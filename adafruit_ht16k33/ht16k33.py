@@ -21,7 +21,7 @@ class HT16K33:
     def _write_cmd(self, byte):
         self._temp[0] = byte
         with self.i2c_device:
-            self.i2c_device.writeto(self._temp)
+            self.i2c_device.write(self._temp)
 
     def blink_rate(self, rate=None):
         if rate is None:
@@ -40,10 +40,9 @@ class HT16K33:
 
     def show(self):
         with self.i2c_device:
-            self.i2c_device.writeto(self._buffer)  # Byte 0 is 0x00, address of
-                                                   # LED data register.  The
-                                                   # remaining 16 bytes are The
-                                                   # display register data to set.
+            # Byte 0 is 0x00, address of LED data register. The remaining 16
+            # bytes are the display register data to set.
+            self.i2c_device.write(self._buffer)
 
     def fill(self, color):
         fill = 0xff if color else 0x00
