@@ -5,17 +5,14 @@
 
 # Import all board pins.
 from board import *
-# Use this import for ESP8266 and other boards with software I2C interfaces:
-import bitbangio as io
-# Or use this import for SAMD21 and boards with a native hardware I2C interace:
-#import nativeio as io
+import busio
 
 # Import the HT16K33 LED segment module.
 from adafruit_ht16k33 import segments
 
 
 # Create the I2C interface.
-i2c = io.I2C(SCL, SDA)
+i2c = busio.I2C(SCL, SDA)
 
 # Create the LED segment class.
 # This creates a 7 segment 4 character display:
