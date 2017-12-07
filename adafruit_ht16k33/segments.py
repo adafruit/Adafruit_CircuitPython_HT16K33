@@ -1,5 +1,31 @@
-from adafruit_ht16k33.ht16k33 import HT16K33
+# The MIT License (MIT)
+#
+# Copyright (c) 2016 Radomir Dopieralski & Tony DiCola for Adafruit Industries
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
+"""Segment Displays
+****************
+
+.. currentmodule:: adafruit_ht16k33.segments"""
+
+from adafruit_ht16k33.ht16k33 import HT16K33
 
 CHARS = (
     0b00000000, 0b00000000, #
@@ -121,7 +147,9 @@ NUMBERS = (
 
 
 class Seg14x4(HT16K33):
+    """Alpha-numeric, 14-segment display."""
     def scroll(self, count=1):
+        """Scroll the display by specified number of places."""
         if count >= 0:
             offset = 0
         else:
@@ -130,6 +158,7 @@ class Seg14x4(HT16K33):
             self._set_buffer(i + offset, self._get_buffer(i + 2 * count))
 
     def put(self, char, index=0):
+        """Put a character at the specified place."""
         if not 0 <= index <= 3:
             return
         if not 32 <= ord(char) <= 127:
@@ -137,72 +166,82 @@ class Seg14x4(HT16K33):
         if char == '.':
             self._set_buffer(index * 2 + 1, self._get_buffer(index * 2 + 1) | 0b01000000)
             return
-        c = ord(char) * 2 - 64
-        self._set_buffer(index * 2, CHARS[1 + c])
-        self._set_buffer(index * 2 + 1, CHARS[c])
+        character = ord(char) * 2 - 64
+        self._set_buffer(index * 2, CHARS[1 + character])
+        self._set_buffer(index * 2 + 1, CHARS[character])
 
     def push(self, char):
+        """Scroll the display and add a character at the end."""
         if char != '.' or self._get_buffer(7) & 0b01000000:
             self.scroll()
             self.put(' ', 3)
         self.put(char, 3)
 
     def text(self, text):
-        for c in text:
-            self.push(c)
+        """Display the specified text."""
+        for character in text:
+            self.push(character)
 
     def number(self, number):
-        s = "{:f}".format(number)
-        if len(s) > 4:
-            if s.find('.') > 4:
+        """Display the specified decimal number."""
+        string = "{:f}".format(number)
+        if len(string) > 4:
+            if string.find('.') > 4:
                 raise ValueError("Overflow")
         self.fill(False)
         places = 4
-        if '.' in s:
+        if '.' in string:
             places += 1
-        self.text(s[:places])
+        self.text(string[:places])
 
     def hex(self, number):
-        s = "{:x}".format(number)
-        if len(s) > 4:
+        """Display the specified hexadecimal number."""
+        string = "{:x}".format(number)
+        if len(string) > 4:
             raise ValueError("Overflow")
         self.fill(False)
-        self.text(s)
+        self.text(string)
 
 
 class Seg7x4(Seg14x4):
-    P = [0, 2, 6, 8] #  The positions of characters.
+    """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
+       supports displaying decimal and hex digits, period and a minus sign."""
+    POSITIONS = [0, 2, 6, 8] #  The positions of characters.
 
     def scroll(self, count=1):
+        """Scroll the display by specified number of places."""
         if count >= 0:
             offset = 0
         else:
             offset = 1
         for i in range(3):
-            self._set_buffer(self.P[i + offset], self._get_buffer(self.P[i + count]))
+            self._set_buffer(self.POSITIONS[i + offset],
+                             self._get_buffer(self.POSITIONS[i + count]))
 
     def push(self, char):
+        """Scroll the display and add a character at the end."""
         if char in ':;':
             self.put(char)
         else:
             super().push(char)
 
     def put(self, char, index=0):
+        """Put a character at the specified place."""
         if not 0 <= index <= 3:
             return
         char = char.lower()
-        index = self.P[index]
+        index = self.POSITIONS[index]
         if char == '.':
             self._set_buffer(index, self._get_buffer(index) | 0b10000000)
             return
         elif char in 'abcdef':
-            c = ord(char) - 97 + 10
+            character = ord(char) - 97 + 10
         elif char == '-':
-            c = 16
+            character = 16
         elif char in '0123456789':
-            c = ord(char) - 48
+            character = ord(char) - 48
         elif char == ' ':
-            c = 0x00
+            character = 0x00
         elif char == ':':
             self._set_buffer(4, 0x02)
             return
@@ -211,4 +250,4 @@ class Seg7x4(Seg14x4):
             return
         else:
             return
-        self._set_buffer(index, NUMBERS[c])
+        self._set_buffer(index, NUMBERS[character])

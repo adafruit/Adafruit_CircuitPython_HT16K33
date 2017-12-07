@@ -1,0 +1,10 @@
+.eggs/
+*.egg-info/
+dist
+*.pyc
+_build/
+*.mpy
+.DS_Store
+.env
+build*
+bundles
