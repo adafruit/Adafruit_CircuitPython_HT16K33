@@ -14,7 +14,7 @@ Variety of HT16K33 displays
 .. automodule:: adafruit_ht16k33.matrix
    :members:
 
-`segments` - Segments display such as those on alarm clocks
+`segments` - Segment display such as those on alarm clocks
 ------------------------------------------------------------
 
 .. automodule:: adafruit_ht16k33.segments
