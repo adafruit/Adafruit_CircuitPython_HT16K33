@@ -1,8 +1,8 @@
 Introduction
 ============
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-circuitplayground/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/circuitplayground/en/latest/
+.. image:: https://readthedocs.org/projects/adafruit-circuitpython-ht16k33/badge/?version=latest
+    :target: https://circuitpython.readthedocs.io/projects/ht16k33/en/latest/
     :alt: Documentation Status
 
 .. image :: https://img.shields.io/discord/327254708534116352.svg
@@ -22,8 +22,6 @@ This driver depends on many other libraries! Please install it by downloading
 
 Usage Example
 =============
-Using it is super simple. Simply import the `cpx` variable from the module
-and then use it.
 
 .. code-block :: python
 
