@@ -58,6 +58,7 @@ class HT16K33:
         self._blink_rate = rate
         self._write_cmd(_HT16K33_BLINK_CMD |
                         _HT16K33_BLINK_DISPLAYON | rate << 1)
+        return None
 
     def brightness(self, brightness):
         """Get or set the brightness. Range 0-15."""
@@ -66,6 +67,7 @@ class HT16K33:
         brightness = brightness & 0x0F
         self._brightness = brightness
         self._write_cmd(_HT16K33_CMD_BRIGHTNESS | brightness)
+        return None
 
     def show(self):
         """Refresh the display and show the changes."""
@@ -90,6 +92,7 @@ class HT16K33:
         else:
             self._buffer[(y * 2) + 1] &= ~(mask & 0xff)
             self._buffer[(y * 2) + 2] &= ~(mask >> 8)
+        return None
 
     def _set_buffer(self, i, value):
         self._buffer[i+1] = value  # Offset by 1 to move past register address.
