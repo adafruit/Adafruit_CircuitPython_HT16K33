@@ -67,6 +67,7 @@ class Matrix8x8x2(HT16K33):
             super()._pixel(y + 8, x, (color >> 1) & 0x01)
         else:
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
+        return None
 
     def fill(self, color):
         """Fill the whole display with the given color."""
