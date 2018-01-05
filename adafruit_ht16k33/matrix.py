@@ -33,9 +33,9 @@ class Matrix16x8(HT16K33):
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
         if not 0 <= x <= 15:
-            return
+            return None
         if not 0 <= y <= 7:
-            return
+            return None
         if x >= 8:
             x -= 8
             y += 8
@@ -47,9 +47,9 @@ class Matrix8x8(HT16K33):
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
         if not 0 <= x <= 7:
-            return
+            return None
         if not 0 <= y <= 7:
-            return
+            return None
         x = (x - 1) % 8
         return super()._pixel(x, y, color)
 
@@ -59,9 +59,9 @@ class Matrix8x8x2(HT16K33):
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
         if not 0 <= x <= 7:
-            return
+            return None
         if not 0 <= y <= 7:
-            return
+            return None
         if color is not None:
             super()._pixel(y, x, (color & 0x01))
             super()._pixel(y + 8, x, (color >> 1) & 0x01)
