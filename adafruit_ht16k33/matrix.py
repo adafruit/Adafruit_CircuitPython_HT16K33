@@ -76,7 +76,7 @@ class Matrix8x8x2(HT16K33):
         for i in range(8):
             self._set_buffer(i * 2, fill1)
             self._set_buffer(i * 2 + 1, fill2)
-            
+
 class Matrix4x4(HT16K33):
     """A single 4x4 matrix."""
     def pixel(self, x, y, color=None):
