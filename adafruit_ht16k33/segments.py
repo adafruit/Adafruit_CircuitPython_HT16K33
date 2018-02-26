@@ -20,13 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Segment Displays
-****************
-
-.. currentmodule:: adafruit_ht16k33.segments"""
+"""
+Segment Displays
+=================
+"""
 
 from adafruit_ht16k33.ht16k33 import HT16K33
 
+# pylint disable=bad-whitespace
 CHARS = (
     0b00000000, 0b00000000, #
     0b01000000, 0b00000110, # !
@@ -144,7 +145,7 @@ NUMBERS = (
     0x71, # F
     0x40, # -
 )
-
+# pylint enable=bad-whitespace
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""

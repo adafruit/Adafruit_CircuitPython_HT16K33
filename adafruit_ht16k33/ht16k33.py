@@ -20,7 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-""".. currentmodule:: adafruit_ht16k33"""
+"""
+`adafruit_ht16k33.ht16k33`
+===========================
+
+* Authors: Radomir Dopieralski & Tony DiCola for Adafruit Industries
+
+"""
 
 from adafruit_bus_device import i2c_device
 from micropython import const
