@@ -12,14 +12,11 @@
 This is a library for using the I²C-based LED matrices with the HT16K33 chip.
 It supports both 16x8 and 8x8 matrices, as well as 7- and 14-segment displays.
 
-**Notes**
+* **Notes**
 
-#. This library is intended for Adafruit CircuitPython's API.  For a library
-compatible with MicroPython machine API see this `library <https://github.com/adafruit/micropython-adafruit-ht16k33>`_.
+    #. This library is intended for Adafruit CircuitPython's API.  For a library compatible with MicroPython machine API see this `library <https://github.com/adafruit/micropython-adafruit-ht16k33>`_.
 
-#. Note: This library does not work with the Trellis 4x4 LED+Keypad board. For that product use:
-
-     `CircuitPython Trellis Library <https://github.com/adafruit/Adafruit_CircuitPython_Trellis/releases/latest>`_
+    #. This library does not work with the Trellis 4x4 LED+Keypad board. For that product use: `CircuitPython Trellis Library <https://github.com/adafruit/Adafruit_CircuitPython_Trellis/releases/latest>`_
 
 Dependencies
 =============
