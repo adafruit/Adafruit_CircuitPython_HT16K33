@@ -7,6 +7,6 @@ Ensure your device works with this simple test.
     :caption: examples/matrix.py
     :linenos:
 
-.. literalinclude:: ../examples/segment.py
-    :caption: examples/segment.py
+.. literalinclude:: ../examples/segments.py
+    :caption: examples/segments.py
     :linenos:
