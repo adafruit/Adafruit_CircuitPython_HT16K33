@@ -26,13 +26,7 @@ Table of Contents
 .. toctree::
     :caption: Related Products
 
-    Too many Adafruit LED Matrices, 7-Segment Displays, and Breakout Boards to list. But here is a handy search link.
-
     Adafruit HT16K33 Products <https://www.adafruit.com/?q=ht16k33>
-
-    Note: This library does not work with the Trellis 4x4 LED+Keypad board. For that product use:
-
-    CircuitPython Trellis Library <https://github.com/adafruit/Adafruit_CircuitPython_Trellis/releases/latest>
 
 .. toctree::
     :caption: Other Links
