@@ -51,7 +51,7 @@ class HT16K33:
             self.i2c_device.write(self._temp)
 
     def blink_rate(self, rate=None):
-        """Get or set the blink rate. Range 0-3."""
+        """The blink rate. Range 0-3."""
         if rate is None:
             return self._blink_rate
         rate = rate & 0x03
@@ -61,7 +61,7 @@ class HT16K33:
         return None
 
     def brightness(self, brightness):
-        """Get or set the brightness. Range 0-15."""
+        """The brightness. Range 0-15."""
         if brightness is None:
             return self._brightness
         brightness = brightness & 0x0F
