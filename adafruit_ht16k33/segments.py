@@ -20,10 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Segment Displays
-****************
-
-.. currentmodule:: adafruit_ht16k33.segments"""
+"""
+Segment Displays
+=================
+"""
 
 from adafruit_ht16k33.ht16k33 import HT16K33
 
