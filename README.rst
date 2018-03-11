@@ -9,6 +9,10 @@
     :target: https://adafru.it/discord
     :alt: Discord
 
+.. image:: https://travis-ci.org/adafruit/Adafruit_CircuitPython_HT16K33.svg?branch=master
+    :target: https://travis-ci.org/adafruit/Adafruit_CircuitPython_HT16K33
+    :alt: Build Status
+
 This is a library for using the I²C-based LED matrices with the HT16K33 chip.
 It supports both 16x8 and 8x8 matrices, as well as 7- and 14-segment displays.
 
