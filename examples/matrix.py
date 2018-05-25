@@ -20,7 +20,7 @@ matrix = matrix.Matrix16x8(i2c)
 # Or this creates a 8x8 matrix:
 #matrix = matrix.Matrix8x8(i2c)
 # Or this creates a 8x8 bicolor matrix:
-#matrix = matrix.Matrix8x8x2
+#matrix = matrix.Matrix8x8x2(i2c)
 # Finally you can optionally specify a custom I2C address of the HT16k33 like:
 #matrix = matrix.Matrix16x8(i2c, address=0x70)
 
