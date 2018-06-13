@@ -42,6 +42,13 @@ class Matrix16x8(HT16K33):
             y += 8
         return super()._pixel(y, x, color)
 
+    def __getitem__(self, key):
+        x, y = key
+        return self.pixel(x, y)
+
+    def __setitem__(self, key, value):
+        x, y = key
+        self.pixel(x, y, value)
 
 class Matrix8x8(HT16K33):
     """A single matrix."""
@@ -54,6 +61,13 @@ class Matrix8x8(HT16K33):
         x = (x - 1) % 8
         return super()._pixel(x, y, color)
 
+    def __getitem__(self, key):
+        x, y = key
+        return self.pixel(x, y)
+
+    def __setitem__(self, key, value):
+        x, y = key
+        self.pixel(x, y, value)
 
 class Matrix8x8x2(HT16K33):
     """A bi-color matrix."""
@@ -69,6 +83,14 @@ class Matrix8x8x2(HT16K33):
         else:
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
         return None
+
+    def __getitem__(self, key):
+        x, y = key
+        return self.pixel(x, y)
+
+    def __setitem__(self, key, value):
+        x, y = key
+        self.pixel(x, y, value)
 
     def fill(self, color):
         """Fill the whole display with the given color."""
