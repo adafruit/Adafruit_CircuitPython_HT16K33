@@ -49,7 +49,7 @@ class HT16K33:
         self._blink_rate = None
         self._brightness = None
         self.blink_rate = 0
-        self.brightness = 15 
+        self.brightness = 15
 
     def _write_cmd(self, byte):
         self._temp[0] = byte
@@ -58,11 +58,11 @@ class HT16K33:
 
     @property
     def blink_rate(self):
+        """The blink rate. Range 0-3."""
         return self._blink_rate
 
     @blink_rate.setter
     def blink_rate(self, rate=None):
-        """The blink rate. Range 0-3."""
         if not 0 <= rate <= 3:
             raise ValueError('Blink rate must be an integer in the range: 0-3')
         rate = rate & 0x03
@@ -73,11 +73,11 @@ class HT16K33:
 
     @property
     def brightness(self):
+        """The brightness. Range 0-15."""
         return self._brightness
 
     @brightness.setter
     def brightness(self, brightness):
-        """The brightness. Range 0-15."""
         if not 0 <= brightness <= 15:
             raise ValueError('Brightness must be an integer in the range: 0-15')
         brightness = brightness & 0x0F
