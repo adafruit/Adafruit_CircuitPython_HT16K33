@@ -48,28 +48,38 @@ class HT16K33:
         self._write_cmd(_HT16K33_OSCILATOR_ON)
         self._blink_rate = None
         self._brightness = None
-        self.blink_rate(0)
-        self.brightness(15)
+        self.blink_rate = 0
+        self.brightness = 15
 
     def _write_cmd(self, byte):
         self._temp[0] = byte
         with self.i2c_device:
             self.i2c_device.write(self._temp)
 
-    def blink_rate(self, rate=None):
+    @property
+    def blink_rate(self):
         """The blink rate. Range 0-3."""
-        if rate is None:
-            return self._blink_rate
+        return self._blink_rate
+
+    @blink_rate.setter
+    def blink_rate(self, rate=None):
+        if not 0 <= rate <= 3:
+            raise ValueError('Blink rate must be an integer in the range: 0-3')
         rate = rate & 0x03
         self._blink_rate = rate
         self._write_cmd(_HT16K33_BLINK_CMD |
                         _HT16K33_BLINK_DISPLAYON | rate << 1)
         return None
 
-    def brightness(self, brightness):
+    @property
+    def brightness(self):
         """The brightness. Range 0-15."""
-        if brightness is None:
-            return self._brightness
+        return self._brightness
+
+    @brightness.setter
+    def brightness(self, brightness):
+        if not 0 <= brightness <= 15:
+            raise ValueError('Brightness must be an integer in the range: 0-15')
         brightness = brightness & 0x0F
         self._brightness = brightness
         self._write_cmd(_HT16K33_CMD_BRIGHTNESS | brightness)
