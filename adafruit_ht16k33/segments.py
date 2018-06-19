@@ -149,6 +149,7 @@ NUMBERS = (
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
     def print(self, value):
+        """Print the value to the display."""
         if isinstance(value, (str)):
             self._text(value)
         elif isinstance(value, (int, float)):
@@ -211,6 +212,7 @@ class Seg7x4(Seg14x4):
     POSITIONS = [0, 2, 6, 8] #  The positions of characters.
 
     def print(self, value):
+        """Print the value to the display."""
         if isinstance(value, (int, float)):
             self._number(value)
         else:
