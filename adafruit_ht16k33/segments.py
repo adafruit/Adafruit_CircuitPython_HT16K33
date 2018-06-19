@@ -148,6 +148,17 @@ NUMBERS = (
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
+    def print(self, value):
+        if isinstance(value, (str)):
+            self._text(value)
+        elif isinstance(value, (int, float)):
+            self._number(value)
+        else:
+            raise ValueError('Unsupported display value type: {}'.format(type(value)))
+
+    def __setitem__(self, key, value):
+        self._put(value, key)
+
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
         if count >= 0:
@@ -157,7 +168,7 @@ class Seg14x4(HT16K33):
         for i in range(6):
             self._set_buffer(i + offset, self._get_buffer(i + 2 * count))
 
-    def put(self, char, index=0):
+    def _put(self, char, index=0):
         """Put a character at the specified place."""
         if not 0 <= index <= 3:
             return
@@ -170,21 +181,21 @@ class Seg14x4(HT16K33):
         self._set_buffer(index * 2, CHARS[1 + character])
         self._set_buffer(index * 2 + 1, CHARS[character])
 
-    def push(self, char):
+    def _push(self, char):
         """Scroll the display and add a character at the end."""
         if char != '.' or self._get_buffer(7) & 0b01000000:
             self.scroll()
-            self.put(' ', 3)
-        self.put(char, 3)
+            self._put(' ', 3)
+        self._put(char, 3)
 
-    def text(self, text):
+    def _text(self, text):
         """Display the specified text."""
         for character in text:
-            self.push(character)
+            self._push(character)
 
-    def number(self, number):
+    def _number(self, number):
         """Display the specified decimal number."""
-        string = "{:f}".format(number)
+        string = "{}".format(number)
         if len(string) > 4:
             if string.find('.') > 4:
                 raise ValueError("Overflow")
@@ -192,21 +203,18 @@ class Seg14x4(HT16K33):
         places = 4
         if '.' in string:
             places += 1
-        self.text(string[:places])
-
-    def hex(self, number):
-        """Display the specified hexadecimal number."""
-        string = "{:x}".format(number)
-        if len(string) > 4:
-            raise ValueError("Overflow")
-        self.fill(False)
-        self.text(string)
-
+        self._text(string[:places])
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
        supports displaying decimal and hex digits, period and a minus sign."""
     POSITIONS = [0, 2, 6, 8] #  The positions of characters.
+
+    def print(self, value):
+        if isinstance(value, (int, float)):
+            self._number(value)
+        else:
+            raise ValueError('Unsupported display value type: {}'.format(type(value)))
 
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
@@ -218,14 +226,14 @@ class Seg7x4(Seg14x4):
             self._set_buffer(self.POSITIONS[i + offset],
                              self._get_buffer(self.POSITIONS[i + count]))
 
-    def push(self, char):
+    def _push(self, char):
         """Scroll the display and add a character at the end."""
         if char in ':;':
-            self.put(char)
+            self._put(char)
         else:
-            super().push(char)
+            super()._push(char)
 
-    def put(self, char, index=0):
+    def _put(self, char, index=0):
         """Put a character at the specified place."""
         if not 0 <= index <= 3:
             return
