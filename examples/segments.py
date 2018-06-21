@@ -28,12 +28,12 @@ display.fill(0)
 display.show()
 
 # Set the first character to '1':
-display.put('1', 0)
+display[0] = '1'
 # Set the second character to '2':
-display.put('2', 1)
+display[1] = '2'
 # Set the third character to 'A':
-display.put('A', 2)
+display[2] = 'A'
 # Set the forth character to 'B':
-display.put('B', 3)
+display[3] = 'B'
 # Make sure to call show to see the changes above on the display!
 display.show()
