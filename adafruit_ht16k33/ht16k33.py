@@ -40,10 +40,11 @@ _HT16K33_OSCILATOR_ON = const(0x21)
 
 class HT16K33:
     """The base class for all displays. Contains common methods."""
-    def __init__(self, i2c, address=0x70):
+    def __init__(self, i2c, address=0x70, auto_write=True):
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)
         self._buffer = bytearray(17)
+        self._auto_write = auto_write
         self.fill(0)
         self._write_cmd(_HT16K33_OSCILATOR_ON)
         self._blink_rate = None
@@ -85,6 +86,14 @@ class HT16K33:
         self._write_cmd(_HT16K33_CMD_BRIGHTNESS | brightness)
         return None
 
+    @property
+    def auto_write(self):
+        return self._auto_write
+
+    @auto_write.setter
+    def auto_write(self, auto_write):
+        self._auto_write = auto_write
+
     def show(self):
         """Refresh the display and show the changes."""
         with self.i2c_device:
@@ -97,6 +106,8 @@ class HT16K33:
         fill = 0xff if color else 0x00
         for i in range(16):
             self._buffer[i+1] = fill
+        if self._auto_write:
+            self.show()
 
     def _pixel(self, x, y, color=None):
         mask = 1 << x
@@ -108,6 +119,8 @@ class HT16K33:
         else:
             self._buffer[(y * 2) + 1] &= ~(mask & 0xff)
             self._buffer[(y * 2) + 2] &= ~(mask >> 8)
+        if self._auto_write:
+            self.show()
         return None
 
     def _set_buffer(self, i, value):

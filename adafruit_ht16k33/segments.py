@@ -156,6 +156,8 @@ class Seg14x4(HT16K33):
             self._number(value)
         else:
             raise ValueError('Unsupported display value type: {}'.format(type(value)))
+        if self._auto_write:
+            self.show()
 
     def __setitem__(self, key, value):
         self._put(value, key)
@@ -217,7 +219,9 @@ class Seg7x4(Seg14x4):
             self._number(value)
         else:
             raise ValueError('Unsupported display value type: {}'.format(type(value)))
-
+        if self._auto_write:
+            self.show()
+            
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
         if count >= 0:
