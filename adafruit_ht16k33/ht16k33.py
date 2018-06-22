@@ -44,6 +44,7 @@ class HT16K33:
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)
         self._buffer = bytearray(17)
+        self._auto_write = None
         self._auto_write = auto_write
         self.fill(0)
         self._write_cmd(_HT16K33_OSCILATOR_ON)
@@ -93,7 +94,10 @@ class HT16K33:
 
     @auto_write.setter
     def auto_write(self, auto_write):
-        self._auto_write = auto_write
+        if isinstance(auto_write, bool):
+            self._auto_write = auto_write
+        else:
+            raise ValueError('Must set to either True or False.')
 
     def show(self):
         """Refresh the display and show the changes."""
