@@ -88,6 +88,7 @@ class HT16K33:
 
     @property
     def auto_write(self):
+        """Auto write updates to the display."""
         return self._auto_write
 
     @auto_write.setter

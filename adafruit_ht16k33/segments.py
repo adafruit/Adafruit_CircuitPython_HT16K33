@@ -221,7 +221,7 @@ class Seg7x4(Seg14x4):
             raise ValueError('Unsupported display value type: {}'.format(type(value)))
         if self._auto_write:
             self.show()
-            
+
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
         if count >= 0:
