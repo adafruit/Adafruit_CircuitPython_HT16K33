@@ -39,7 +39,13 @@ _HT16K33_OSCILATOR_ON = const(0x21)
 
 
 class HT16K33:
-    """The base class for all displays. Contains common methods."""
+    """
+    The base class for all displays. Contains common methods.
+
+    :param int address: The I2C addess of the HT16K33.
+    :param bool auto_write: True if the display should immediately change when
+        set. If False, `show` must be called explicitly.
+    """
     def __init__(self, i2c, address=0x70, auto_write=True):
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)

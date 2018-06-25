@@ -58,10 +58,8 @@ Usage Example
     # Finally you can optionally specify a custom I2C address of the HT16k33 like:
     #matrix = matrix.Matrix16x8(i2c, address=0x70)
 
-    # Clear the matrix.  Always call show after changing pixels to make the display
-    # update visible!
+    # Clear the matrix.
     matrix.fill(0)
-    matrix.show()
 
     # Set a pixel in the origin 0,0 position.
     matrix.pixel[0, 0] = 1
@@ -77,7 +75,6 @@ Usage Example
     # Set the blink rate
     matrix.blink_rate = 2
 
-    matrix.show()
 
 Contributing
 ============
