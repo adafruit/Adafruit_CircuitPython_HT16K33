@@ -99,3 +99,5 @@ class Matrix8x8x2(HT16K33):
         for i in range(8):
             self._set_buffer(i * 2, fill1)
             self._set_buffer(i * 2 + 1, fill2)
+        if self._auto_write:
+            self.show()

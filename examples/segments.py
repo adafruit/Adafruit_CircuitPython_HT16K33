@@ -3,6 +3,8 @@
 # Author: Tony DiCola
 # License: Public Domain
 
+import time
+
 # Import all board pins.
 from board import *
 import busio
@@ -22,11 +24,14 @@ display = segments.Seg7x4(i2c)
 # Finally you can optionally specify a custom I2C address of the HT16k33 like:
 #display = segments.Seg7x4(i2c, address=0x70)
 
-# Clear the display.  Always call show after changing the display to make the
-# update visible!
+# Clear the display.
 display.fill(0)
-display.show()
 
+# Can just print a number
+display.print(42)
+time.sleep(2)
+
+# Or, can set indivdual digits / characters
 # Set the first character to '1':
 display[0] = '1'
 # Set the second character to '2':
@@ -35,5 +40,3 @@ display[1] = '2'
 display[2] = 'A'
 # Set the forth character to 'B':
 display[3] = 'B'
-# Make sure to call show to see the changes above on the display!
-display.show()

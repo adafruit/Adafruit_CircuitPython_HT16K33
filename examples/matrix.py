@@ -24,15 +24,12 @@ matrix = matrix.Matrix16x8(i2c)
 # Finally you can optionally specify a custom I2C address of the HT16k33 like:
 #matrix = matrix.Matrix16x8(i2c, address=0x70)
 
-# Clear the matrix.  Always call show after changing pixels to make the display
-# update visible!
+# Clear the matrix.
 matrix.fill(0)
-matrix.show()
 
 # Set a pixel in the origin 0,0 position.
-matrix.pixel(0, 0, 1)
+matrix[0, 0] = 1
 # Set a pixel in the middle 8, 4 position.
-matrix.pixel(8, 4, 1)
+matrix[8, 4] = 1
 # Set a pixel in the opposite 15, 7 position.
-matrix.pixel(15, 7, 1)
-matrix.show()
+matrix[15, 7] = 1
