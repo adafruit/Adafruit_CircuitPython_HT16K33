@@ -210,17 +210,8 @@ class Seg14x4(HT16K33):
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-       supports displaying decimal and hex digits, period and a minus sign."""
+       supports displaying a limited set of characters."""
     POSITIONS = [0, 2, 6, 8] #  The positions of characters.
-
-    def print(self, value):
-        """Print the value to the display."""
-        if isinstance(value, (int, float)):
-            self._number(value)
-        else:
-            raise ValueError('Unsupported display value type: {}'.format(type(value)))
-        if self._auto_write:
-            self.show()
 
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
