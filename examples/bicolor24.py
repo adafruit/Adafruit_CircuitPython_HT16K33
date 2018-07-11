@@ -16,25 +16,25 @@ from adafruit_ht16k33.bargraph import Bicolor24
 i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the LED bargraph class.
-bar = Bicolor24(i2c)
+bc24 = Bicolor24(i2c)
 
 # Set individual segments of bargraph
-bar[0] = bar.LED_RED
-bar[1] = bar.LED_GREEN
-bar[2] = bar.LED_YELLOW
+bc24[0] = bc24.LED_RED
+bc24[1] = bc24.LED_GREEN
+bc24[2] = bc24.LED_YELLOW
 
 time.sleep(2)
 
 # Turn them all off
-bar.fill(bar.LED_OFF)
+bc24.fill(bc24.LED_OFF)
 
 # Turn them on in a loop
 for i in range(24):
-    bar[i] = bar.LED_RED
+    bc24[i] = bc24.LED_RED
     time.sleep(0.1)
-    bar[i] = bar.LED_OFF
+    bc24[i] = bc24.LED_OFF
 
 time.sleep(1)
 
 # Fill the entrire bargraph
-bar.fill(bar.LED_GREEN)
+bc24.fill(bc24.LED_GREEN)
