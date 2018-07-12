@@ -145,7 +145,6 @@ NUMBERS = (
     0x40, # -
 )
 
-
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
     def print(self, value):
@@ -262,10 +261,11 @@ class BigSeg7x4(Seg7x4):
        supports displaying a limited set of characters."""
     def __init__(self, i2c, address=0x70, auto_write=True):
         super().__init__(i2c, address, auto_write)
+        self.colon = Colon(self, 2)
 
     @property
     def ampm(self):
-        return (self._get_buffer(0x04) & 0x10) >> 4
+        return bool(self._get_buffer(0x04) & 0x10)
 
     @ampm.setter
     def ampm(self, value):
@@ -277,8 +277,34 @@ class BigSeg7x4(Seg7x4):
         if self._auto_write:
             self.show()
 
-    def print(self, value):
-        ampm = self.ampm
-        super().print(value)
-        if ampm:
-            self.ampm = ampm
+    """need something like this to keep ampm indicator
+       and colons from being turned off with print?"""
+    # def print(self, value):
+    #     ampm = self.ampm
+    #     super().print(value)
+    #     if ampm:
+    #         self.ampm = ampm
+
+class Colon():
+    """Helper class for controlling the colons. Not intended for direct use."""
+    MASKS = (0x02, 0x0C)
+
+    def __init__(self, disp, num_of_colons=1):
+        self._disp = disp
+        self._num_of_colons = num_of_colons
+
+    def __setitem__(self, key, value):
+        if key > self._num_of_colons - 1:
+            raise ValueError("Trying to set a non-existant colon.")
+        current = self._disp._get_buffer(0x04)
+        if value:
+            self._disp._set_buffer(0x04, current | self.MASKS[key])
+        else:
+            self._disp._set_buffer(0x04, current & ~self.MASKS[key])
+        if self._disp.auto_write:
+            self._disp.show()
+
+    def __getitem__(self, key):
+        if key > self._num_of_colons - 1:
+            raise ValueError("Trying to access a non-existant colon.")
+        return bool(self._disp._get_buffer(0x04) & self.MASKS[key])
