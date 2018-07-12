@@ -256,3 +256,29 @@ class Seg7x4(Seg14x4):
         else:
             return
         self._set_buffer(index, NUMBERS[character])
+
+class BigSeg7x4(Seg7x4):
+    """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
+       supports displaying a limited set of characters."""
+    def __init__(self, i2c, address=0x70, auto_write=True):
+        super().__init__(i2c, address, auto_write)
+
+    @property
+    def ampm(self):
+        return (self._get_buffer(0x04) & 0x10) >> 4
+
+    @ampm.setter
+    def ampm(self, value):
+        current = self._get_buffer(0x04)
+        if value:
+            self._set_buffer(0x04, current | 0x10)
+        else:
+            self._set_buffer(0x04, current & ~0x10)
+        if self._auto_write:
+            self.show()
+
+    def print(self, value):
+        ampm = self.ampm
+        super().print(value)
+        if ampm:
+            self.ampm = ampm
