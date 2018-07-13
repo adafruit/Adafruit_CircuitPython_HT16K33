@@ -278,9 +278,10 @@ class BigSeg7x4(Seg7x4):
         if self._auto_write:
             self.show()
 
-#pylint: disable=W0212
 class Colon():
     """Helper class for controlling the colons. Not intended for direct use."""
+    #pylint: disable=protected-access
+
     MASKS = (0x02, 0x0C)
 
     def __init__(self, disp, num_of_colons=1):
