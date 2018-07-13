@@ -261,7 +261,7 @@ class BigSeg7x4(Seg7x4):
        supports displaying a limited set of characters."""
     def __init__(self, i2c, address=0x70, auto_write=True):
         super().__init__(i2c, address, auto_write)
-        self.colon = Colon(self, 2)
+        self.colon = Colon(self, 2)    
 
     @property
     def ampm(self):
