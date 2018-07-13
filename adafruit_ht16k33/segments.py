@@ -145,7 +145,6 @@ NUMBERS = (
     0x40, # -
 )
 
-
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
     def print(self, value):
@@ -256,3 +255,51 @@ class Seg7x4(Seg14x4):
         else:
             return
         self._set_buffer(index, NUMBERS[character])
+
+class BigSeg7x4(Seg7x4):
+    """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
+       supports displaying a limited set of characters."""
+    def __init__(self, i2c, address=0x70, auto_write=True):
+        super().__init__(i2c, address, auto_write)
+        self.colon = Colon(self, 2)
+
+    @property
+    def ampm(self):
+        """The AM/PM indicator."""
+        return bool(self._get_buffer(0x04) & 0x10)
+
+    @ampm.setter
+    def ampm(self, value):
+        current = self._get_buffer(0x04)
+        if value:
+            self._set_buffer(0x04, current | 0x10)
+        else:
+            self._set_buffer(0x04, current & ~0x10)
+        if self._auto_write:
+            self.show()
+
+class Colon():
+    """Helper class for controlling the colons. Not intended for direct use."""
+    #pylint: disable=protected-access
+
+    MASKS = (0x02, 0x0C)
+
+    def __init__(self, disp, num_of_colons=1):
+        self._disp = disp
+        self._num_of_colons = num_of_colons
+
+    def __setitem__(self, key, value):
+        if key > self._num_of_colons - 1:
+            raise ValueError("Trying to set a non-existent colon.")
+        current = self._disp._get_buffer(0x04)
+        if value:
+            self._disp._set_buffer(0x04, current | self.MASKS[key])
+        else:
+            self._disp._set_buffer(0x04, current & ~self.MASKS[key])
+        if self._disp.auto_write:
+            self._disp.show()
+
+    def __getitem__(self, key):
+        if key > self._num_of_colons - 1:
+            raise ValueError("Trying to access a non-existent colon.")
+        return bool(self._disp._get_buffer(0x04) & self.MASKS[key])
