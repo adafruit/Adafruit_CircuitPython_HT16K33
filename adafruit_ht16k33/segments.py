@@ -277,14 +277,6 @@ class BigSeg7x4(Seg7x4):
         if self._auto_write:
             self.show()
 
-    """need something like this to keep ampm indicator
-       and colons from being turned off with print?"""
-    # def print(self, value):
-    #     ampm = self.ampm
-    #     super().print(value)
-    #     if ampm:
-    #         self.ampm = ampm
-
 class Colon():
     """Helper class for controlling the colons. Not intended for direct use."""
     MASKS = (0x02, 0x0C)
@@ -295,7 +287,7 @@ class Colon():
 
     def __setitem__(self, key, value):
         if key > self._num_of_colons - 1:
-            raise ValueError("Trying to set a non-existant colon.")
+            raise ValueError("Trying to set a non-existent colon.")
         current = self._disp._get_buffer(0x04)
         if value:
             self._disp._set_buffer(0x04, current | self.MASKS[key])
@@ -306,5 +298,5 @@ class Colon():
 
     def __getitem__(self, key):
         if key > self._num_of_colons - 1:
-            raise ValueError("Trying to access a non-existant colon.")
+            raise ValueError("Trying to access a non-existent colon.")
         return bool(self._disp._get_buffer(0x04) & self.MASKS[key])
