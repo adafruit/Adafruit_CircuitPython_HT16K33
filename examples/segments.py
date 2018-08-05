@@ -6,7 +6,7 @@
 import time
 
 # Import all board pins.
-from board import *
+import board
 import busio
 
 # Import the HT16K33 LED segment module.
@@ -14,7 +14,7 @@ from adafruit_ht16k33 import segments
 
 
 # Create the I2C interface.
-i2c = busio.I2C(SCL, SDA)
+i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the LED segment class.
 # This creates a 7 segment 4 character display:
