@@ -121,18 +121,18 @@ class HT16K33:
             self.show()
 
     def _pixel(self, x, y, color=None):
-        mask = 1 << x
+        addr = 2*y + x // 8
+        mask = 1 << x % 8
         if color is None:
-            return bool((self._buffer[y + 1] | self._buffer[y + 2] << 8) & mask)
+            return bool(self._buffer[addr + 1] & mask)
         if color:
-            self._buffer[(y * 2) + 1] |= mask & 0xff
-            self._buffer[(y * 2) + 2] |= mask >> 8
+            # set the bit
+            self._buffer[addr + 1] |= mask
         else:
-            self._buffer[(y * 2) + 1] &= ~(mask & 0xff)
-            self._buffer[(y * 2) + 2] &= ~(mask >> 8)
+            # clear the bit
+            self._buffer[addr + 1] &= ~mask
         if self._auto_write:
             self.show()
-        return None
 
     def _set_buffer(self, i, value):
         self._buffer[i+1] = value  # Offset by 1 to move past register address.
