@@ -133,6 +133,7 @@ class HT16K33:
             self._buffer[addr + 1] &= ~mask
         if self._auto_write:
             self.show()
+        return None
 
     def _set_buffer(self, i, value):
         self._buffer[i+1] = value  # Offset by 1 to move past register address.
