@@ -38,15 +38,15 @@ Usage Example
 
 .. code-block :: python
 
-    # Import all board pins.
-    from board import *
+    # Import all board pins and bus interface.
+    import board
     import busio
 
     # Import the HT16K33 LED matrix module.
     from adafruit_ht16k33 import matrix
 
     # Create the I2C interface.
-    i2c = busio.I2C(SCL, SDA)
+    i2c = busio.I2C(board.SCL, board.SDA)
 
     # Create the matrix class.
     # This creates a 16x8 matrix:
@@ -62,11 +62,11 @@ Usage Example
     matrix.fill(0)
 
     # Set a pixel in the origin 0,0 position.
-    matrix.pixel[0, 0] = 1
+    matrix[0, 0] = 1
     # Set a pixel in the middle 8, 4 position.
-    matrix.pixel[8, 4] = 1
+    matrix[8, 4] = 1
     # Set a pixel in the opposite 15, 7 position.
-    matrix.pixel[15, 7] = 1
+    matrix[15, 7] = 1
     matrix.show()
 
     # Change the brightness
