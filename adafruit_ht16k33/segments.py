@@ -199,6 +199,8 @@ class Seg14x4(HT16K33):
 
     def _number(self, number):
         """Display the specified decimal number."""
+        auto_write = self._auto_write
+        self._auto_write = False
         string = "{}".format(number)
         if len(string) > 4:
             if string.find('.') > 4:
@@ -208,6 +210,7 @@ class Seg14x4(HT16K33):
         if '.' in string:
             places += 1
         self._text(string[:places])
+        self._auto_write = auto_write
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
