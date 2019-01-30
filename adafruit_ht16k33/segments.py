@@ -160,6 +160,8 @@ class Seg14x4(HT16K33):
 
     def __setitem__(self, key, value):
         self._put(value, key)
+        if self._auto_write:
+            self.show()
 
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
@@ -182,8 +184,6 @@ class Seg14x4(HT16K33):
         character = ord(char) * 2 - 64
         self._set_buffer(index * 2, CHARS[1 + character])
         self._set_buffer(index * 2 + 1, CHARS[character])
-        if self._auto_write:
-            self.show()
 
     def _push(self, char):
         """Scroll the display and add a character at the end."""
@@ -260,8 +260,6 @@ class Seg7x4(Seg14x4):
         else:
             return
         self._set_buffer(index, NUMBERS[character])
-        if self._auto_write:
-            self.show()
 
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
