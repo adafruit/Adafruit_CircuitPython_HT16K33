@@ -250,7 +250,8 @@ class Seg7x4(Seg14x4):
         elif char in '0123456789':
             character = ord(char) - 48
         elif char == ' ':
-            character = 0x00
+            self._set_buffer(index, 0x00)
+            return
         elif char == ':':
             self._set_buffer(4, 0x02)
             return
