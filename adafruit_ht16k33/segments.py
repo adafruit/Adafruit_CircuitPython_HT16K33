@@ -232,7 +232,10 @@ class Seg7x4(Seg14x4):
         if char in ':;':
             self._put(char)
         else:
-            super()._push(char)
+            if char != '.' or self._get_buffer(self.POSITIONS[3]) & 0b10000000:
+                self.scroll()
+                self._put(' ', 3)
+            self._put(char, 3)
 
     def _put(self, char, index=0):
         """Put a character at the specified place."""
