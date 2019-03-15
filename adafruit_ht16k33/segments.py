@@ -215,7 +215,7 @@ class Seg14x4(HT16K33):
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
        supports displaying a limited set of characters."""
-    POSITIONS = [0, 2, 6, 8] #  The positions of characters.
+    POSITIONS = (0, 2, 6, 8) #  The positions of characters.
 
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
