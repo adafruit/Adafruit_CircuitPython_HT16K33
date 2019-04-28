@@ -20,7 +20,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 #  Create a 14 segment alphanumeric 8 character display:
 display = segments_8_char.Seg14x8(i2c)
 #  Optionally, specify a custom I2C address for the HT16k33 chip:
-#display = segments_8_digit.Seg14x8(i2c, address=0x70)
+#display = segments_8_char.Seg14x8(i2c, address=0x70)
 
 #  Clear the display.
 display.fill(0)
