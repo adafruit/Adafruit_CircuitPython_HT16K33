@@ -308,20 +308,39 @@ class BigSeg7x4(Seg7x4):
         super().__init__(i2c, address, auto_write)
         self.colon = Colon(self, 2)
 
+    def setindicator(self, index, value):
+        """ Set side LEDs (dots)
+            Index is as follow :
+            * 0 : two dots at the center
+            * 1 : top-left dot
+            * 2 : bottom-left dot
+            * 3 : right dot (also ampm indicator)
+        """
+        bitmask = 1 << (index + 1)
+        current = self._get_buffer(0x04)
+        if value:
+            self._set_buffer(0x04, current | bitmask)
+        else:
+            self._set_buffer(0x04, current & ~bitmask)
+        if self._auto_write:
+            self.show()
+
+    def getindicator(self, index):
+        """ Get side LEDs (dots)
+            See setindicator() for indexes
+        """
+        bitmask = 1 << (index + 1)
+        return self._get_buffer(0x04) & bitmask
+
     @property
     def ampm(self):
         """The AM/PM indicator."""
-        return bool(self._get_buffer(0x04) & 0x10)
+        return bool(self.getindicator(3))
 
     @ampm.setter
     def ampm(self, value):
-        current = self._get_buffer(0x04)
-        if value:
-            self._set_buffer(0x04, current | 0x10)
-        else:
-            self._set_buffer(0x04, current & ~0x10)
-        if self._auto_write:
-            self.show()
+        self.setindicator(3, value)
+
 
 class Colon():
     """Helper class for controlling the colons. Not intended for direct use."""
