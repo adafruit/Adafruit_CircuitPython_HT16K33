@@ -1,5 +1,5 @@
 ﻿Introduction
-============
+=============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-ht16k33/badge/?version=latest
     :target: https://circuitpython.readthedocs.io/projects/ht16k33/en/latest/
