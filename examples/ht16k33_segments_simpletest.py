@@ -12,7 +12,6 @@ import busio
 # Import the HT16K33 LED segment module.
 from adafruit_ht16k33 import segments
 
-
 # Create the I2C interface.
 i2c = busio.I2C(board.SCL, board.SDA)
 
@@ -40,3 +39,18 @@ display[1] = '2'
 display[2] = 'A'
 # Set the forth character to 'B':
 display[3] = 'B'
+time.sleep(2)
+
+# Or, can even set the segments to make up characters
+if isinstance(display, segments.Seg7x4):
+    # 7-segment raw digits
+    display.set_digit_raw(0, 0xFF)
+    display.set_digit_raw(1, 0b11111111)
+    display.set_digit_raw(2, 0x79)
+    display.set_digit_raw(3, 0b01111001)
+else:
+    # 14-segment raw digits
+    display.set_digit_raw(0, 0x3F2D)
+    display.set_digit_raw(1, 0b0011111100101101)
+    display.set_digit_raw(2, (0b00111111, 0b00101101))
+    display.set_digit_raw(3, [0b00111111, 0b00101101])
