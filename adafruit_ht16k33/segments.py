@@ -218,14 +218,14 @@ class Seg14x4(HT16K33):
     def set_digit_raw(self, index, bitmask):
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most character on the display.
-        
+
         bitmask should be 2 bytes such as: 0xFFFF
         If can be passed as an integer, list, or tuple
         """
         if not 0 <= index <= 3:
             return
 
-        if isinstance(bitmask, tuple) or isinstance(bitmask, list):
+        if isinstance(bitmask, (tuple, list)):
             bitmask = bitmask[0] << 8 | bitmask[1]
 
         # Set the digit bitmask value at the appropriate position.
@@ -269,7 +269,7 @@ class Seg7x4(Seg14x4):
         if char == '.':
             self._set_buffer(index, self._get_buffer(index) | 0b10000000)
             return
-        elif char in 'abcdef':
+        if char in 'abcdef':
             character = ord(char) - 97 + 10
         elif char == '-':
             character = 16
