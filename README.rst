@@ -9,8 +9,8 @@
     :target: https://adafru.it/discord
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_HT16K33.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_HT16K33
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_HT16K33/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_HT16K33/actions/
     :alt: Build Status
 
 This is a library for using the I²C-based LED matrices with the HT16K33 chip.
