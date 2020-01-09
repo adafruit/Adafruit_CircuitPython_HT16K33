@@ -335,15 +335,6 @@ class BigSeg7x4(Seg7x4):
         return self._get_buffer(0x04) & bitmask
 
     @property
-    def two_dots_center(self):
-        """The two dots at the center indicator."""
-        return bool(self._getindicator(0))
-
-    @two_dots_center.setter
-    def two_dots_center(self, value):
-        self._setindicator(0, value)
-
-    @property
     def top_left_dot(self):
         """The top-left dot indicator."""
         return bool(self._getindicator(1))
