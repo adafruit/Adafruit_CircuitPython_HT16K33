@@ -306,22 +306,60 @@ class BigSeg7x4(Seg7x4):
        supports displaying a limited set of characters."""
     def __init__(self, i2c, address=0x70, auto_write=True):
         super().__init__(i2c, address, auto_write)
+        # Use colon for controling two-dots indicator at the center (index 0)
+        # or the two-dots indicators at the left (index 1)
         self.colon = Colon(self, 2)
+
+    def _setindicator(self, index, value):
+        """ Set side LEDs (dots)
+            Index is as follow :
+            * 0 : two dots at the center
+            * 1 : top-left dot
+            * 2 : bottom-left dot
+            * 3 : right dot (also ampm indicator)
+        """
+        bitmask = 1 << (index + 1)
+        current = self._get_buffer(0x04)
+        if value:
+            self._set_buffer(0x04, current | bitmask)
+        else:
+            self._set_buffer(0x04, current & ~bitmask)
+        if self._auto_write:
+            self.show()
+
+    def _getindicator(self, index):
+        """ Get side LEDs (dots)
+            See setindicator() for indexes
+        """
+        bitmask = 1 << (index + 1)
+        return self._get_buffer(0x04) & bitmask
+
+    @property
+    def top_left_dot(self):
+        """The top-left dot indicator."""
+        return bool(self._getindicator(1))
+
+    @top_left_dot.setter
+    def top_left_dot(self, value):
+        self._setindicator(1, value)
+
+    @property
+    def bottom_left_dot(self):
+        """The bottom-left dot indicator."""
+        return bool(self._getindicator(2))
+
+    @bottom_left_dot.setter
+    def bottom_left_dot(self, value):
+        self._setindicator(2, value)
 
     @property
     def ampm(self):
         """The AM/PM indicator."""
-        return bool(self._get_buffer(0x04) & 0x10)
+        return bool(self._getindicator(3))
 
     @ampm.setter
     def ampm(self, value):
-        current = self._get_buffer(0x04)
-        if value:
-            self._set_buffer(0x04, current | 0x10)
-        else:
-            self._set_buffer(0x04, current & ~0x10)
-        if self._auto_write:
-            self.show()
+        self._setindicator(3, value)
 
 class Colon():
     """Helper class for controlling the colons. Not intended for direct use."""
