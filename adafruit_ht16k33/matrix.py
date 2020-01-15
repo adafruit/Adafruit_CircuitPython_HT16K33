@@ -52,6 +52,7 @@ class Matrix8x8(HT16K33):
         x, y = key
         self.pixel(x, y, value)
 
+    #pylint: disable=too-many-branches
     def shift(self, x, y, rotate=False):
         """
         Shift pixels by x and y
@@ -88,7 +89,7 @@ class Matrix8x8(HT16K33):
                     self[col, self.rows - 1] = last_pixel
         if self._auto_write:
             self.show()
-
+    #pylint: enable=too-many-branches
 
     def shift_right(self, rotate=False):
         """
