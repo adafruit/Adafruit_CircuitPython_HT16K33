@@ -25,7 +25,6 @@ Matrix Displays
 ================
 
 """
-
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 __version__ = "0.0.0-auto.0"
@@ -33,8 +32,8 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
 class Matrix8x8(HT16K33):
     """A single matrix."""
-    columns = 8
-    rows = 8
+    _columns = 8
+    _rows = 8
 
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
@@ -109,10 +108,17 @@ class Matrix8x8(HT16K33):
         if self._auto_write:
             self.show()
 
+    @property
+    def columns(self):
+        return self._columns
+
+    @property
+    def rows(self):
+        return self._rows
+
 class Matrix16x8(Matrix8x8):
     """The matrix wing."""
-    columns = 16
-    rows = 8
+    _columns = 16
 
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
