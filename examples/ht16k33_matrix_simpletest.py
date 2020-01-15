@@ -73,4 +73,3 @@ while True:
     for frame in range(0, 8):
         matrix.shift_up(True)
         time.sleep(0.05)
-
