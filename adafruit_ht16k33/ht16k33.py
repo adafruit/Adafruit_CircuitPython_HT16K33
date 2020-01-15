@@ -79,7 +79,6 @@ class HT16K33:
         self._blink_rate = rate
         self._write_cmd(_HT16K33_BLINK_CMD |
                         _HT16K33_BLINK_DISPLAYON | rate << 1)
-        return None
 
     @property
     def brightness(self):
@@ -93,7 +92,6 @@ class HT16K33:
         brightness = brightness & 0x0F
         self._brightness = brightness
         self._write_cmd(_HT16K33_CMD_BRIGHTNESS | brightness)
-        return None
 
     @property
     def auto_write(self):

@@ -54,3 +54,6 @@ else:
     display.set_digit_raw(1, 0b0011111100101101)
     display.set_digit_raw(2, (0b00111111, 0b00101101))
     display.set_digit_raw(3, [0b00111111, 0b00101101])
+
+#Show a looping marquee
+display.marquee('Deadbeef 192.168.100.102... ', 0.2)

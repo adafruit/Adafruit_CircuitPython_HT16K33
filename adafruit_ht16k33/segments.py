@@ -25,6 +25,7 @@ Segment Displays
 =================
 """
 
+from time import sleep
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 __version__ = "0.0.0-auto.0"
@@ -233,6 +234,35 @@ class Seg14x4(HT16K33):
         self._set_buffer(index * 2 + 1, bitmask & 0xFF)
 
         if self._auto_write:
+            self.show()
+
+    def marquee(self, text, delay=0.25, loop=True):
+        """
+        Automatically scroll the text at the specified delay between characters
+
+        :param str text: The text to display
+        :param float delay: (optional) The delay in seconds to pause before scrolling
+                            to the next character (default=0.25)
+        :param bool loop: (optional) Whether to endlessly loop the text (default=True)
+
+        """
+        if isinstance(text, str):
+            self.fill(False)
+            if loop:
+                while True:
+                    self._scroll_marquee(text, delay)
+            else:
+                self._scroll_marquee(text, delay)
+
+    def _scroll_marquee(self, text, delay):
+        """Scroll through the text string once using the delay"""
+        char_is_dot = False
+        for character in text:
+            self.print(character)
+            # Add delay if character is not a dot or more than 2 in a row
+            if character != '.' or char_is_dot:
+                sleep(delay)
+            char_is_dot = (character == '.')
             self.show()
 
 class Seg7x4(Seg14x4):
