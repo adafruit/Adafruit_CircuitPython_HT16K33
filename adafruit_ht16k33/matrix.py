@@ -110,10 +110,12 @@ class Matrix8x8(HT16K33):
 
     @property
     def columns(self):
+        """Read-only property for number of columns"""
         return self._columns
 
     @property
     def rows(self):
+        """Read-only property for number of rows"""
         return self._rows
 
 class Matrix16x8(Matrix8x8):
