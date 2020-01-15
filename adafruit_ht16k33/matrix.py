@@ -31,27 +31,6 @@ from adafruit_ht16k33.ht16k33 import HT16K33
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
-class Matrix16x8(HT16K33):
-    """A double matrix or the matrix wing."""
-    def pixel(self, x, y, color=None):
-        """Get or set the color of a given pixel."""
-        if not 0 <= x <= 15:
-            return None
-        if not 0 <= y <= 7:
-            return None
-        if x >= 8:
-            x -= 8
-            y += 8
-        return super()._pixel(y, x, color)
-
-    def __getitem__(self, key):
-        x, y = key
-        return self.pixel(x, y)
-
-    def __setitem__(self, key, value):
-        x, y = key
-        self.pixel(x, y, value)
-
 class Matrix8x8(HT16K33):
     """A single matrix."""
     def pixel(self, x, y, color=None):
@@ -71,7 +50,30 @@ class Matrix8x8(HT16K33):
         x, y = key
         self.pixel(x, y, value)
 
-class Matrix8x8x2(HT16K33):
+class Matrix16x8(Matrix8x8):
+    """The matrix wing."""
+    def pixel(self, x, y, color=None):
+        """Get or set the color of a given pixel."""
+        if not 0 <= x <= 15:
+            return None
+        if not 0 <= y <= 7:
+            return None
+        if x >= 8:
+            x -= 8
+            y += 8
+        return super()._pixel(y, x, color)
+
+class MatrixBackpack16x8(Matrix8x8):
+    """A double matrix backpack."""
+    def pixel(self, x, y, color=None):
+        """Get or set the color of a given pixel."""
+        if not 0 <= x <= 15:
+            return None
+        if not 0 <= y <= 7:
+            return None
+        return super()._pixel(x, y, color)
+
+class Matrix8x8x2(Matrix8x8):
     """A bi-color matrix."""
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
@@ -85,14 +87,6 @@ class Matrix8x8x2(HT16K33):
         else:
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
         return None
-
-    def __getitem__(self, key):
-        x, y = key
-        return self.pixel(x, y)
-
-    def __setitem__(self, key, value):
-        x, y = key
-        self.pixel(x, y, value)
 
     def fill(self, color):
         """Fill the whole display with the given color."""
