@@ -123,6 +123,22 @@ class Matrix8x8(HT16K33):
         """
         self.shift(0, -1, rotate)
 
+    def image(self, img):
+        """Set buffer to value of Python Imaging Library image.  The image should
+        be in 1 bit mode and a size equal to the display size."""
+        imwidth, imheight = img.size
+        if imwidth != self.columns or imheight != self.rows:
+            raise ValueError('Image must be same dimensions as display ({0}x{1}).' \
+                .format(self.columns, self.rows))
+        # Grab all the pixels from the image, faster than getpixel.
+        pixels = img.convert('1').load()
+        # Iterate through the pixels
+        for x in range(self.columns):       # yes this double loop is slow,
+            for y in range(self.rows):  #  but these displays are small!
+                self.pixel(x, y, pixels[(x, y)])
+        if self._auto_write:
+            self.show()
+
     @property
     def columns(self):
         """Read-only property for number of columns"""
@@ -160,6 +176,12 @@ class MatrixBackpack16x8(Matrix16x8):
 
 class Matrix8x8x2(Matrix8x8):
     """A bi-color matrix."""
+
+    LED_OFF = 0
+    LED_RED = 1
+    LED_GREEN = 2
+    LED_YELLOW = 3
+
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
         if not 0 <= x <= 7:
@@ -167,8 +189,8 @@ class Matrix8x8x2(Matrix8x8):
         if not 0 <= y <= 7:
             return None
         if color is not None:
-            super()._pixel(y, x, (color & 0x01))
-            super()._pixel(y + 8, x, (color >> 1) & 0x01)
+            super()._pixel(y, x, (color >> 1) & 0x01)
+            super()._pixel(y + 8, x, (color & 0x01))
         else:
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
         return None
@@ -180,5 +202,29 @@ class Matrix8x8x2(Matrix8x8):
         for i in range(8):
             self._set_buffer(i * 2, fill1)
             self._set_buffer(i * 2 + 1, fill2)
+        if self._auto_write:
+            self.show()
+
+    def image(self, img):
+        """Set buffer to value of Python Imaging Library image.  The image should
+        be a size equal to the display size."""
+        imwidth, imheight = img.size
+        if imwidth != self.columns or imheight != self.rows:
+            raise ValueError('Image must be same dimensions as display ({0}x{1}).' \
+                .format(self.columns, self.rows))
+        # Grab all the pixels from the image, faster than getpixel.
+        pixels = img.convert('RGB').load()
+        # Iterate through the pixels
+        for x in range(self.columns):       # yes this double loop is slow,
+            for y in range(self.rows):  #  but these displays are small!
+                if pixels[(x, y)] == (255, 0, 0):
+                    self.pixel(x, y, self.LED_RED)
+                elif pixels[(x, y)] == (0, 255, 0):
+                    self.pixel(x, y, self.LED_GREEN)
+                elif pixels[(x, y)] == (255, 255, 0):
+                    self.pixel(x, y, self.LED_YELLOW)
+                else:
+                    # Unknown color, default to LED off.
+                    self.pixel(x, y, self.LED_OFF)
         if self._auto_write:
             self.show()
