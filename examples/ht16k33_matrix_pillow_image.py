@@ -9,7 +9,6 @@
 # License: Public Domain
 
 # Import all board pins.
-import time
 import board
 import busio
 from PIL import Image
