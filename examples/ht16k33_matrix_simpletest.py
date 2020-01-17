@@ -40,6 +40,8 @@ matrix[15, 7] = 1
 time.sleep(2)
 
 # Draw a Smiley Face
+matrix.fill(0)
+
 for row in range(2, 6):
     matrix[row, 0] = 1
     matrix[row, 7] = 1
