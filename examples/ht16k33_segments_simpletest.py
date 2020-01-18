@@ -30,6 +30,10 @@ display.fill(0)
 display.print(42)
 time.sleep(2)
 
+# Or, can print a hexadecimal value
+display.print_hex(0xFF23)
+time.sleep(2)
+
 # Or, can set indivdual digits / characters
 # Set the first character to '1':
 display[0] = '1'
