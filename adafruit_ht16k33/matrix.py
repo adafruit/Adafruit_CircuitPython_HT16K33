@@ -59,6 +59,8 @@ class Matrix8x8(HT16K33):
 
         :param rotate: (Optional) Rotate the shifted pixels to the left side (default=False)
         """
+        auto_write = self.auto_write
+        self._auto_write = False
         if x > 0: # Shift Right
             for _ in range(x):
                 for row in range(0, self.rows):
@@ -87,7 +89,8 @@ class Matrix8x8(HT16K33):
                     for row in range(0, self.rows - 1):
                         self[col, row] = self[col, row + 1]
                     self[col, self.rows - 1] = last_pixel
-        if self._auto_write:
+        self._auto_write = auto_write
+        if auto_write:
             self.show()
     #pylint: enable=too-many-branches
 
