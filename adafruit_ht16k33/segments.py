@@ -155,7 +155,7 @@ class Seg14x4(HT16K33):
     #	If True, debugging code will be executed
     debug = False
 
-    def print(self, value, decimal = 0):
+    def print(self, value, decimal=0):
         """Print the value to the display."""
         if isinstance(value, (str)):
             self._text(value)
@@ -226,7 +226,7 @@ class Seg14x4(HT16K33):
 
         Returns: The output text string to be displayed.
     '''
-    def _number(self, number, decimal = 0):
+    def _number(self, number, decimal=0):
         auto_write = self._auto_write
         self._auto_write = False
         s = str(number)
