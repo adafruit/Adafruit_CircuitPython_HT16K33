@@ -27,7 +27,7 @@ Segment Displays
 
 from time import sleep
 #from adafruit_ht16k33.ht16k33 import HT16K33
-from ht16k33.ht16k33_matrix import HT16K33
+from adafruit_ht16k33.matrix import HT16K33
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
@@ -155,12 +155,12 @@ class Seg14x4(HT16K33):
     #	If True, debugging code will be executed
     debug = False
 
-    def print(self, value):
+    def print(self, value, decimal = 0):
         """Print the value to the display."""
         if isinstance(value, (str)):
             self._text(value)
         elif isinstance(value, (int, float)):
-            self._number(value)
+            self._number(value, decimal)
         else:
             raise ValueError('Unsupported display value type: {}'.format(type(value)))
         if self._auto_write:
@@ -229,19 +229,20 @@ class Seg14x4(HT16K33):
     def _number(self, number, decimal = 0):
         auto_write = self._auto_write
         self._auto_write = False
-        s = "{:f}".format(number)
-        places = 0
+        s = str(number)
+        dot = s.find('.')
+        
+        if ((len(s) > 5) or ((len(s) > 4) and (dot < 0))):
+            raise ValueError("Input overflow - {0} is too large for the display!".format(number))
+        
+        if (dot < 0):
+			#	No decimal point (Integer)
+            places = len(s)
+        else:
+            places = len(s[:dot])
 
         if self.debug:
-            print("(1) number = {0}, places = {1}, decimal = {2}, s = '{3}'".format(number, places, decimal, s))
-
-        if (len(s) > 5):
-            dot = s.find('.')
-
-            if (dot > 5):
-                raise ValueError("Input overflow - {0} is too large for the display!".format(number))
-            elif ((dot > 0) and (decimal == 0)):
-                places = dot
+            print("(1) number = {0}, places = {1}, decimal = {2}, dot = {3}, s = '{4}'".format(number, places, decimal, dot, s))
 
         if ((places <= 0) and (decimal > 0)):
             self.fill(False)
@@ -251,7 +252,7 @@ class Seg14x4(HT16K33):
                 places += 1
 
         if self.debug:
-            print("(2) places = {0}, dot = '{1}', decimal = {2}, s = '{3}'".format(places, dot, decimal, s))
+            print("(2) places = {0}, dot = {1}, decimal = {2}, s = '{3}'".format(places, dot, decimal, s))
 
         #	Set decimal places, if number of decimal places is specified (decimal > 0)	
         if ((places > 0) and (decimal > 0) and (dot > 0) and (len(s[places:]) > decimal)):
