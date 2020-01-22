@@ -260,7 +260,7 @@ class Seg14x4(HT16K33):
             txt = stnum[:places]
 
         if self.debug:
-            print("(3) places = {0}, s = '{1}', decimal = {2}, txt = '{3}'".format(places, s, decimal, txt))
+            print("(3) places = {0}, stnum = '{1}', decimal = {2}, txt = '{3}'".format(places, stnum, decimal, txt))
             print()
 
         if len(txt) > 5:
