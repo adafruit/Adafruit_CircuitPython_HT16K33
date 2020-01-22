@@ -26,7 +26,8 @@ Segment Displays
 """
 
 from time import sleep
-from adafruit_ht16k33.ht16k33 import HT16K33
+#from adafruit_ht16k33.ht16k33 import HT16K33
+from ht16k33.ht16k33_matrix import HT16K33
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
@@ -151,6 +152,9 @@ NUMBERS = (
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
+    #	If True, debugging code will be executed
+    debug = False
+
     def print(self, value):
         """Print the value to the display."""
         if isinstance(value, (str)):
@@ -211,20 +215,61 @@ class Seg14x4(HT16K33):
         for character in text:
             self._push(character)
 
-    def _number(self, number):
-        """Display the specified decimal number."""
+    '''
+		Display a floating point or integer number on the Adafruit HT16K33 based displays
+		
+		Param: number - The floating point or integer number to be displayed, which must be
+			in the range 0 (zero) to 9999 for integers and floating point or integer numbers
+			and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
+		Param: decimal - The number of decimal places for a floating point number if decimal
+			is greater than zero, or the input number is an integer if decimal is zero.
+
+        Returns: The output text string to be displayed.
+    '''
+    def _number(self, number, decimal = 0):
         auto_write = self._auto_write
         self._auto_write = False
-        string = "{}".format(number)
-        if len(string) > 4:
-            if string.find('.') > 4:
-                raise ValueError("Overflow")
-        self.fill(False)
-        places = 4
-        if '.' in string:
-            places += 1
-        self._text(string[:places])
+        s = "{:f}".format(number)
+        places = 0
+
+        if self.debug:
+            print("(1) number = {0}, places = {1}, decimal = {2}, s = '{3}'".format(number, places, decimal, s))
+
+        if (len(s) > 5):
+            dot = s.find('.')
+
+            if (dot > 5):
+                raise ValueError("Input overflow - {0} is too large for the display!".format(number))
+            elif ((dot > 0) and (decimal == 0)):
+                places = dot
+
+        if ((places <= 0) and (decimal > 0)):
+            self.fill(False)
+            places = 4
+			
+            if '.' in s:
+                places += 1
+
+        if self.debug:
+            print("(2) places = {0}, dot = '{1}', decimal = {2}, s = '{3}'".format(places, dot, decimal, s))
+
+        #	Set decimal places, if number of decimal places is specified (decimal > 0)	
+        if ((places > 0) and (decimal > 0) and (dot > 0) and (len(s[places:]) > decimal)):
+            txt = s[:dot + decimal + 1]
+        elif (places > 0):
+            txt = s[:places]
+
+        if self.debug:
+            print("(3) places = {0}, s = '{1}', decimal = {2}, txt = '{3}'".format(places, s, decimal, txt))
+            print()
+
+        if (len(txt) > 5):
+            raise ValueError("Output string ('{0}') is too long!".format(txt))
+
+        self._text(txt)
         self._auto_write = auto_write
+        
+        return txt
 
     def set_digit_raw(self, index, bitmask):
         """Set digit at position to raw bitmask value. Position should be a value
