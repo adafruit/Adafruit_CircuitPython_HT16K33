@@ -224,52 +224,51 @@ class Seg14x4(HT16K33):
 		Param: decimal - The number of decimal places for a floating point number if decimal
 			is greater than zero, or the input number is an integer if decimal is zero.
 
-        Returns: The output text string to be displayed.
-    '''
+        Returns: The output text string to be displayed.'''
     def _number(self, number, decimal=0):
         auto_write = self._auto_write
         self._auto_write = False
-        s = str(number)
-        dot = s.find('.')
-        
-        if ((len(s) > 5) or ((len(s) > 4) and (dot < 0))):
+        stnum = str(number)
+        dot = stnum.find('.')
+
+        if ((len(stnum) > 5) or ((len(stnum) > 4) and (dot < 0))):
             raise ValueError("Input overflow - {0} is too large for the display!".format(number))
-        
-        if (dot < 0):
+
+        if dot < 0:
 			#	No decimal point (Integer)
-            places = len(s)
+            places = len(stnum)
         else:
-            places = len(s[:dot])
+            places = len(stnum[:dot])
 
         if self.debug:
-            print("(1) number = {0}, places = {1}, decimal = {2}, dot = {3}, s = '{4}'".format(number, places, decimal, dot, s))
+            print("(1) number = {0}, places = {1}, decimal = {2}, dot = {3}, stnum = '{4}'".format(number, places, decimal, dot, stnum))
 
         if ((places <= 0) and (decimal > 0)):
             self.fill(False)
             places = 4
-			
-            if '.' in s:
+
+            if '.' in stnum:
                 places += 1
 
         if self.debug:
-            print("(2) places = {0}, dot = {1}, decimal = {2}, s = '{3}'".format(places, dot, decimal, s))
+            print("(2) places = {0}, dot = {1}, decimal = {2}, stnum = '{3}'".format(places, dot, decimal, stnum))
 
         #	Set decimal places, if number of decimal places is specified (decimal > 0)	
-        if ((places > 0) and (decimal > 0) and (dot > 0) and (len(s[places:]) > decimal)):
-            txt = s[:dot + decimal + 1]
-        elif (places > 0):
-            txt = s[:places]
+        if ((places > 0) and (decimal > 0) and (dot > 0) and (len(stnum[places:]) > decimal)):
+            txt = stnum[:dot + decimal + 1]
+        elif places > 0:
+            txt = stnum[:places]
 
         if self.debug:
             print("(3) places = {0}, s = '{1}', decimal = {2}, txt = '{3}'".format(places, s, decimal, txt))
             print()
 
-        if (len(txt) > 5):
+        if len(txt) > 5:
             raise ValueError("Output string ('{0}') is too long!".format(txt))
 
         self._text(txt)
         self._auto_write = auto_write
-        
+
         return txt
 
     def set_digit_raw(self, index, bitmask):
