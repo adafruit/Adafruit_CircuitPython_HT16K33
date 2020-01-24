@@ -240,8 +240,8 @@ class Seg14x4(HT16K33):
             bitmask = bitmask[0] << 8 | bitmask[1]
 
         # Set the digit bitmask value at the appropriate position.
-        self._set_buffer(index * 2, (bitmask >> 8) & 0xFF)
-        self._set_buffer(index * 2 + 1, bitmask & 0xFF)
+        self._set_buffer(index * 2, bitmask & 0xFF)
+        self._set_buffer(index * 2 + 1, (bitmask >> 8) & 0xFF)
 
         if self._auto_write:
             self.show()

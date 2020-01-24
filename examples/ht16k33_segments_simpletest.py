@@ -17,9 +17,9 @@ i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the LED segment class.
 # This creates a 7 segment 4 character display:
-display = segments.Seg7x4(i2c)
+#display = segments.Seg7x4(i2c)
 # Or this creates a 14 segment alphanumeric 4 character display:
-#display = segments.Seg14x4(i2c)
+display = segments.Seg14x4(i2c)
 # Finally you can optionally specify a custom I2C address of the HT16k33 like:
 #display = segments.Seg7x4(i2c, address=0x70)
 
@@ -54,10 +54,11 @@ if isinstance(display, segments.Seg7x4):
     display.set_digit_raw(3, 0b01111001)
 else:
     # 14-segment raw digits
-    display.set_digit_raw(0, 0x3F2D)
-    display.set_digit_raw(1, 0b0011111100101101)
-    display.set_digit_raw(2, (0b00111111, 0b00101101))
-    display.set_digit_raw(3, [0b00111111, 0b00101101])
+    display.set_digit_raw(0, 0x2D3F)
+    display.set_digit_raw(1, 0b0010110100111111)
+    display.set_digit_raw(2, (0b00101101, 0b00111111))
+    display.set_digit_raw(3, [0x2D, 0x3F])
+time.sleep(2)
 
 #Show a looping marquee
 display.marquee('Deadbeef 192.168.100.102... ', 0.2)
