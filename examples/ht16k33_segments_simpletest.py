@@ -17,9 +17,9 @@ i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the LED segment class.
 # This creates a 7 segment 4 character display:
-#display = segments.Seg7x4(i2c)
+display = segments.Seg7x4(i2c)
 # Or this creates a 14 segment alphanumeric 4 character display:
-display = segments.Seg14x4(i2c)
+#display = segments.Seg14x4(i2c)
 # Finally you can optionally specify a custom I2C address of the HT16k33 like:
 #display = segments.Seg7x4(i2c, address=0x70)
 
