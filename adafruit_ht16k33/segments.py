@@ -151,12 +151,13 @@ NUMBERS = (
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
-    def print(self, value):
+
+    def print(self, value, decimal=0):
         """Print the value to the display."""
         if isinstance(value, (str)):
             self._text(value)
         elif isinstance(value, (int, float)):
-            self._number(value)
+            self._number(value, decimal)
         else:
             raise ValueError('Unsupported display value type: {}'.format(type(value)))
         if self._auto_write:
@@ -211,20 +212,53 @@ class Seg14x4(HT16K33):
         for character in text:
             self._push(character)
 
-    def _number(self, number):
-        """Display the specified decimal number."""
+    def _number(self, number, decimal=0):
+        '''
+		Display a floating point or integer number on the Adafruit HT16K33 based displays
+
+		Param: number - The floating point or integer number to be displayed, which must be
+			in the range 0 (zero) to 9999 for integers and floating point or integer numbers
+			and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
+		Param: decimal - The number of decimal places for a floating point number if decimal
+			is greater than zero, or the input number is an integer if decimal is zero.
+
+        Returns: The output text string to be displayed.
+        '''
+
         auto_write = self._auto_write
         self._auto_write = False
-        string = "{}".format(number)
-        if len(string) > 4:
-            if string.find('.') > 4:
-                raise ValueError("Overflow")
-        self.fill(False)
-        places = 4
-        if '.' in string:
-            places += 1
-        self._text(string[:places])
+        stnum = str(number)
+        dot = stnum.find('.')
+
+        if ((len(stnum) > 5) or ((len(stnum) > 4) and (dot < 0))):
+            raise ValueError("Input overflow - {0} is too large for the display!".format(number))
+
+        if dot < 0:
+			#	No decimal point (Integer)
+            places = len(stnum)
+        else:
+            places = len(stnum[:dot])
+
+        if places <= 0 and decimal > 0:
+            self.fill(False)
+            places = 4
+
+            if '.' in stnum:
+                places += 1
+
+        #	Set decimal places, if number of decimal places is specified (decimal > 0)
+        if (places > 0 and decimal > 0 and dot > 0 and (len(stnum[places:]) > decimal)):
+            txt = stnum[:dot + decimal + 1]
+        elif places > 0:
+            txt = stnum[:places]
+
+        if len(txt) > 5:
+            raise ValueError("Output string ('{0}') is too long!".format(txt))
+
+        self._text(txt)
         self._auto_write = auto_write
+
+        return txt
 
     def set_digit_raw(self, index, bitmask):
         """Set digit at position to raw bitmask value. Position should be a value
