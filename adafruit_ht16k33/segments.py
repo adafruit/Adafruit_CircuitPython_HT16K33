@@ -26,7 +26,6 @@ Segment Displays
 """
 
 from time import sleep
-#from adafruit_ht16k33.ht16k33 import HT16K33
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 __version__ = "0.0.0-auto.0"
