@@ -166,10 +166,7 @@ class Seg14x4(HT16K33):
     def print_hex(self, value):
         """Print the value as a hexidecimal string to the display."""
         if isinstance(value, int):
-            if 0 <= value <= 0xFFFF:
-                self.print('{0:X}'.format(value))
-            else:
-                raise ValueError('Value out of displayable range: {}'.format(value))
+            self.print('{0:X}'.format(value))
         else:
             self.print(value)
 
