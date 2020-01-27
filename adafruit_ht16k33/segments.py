@@ -214,7 +214,7 @@ class Seg14x4(HT16K33):
             self._push(character)
 
     def _number(self, number, decimal=0):
-    '''
+        '''
 		Display a floating point or integer number on the Adafruit HT16K33 based displays
 		
 		Param: number - The floating point or integer number to be displayed, which must be
@@ -224,7 +224,7 @@ class Seg14x4(HT16K33):
 			is greater than zero, or the input number is an integer if decimal is zero.
 
         Returns: The output text string to be displayed.
-    '''
+        '''
 
         auto_write = self._auto_write
         self._auto_write = False
