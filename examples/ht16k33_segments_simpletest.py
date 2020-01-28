@@ -34,6 +34,12 @@ time.sleep(2)
 display.print_hex(0xFF23)
 time.sleep(2)
 
+# Or, print the time
+display.print("12:30")
+time.sleep(2)
+
+display.colon = False
+
 # Or, can set indivdual digits / characters
 # Set the first character to '1':
 display[0] = '1'

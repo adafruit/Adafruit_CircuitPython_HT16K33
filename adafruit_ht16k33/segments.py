@@ -311,6 +311,11 @@ class Seg7x4(Seg14x4):
        supports displaying a limited set of characters."""
     POSITIONS = (0, 2, 6, 8) #  The positions of characters.
 
+    def __init__(self, i2c, address=0x70, auto_write=True):
+        super().__init__(i2c, address, auto_write)
+        # Use colon for controling two-dots indicator at the center (index 0)
+        self._colon = Colon(self)
+
     def scroll(self, count=1):
         """Scroll the display by specified number of places."""
         if count >= 0:
@@ -371,6 +376,15 @@ class Seg7x4(Seg14x4):
 
         if self._auto_write:
             self.show()
+
+    @property
+    def colon(self):
+        """Simplified colon accessor"""
+        return self._colon[0]
+
+    @colon.setter
+    def colon(self, turn_on):
+        self._colon[0] = turn_on
 
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
