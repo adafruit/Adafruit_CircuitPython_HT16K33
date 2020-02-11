@@ -34,13 +34,13 @@ A =     1
 def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
 	'''
 	Main driver for alphanumeric display animations (WIP!!!)
-		Param: digits - a list of the digits to write to, like [0, 1, 3]. The digits are 
+		Param: digits - a list of the digits to write to, like [0, 1, 3]. The digits are
 			0 to 3 starting at the left most digit. Digits will be written to in sequence.
 		Param: bitmasks - a list of the bitmasks to write, in sequence, to the specified digits.
 		Param: delay - The delay, in seconds (or fractions of), between writing bitmasks to a digit.
 		Param: cycles - The number of cycles (loops) to write an animation.
 
-        Returns: No result
+		Returns: No result
 	'''
 	for cy in range(cycles):
 		for dig in digits:
@@ -95,7 +95,7 @@ while True:
 	sleep(1.5)
 	display.fill(0)
 	sleep(1.5)
-	
+
 	#	Chase and reverse.
 	chase_animation(0.1, 5)
 	sleep(1.5)
