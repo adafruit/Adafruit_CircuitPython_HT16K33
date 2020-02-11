@@ -1,8 +1,8 @@
 """ Test script for display animations on an HT16K33 with alphanumeric display """
 
+from time import sleep
 import board
 import busio
-from time import sleep
 from adafruit_ht16k33 import segments
 
 #   The number of seconds to delay between writing segments
@@ -42,14 +42,22 @@ def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLE
 
         Returns: No result
     '''
-    for cy in range(cycles):
+    cy = 0
+
+    while cy < cycles:
+    # cy in range(cycles):
         for dig in digits:
             for bits in bitmasks:
                 display.set_digit_raw(dig, bits)
                 sleep(delay)
+                
+        cy += 1
 
 def chase_animation(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
-    for cy in range(cycles):
+    cy = 0
+    
+    while cy < cycles:
+    #for cy in range(cycles):
         animate([0, 1, 2, 3], [A, 0], delay)
         animate([3], [B, C, D, 0], delay)
         animate([2, 1, 0], [D, 0], delay)
@@ -63,6 +71,8 @@ def chase_animation(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
         animate([2, 1], [G2, G1, 0], delay)
         animate([0], [H, 0], delay)
         #animate([0], [M, H, 0x0], delay)
+        
+        cy += 1
 
 #   Initialize the I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
