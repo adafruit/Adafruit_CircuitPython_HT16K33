@@ -50,12 +50,12 @@ def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLE
             for bits in bitmasks:
                 display.set_digit_raw(dig, bits)
                 sleep(delay)
-                
+
         cy += 1
 
 def chase_animation(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
     cy = 0
-    
+
     while cy < cycles:
     #for cy in range(cycles):
         animate([0, 1, 2, 3], [A, 0], delay)
@@ -71,7 +71,7 @@ def chase_animation(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
         animate([2, 1], [G2, G1, 0], delay)
         animate([0], [H, 0], delay)
         #animate([0], [M, H, 0x0], delay)
-        
+
         cy += 1
 
 #   Initialize the I2C bus
