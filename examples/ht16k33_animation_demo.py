@@ -4,6 +4,11 @@
     The display must be initialized with auto_write=False.
 """
 
+from time import sleep
+import board
+import busio
+from adafruit_ht16k33.segments import Seg14x4
+
 #
 #   Segment bits on the HT16K33 with alphanumeric display.
 #
@@ -34,11 +39,6 @@ DEFAULT_CYCLES = 5
 
 #   Brightness of the display (0 to 15)
 DEFAULT_DISPLAY_BRIGHTNESS = 2
-
-from time import sleep
-import board
-import busio
-from adafruit_ht16k33.segments import Seg14x4
 
 #   Initialize the I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -307,7 +307,7 @@ try:
         sleep(1.0)
 
 
-        print("Enclosed Spinners")        
+        print("Enclosed Spinners")
         enclosed_spinners(0.1, 20)
         sleep(1.0)
         display.fill(0)
