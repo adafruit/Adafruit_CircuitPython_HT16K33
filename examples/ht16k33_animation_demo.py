@@ -77,7 +77,7 @@ def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, auto_write=True):
 
 def chase_forward_and_reverse(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
     cy = 0
-    
+
     while cy < cycles:
         animate([0, 1, 2, 3], [A, 0], delay)
         animate([3], [B, C, D, 0], delay)
@@ -178,7 +178,7 @@ def spinners(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
         animate([3], [H+M], 0, auto_write)
         display.show()
         sleep(delay)
-        
+
         cy += 1
 
     display.fill(0)
@@ -208,16 +208,16 @@ def enclosed_spinners(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
         animate([3], [A+B+C+D+H+M], 0, auto_write)
         display.show()
         sleep(delay)
-        
+
         cy += 1
 
     display.fill(0)
 
-def count_down(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
+def count_down():
     auto_write = False
     numbers = [ [A+B+C+D+G1+G2+N], [A+B+D+E+G1+G2+N], [B+C+N] ]
     index = 0
-    
+
     display.fill(0)
 
     while index < len(numbers):
@@ -248,7 +248,7 @@ try:
     display.show()
     sleep(1)
 
-    count_down(0.1, 1)
+    count_down()
     sleep(0.2)
 
     text = "Go!!"
@@ -272,13 +272,13 @@ try:
 
         #   Flying
         print("Flying")
-        cy = 0
+        cyc = 0
 
-        while cy < DEFAULT_CYCLES:
+        while cyc < DEFAULT_CYCLES:
             animate([0], [H+J, G1+G2, K+M, G1+G2], DEFAULT_CHAR_DELAY_SEC)
 
-            cy += 1
-        
+            cyc += 1
+
         animate([0], [0])
         sleep(1.0)
         display.fill(0)
@@ -290,7 +290,7 @@ try:
         sleep(1.0)
         display.fill(0)
         sleep(1.0)
-        
+
         #   Testing writing to more than one segment simultaneously
         print("Prelude to Spinners")
         prelude_to_spinners(0.1, 5)
@@ -299,7 +299,7 @@ try:
         display.show()
         sleep(1.0)
 
-        print("Spinners")        
+        print("Spinners")
         spinners(0.1, 20)
         sleep(1.0)
         display.fill(0)
