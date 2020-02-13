@@ -1,113 +1,48 @@
-""" Test script for display animations on an HT16K33 with alphanumeric display """
-
+#!/usr/bin/env python3
+from os import environ, system
+from posixpath import isdir, isfile
 from time import sleep
-import board
-import busio
-from adafruit_ht16k33 import segments
+import subprocess
 
-#   The number of seconds to delay between writing segments
-DEFAULT_CHAR_DELAY_SEC = 0.2
+HOME = environ["HOME"]
+print("HOME = {0}".format(HOME))
 
-#   The number of cycles to go for each animation
-DEFAULT_CYCLES = 1
+FROM_DIR = "{0}/Downloads/OS/Circuitpython/Libraries/bundle/lib".format(HOME)
+TO_DIR = "{0}/Downloads/OS/Circuitpython/Libraries/lib".format(HOME)
+ORIGINAL_DIR = "/media/hybotics/DISPLAYPY/lib/"
 
-#
-#   Segment bits on the HT16K33 with alphanumeric display
-#
-
-N = 16384
-M =  8192
-L =  4096
-K =  2048
-J =  1024
-I =   512
-H =   256
-G2=   128
-G1=    64
-F =    32
-E =    16
-D =     8
-C =     4
-B =     2
-A =     1
-
-def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
-    '''
-    Main driver for alphanumeric display animations (WIP!!!)
-        Param: digits - a list of the digits to write to, like [0, 1, 3]. The digits are
-            0 to 3 starting at the left most digit. Digits will be written to in sequence.
-        Param: bitmasks - a list of the bitmasks to write, in sequence, to the specified digits.
-        Param: delay - The delay, in seconds (or fractions of), between writing bitmasks to a digit.
-        Param: cycles - The number of cycles (loops) to write an animation.
-
-        Returns: No result
-    '''
-    cy = 0
-
-    while cy < cycles:
-    # cy in range(cycles):
-        for dig in digits:
-            for bits in bitmasks:
-                display.set_digit_raw(dig, bits)
-                sleep(delay)
-
-        cy += 1
-
-def chase_animation(delay=DEFAULT_CHAR_DELAY_SEC, cycles=DEFAULT_CYCLES):
-    cy = 0
-
-    while cy < cycles:
-    #for cy in range(cycles):
-        animate([0, 1, 2, 3], [A, 0], delay)
-        animate([3], [B, C, D, 0], delay)
-        animate([2, 1, 0], [D, 0], delay)
-        animate([0], [E, F, H, G2, 0], delay)
-        animate([1, 2], [G1, G2, 0], delay)
-        animate([3], [G1, J, A, 0], delay)
-        animate([2, 1], [A, 0], delay)
-        animate([0], [A, F, E, D, 0], delay)
-        animate([1, 2], [D, 0], delay)
-        animate([3], [D, C, B, J, G1, 0], delay)
-        animate([2, 1], [G2, G1, 0], delay)
-        animate([0], [H, 0], delay)
-        #animate([0], [M, H, 0x0], delay)
-
-        cy += 1
-
-#   Initialize the I2C bus
-i2c = busio.I2C(board.SCL, board.SDA)
-
-#   Initialize the HT16K33 with alphanumeric display featherwing
-display = segments.Seg14x4(i2c)
-
-text = "Init"
-
-display.fill(1)
-sleep(1)
-display.fill(0)
-
-display.print(text)
-sleep(1)
-display.fill(0)
+LIST = subprocess.getoutput("dir {0}".format(ORIGINAL_DIR)).strip()
+print("LIST = '{0}'".format(LIST))
 print()
 
-while True:
-    #   Arrow
-    animate([0, 1, 2], [G1+G2])
-    animate([3], [G1+H+K])
-    sleep(1.5)
-    display.fill(0)
-    sleep(1.5)
+LIST = LIST.split()
+print("LIST = '{0}'".format(LIST))
+print()
 
-    #   Flying
-    animate([0], [H+J, G1+G2, K+M, G1+G2], 0.2, 5)
-    animate([0], [0])
-    sleep(1.5)
-    display.fill(0)
-    sleep(1.5)
+print("FROM_DIR = '{0}'".format(FROM_DIR))
+print("TO_DIR = '{0}'".format(TO_DIR))
+print()
+sleep(5)
 
-    #   Chase and reverse.
-    chase_animation(0.1, 5)
-    sleep(1.5)
-    display.fill(0)
-    sleep(1.5)
+for FILE in LIST:
+    FILE = FILE.strip()
+    print("FILE = '{0}'".format(FILE))
+    FN = ("{0}/{1}").format(FROM_DIR, FILE)
+
+    print("FN = '{0}'".format(FN))
+
+    if (isdir(FN)):
+        print("COPYING DIRECTORY '{0}' to '{1}'".format(FN, TO_DIR))
+        command = "cp -rf {0} {1}".format(FN, TO_DIR)
+        #print("command = '{0}'".format(command))
+        system(command)
+    elif (isfile(FN)):
+        print("COPYING FILE '{0}' to '{1}'".format(FN, TO_DIR))
+        command = "cp {0} {1}".format(FN, TO_DIR)
+        #print("command = '{0}'".format(command))
+        system(command)
+    else:
+      print("File is not a directory or file!")
+
+    print()
+    sleep(1)
