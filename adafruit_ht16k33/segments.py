@@ -265,7 +265,10 @@ class Seg14x4(HT16K33):
         If can be passed as an integer, list, or tuple
         """
         if not 0 <= index <= 3:
-            return
+            raise ValueError('Digit value must be an integer in the range: 0-3')
+
+        if not 0 <= bitmask <= 0xFFFF:
+            raise ValueError('Bitmask value must be an integer in the range: 0-65535')
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = bitmask[0] << 8 | bitmask[1]
