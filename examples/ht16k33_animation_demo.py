@@ -68,7 +68,13 @@ def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, auto_write=True):
         raise ValueError("The delay between frames must be positive!")
     else:
         for dig in digits:
+            if not 0 <= dig <= 3:
+                raise ValueError('Digit value ({0}) must be an integer in the range: 0-3'.format(dig))
+
             for bits in bitmasks:
+                if not 0 <= bits <= 0xFFFF:
+                    raise ValueError('Bitmask ({0}) value must be an integer in the range: 0-65535'.format(bits))
+
                 display.set_digit_raw(dig, bits)
 
                 if auto_write:
