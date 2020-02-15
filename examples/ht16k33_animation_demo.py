@@ -49,13 +49,6 @@ i2c = busio.I2C(board.SCL, board.SDA)
 display = Seg14x4(i2c, auto_write=False)
 display.brightness = DEFAULT_DISPLAY_BRIGHTNESS
 
-def check_animate_values(dig, bits):
-    if not 0 <= dig <= 3:
-        raise ValueError('Digit value must be an integer in the range: 0-3')
-
-    if not 0 <= bits <= 0xFFFF:
-        raise ValueError('Bitmask value must be an integer in the range: 0-65535')
-
 def animate(digits, bitmasks, delay=DEFAULT_CHAR_DELAY_SEC, auto_write=True):
     '''
     Main driver for all alphanumeric display animations (WIP!!!)
