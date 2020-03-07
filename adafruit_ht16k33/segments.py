@@ -268,7 +268,7 @@ class Seg14x4(HT16K33):
             return
 
         if isinstance(bitmask, (tuple, list)):
-            bitmask = bitmask[0] << 8 | bitmask[1]
+            bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
 
         # Set the digit bitmask value at the appropriate position.
         self._set_buffer(index * 2, bitmask & 0xFF)
