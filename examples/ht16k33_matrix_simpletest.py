@@ -19,7 +19,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # This creates a 16x8 matrix:
 matrix = matrix.Matrix16x8(i2c)
 # Or this creates a 16x8 matrix backpack:
-# matrix = matrix.MatrixBackpack16x8(i2c)
+#matrix = matrix.MatrixBackpack16x8(i2c)
 # Or this creates a 8x8 matrix:
 #matrix = matrix.Matrix8x8(i2c)
 # Or this creates a 8x8 bicolor matrix:
