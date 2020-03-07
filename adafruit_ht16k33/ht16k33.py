@@ -90,7 +90,7 @@ class HT16K33:
             raise ValueError('Brightness must be a decimal number in the range: 0.0-1.0')
 
         self._brightness = brightness
-        xbright = int(15 * brightness)
+        xbright = round(15 * brightness)
         xbright = xbright & 0x0F
         self._write_cmd(_HT16K33_CMD_BRIGHTNESS | xbright)
 
