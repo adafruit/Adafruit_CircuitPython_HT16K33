@@ -47,8 +47,9 @@ class HT16K33:
     :param int address: The I2C addess of the HT16K33.
     :param bool auto_write: True if the display should immediately change when
         set. If False, `show` must be called explicitly.
+    :param float brightness: 0.0 - 1.0 default brightness level.
     """
-    def __init__(self, i2c, address=0x70, auto_write=True):
+    def __init__(self, i2c, address=0x70, auto_write=True, brightness=1.0):
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)
         self._buffer = bytearray(17)
@@ -58,7 +59,7 @@ class HT16K33:
         self._blink_rate = None
         self._brightness = None
         self.blink_rate = 0
-        self.brightness = 1.0
+        self.brightness = brightness
 
     def _write_cmd(self, byte):
         self._temp[0] = byte
