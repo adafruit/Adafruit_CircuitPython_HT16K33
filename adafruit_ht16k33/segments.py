@@ -231,7 +231,7 @@ class Seg14x4(HT16K33):
             raise ValueError("Input overflow - {0} is too large for the display!".format(number))
 
         if dot < 0:
-			#	No decimal point (Integer)
+			# No decimal point (Integer)
             places = len(stnum)
         else:
             places = len(stnum[:dot])
@@ -243,7 +243,7 @@ class Seg14x4(HT16K33):
             if '.' in stnum:
                 places += 1
 
-        #	Set decimal places, if number of decimal places is specified (decimal > 0)
+        # Set decimal places, if number of decimal places is specified (decimal > 0)
         if (places > 0 and decimal > 0 and dot > 0 and (len(stnum[places:]) > decimal)):
             txt = stnum[:dot + decimal + 1]
         elif places > 0:
@@ -264,11 +264,14 @@ class Seg14x4(HT16K33):
         bitmask should be 2 bytes such as: 0xFFFF
         If can be passed as an integer, list, or tuple
         """
-        if not 0 <= index <= 3:
-            return
+        if not isinstance(index, int) or not 0 <= index <= 3:
+            raise ValueError('Index value must be an integer in the range: 0-3')
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
+
+        # Use only the valid potion of bitmask
+        bitmask &= 0xFFFF
 
         # Set the digit bitmask value at the appropriate position.
         self._set_buffer(index * 2, bitmask & 0xFF)
@@ -368,8 +371,8 @@ class Seg7x4(Seg14x4):
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most digit on the display.
         """
-        if not 0 <= index <= 3:
-            return
+        if not isinstance(index, int) or not 0 <= index <= 3:
+            raise ValueError('Index value must be an integer in the range: 0-3')
 
         # Set the digit bitmask value at the appropriate position.
         self._set_buffer(self.POSITIONS[index], bitmask & 0xFF)
