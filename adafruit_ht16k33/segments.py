@@ -31,6 +31,7 @@ from adafruit_ht16k33.ht16k33 import HT16K33
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
+# fmt: off
 CHARS = (
     0b00000000, 0b00000000, #
     0b01000000, 0b00000110, # !
@@ -129,25 +130,27 @@ CHARS = (
     0b00000101, 0b00100000, # ~
     0b00111111, 0b11111111,
 )
+# fmt: on
 NUMBERS = (
-    0x3F, # 0
-    0x06, # 1
-    0x5B, # 2
-    0x4F, # 3
-    0x66, # 4
-    0x6D, # 5
-    0x7D, # 6
-    0x07, # 7
-    0x7F, # 8
-    0x6F, # 9
-    0x77, # a
-    0x7C, # b
-    0x39, # C
-    0x5E, # d
-    0x79, # E
-    0x71, # F
-    0x40, # -
+    0x3F,  # 0
+    0x06,  # 1
+    0x5B,  # 2
+    0x4F,  # 3
+    0x66,  # 4
+    0x6D,  # 5
+    0x7D,  # 6
+    0x07,  # 7
+    0x7F,  # 8
+    0x6F,  # 9
+    0x77,  # a
+    0x7C,  # b
+    0x39,  # C
+    0x5E,  # d
+    0x79,  # E
+    0x71,  # F
+    0x40,  # -
 )
+
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
@@ -159,14 +162,14 @@ class Seg14x4(HT16K33):
         elif isinstance(value, (int, float)):
             self._number(value, decimal)
         else:
-            raise ValueError('Unsupported display value type: {}'.format(type(value)))
+            raise ValueError("Unsupported display value type: {}".format(type(value)))
         if self._auto_write:
             self.show()
 
     def print_hex(self, value):
         """Print the value as a hexidecimal string to the display."""
         if isinstance(value, int):
-            self.print('{0:X}'.format(value))
+            self.print("{0:X}".format(value))
         else:
             self.print(value)
 
@@ -190,8 +193,10 @@ class Seg14x4(HT16K33):
             return
         if not 32 <= ord(char) <= 127:
             return
-        if char == '.':
-            self._set_buffer(index * 2 + 1, self._get_buffer(index * 2 + 1) | 0b01000000)
+        if char == ".":
+            self._set_buffer(
+                index * 2 + 1, self._get_buffer(index * 2 + 1) | 0b01000000
+            )
             return
         character = ord(char) * 2 - 64
         self._set_buffer(index * 2, CHARS[1 + character])
@@ -199,9 +204,9 @@ class Seg14x4(HT16K33):
 
     def _push(self, char):
         """Scroll the display and add a character at the end."""
-        if char != '.' or self._get_buffer(7) & 0b01000000:
+        if char != "." or self._get_buffer(7) & 0b01000000:
             self.scroll()
-            self._put(' ', 3)
+            self._put(" ", 3)
         self._put(char, 3)
 
     def _text(self, text):
@@ -210,7 +215,7 @@ class Seg14x4(HT16K33):
             self._push(character)
 
     def _number(self, number, decimal=0):
-        '''
+        """
 		Display a floating point or integer number on the Adafruit HT16K33 based displays
 
 		Param: number - The floating point or integer number to be displayed, which must be
@@ -220,32 +225,34 @@ class Seg14x4(HT16K33):
 			is greater than zero, or the input number is an integer if decimal is zero.
 
         Returns: The output text string to be displayed.
-        '''
+        """
 
         auto_write = self._auto_write
         self._auto_write = False
         stnum = str(number)
-        dot = stnum.find('.')
+        dot = stnum.find(".")
 
-        if ((len(stnum) > 5) or ((len(stnum) > 4) and (dot < 0))):
-            raise ValueError("Input overflow - {0} is too large for the display!".format(number))
+        if (len(stnum) > 5) or ((len(stnum) > 4) and (dot < 0)):
+            raise ValueError(
+                "Input overflow - {0} is too large for the display!".format(number)
+            )
 
         if dot < 0:
-			# No decimal point (Integer)
+            # No decimal point (Integer)
             places = len(stnum)
         else:
             places = len(stnum[:dot])
 
-        if places <= 0 and decimal > 0:
+        if places <= 0 < decimal:
             self.fill(False)
             places = 4
 
-            if '.' in stnum:
+            if "." in stnum:
                 places += 1
 
         # Set decimal places, if number of decimal places is specified (decimal > 0)
-        if (places > 0 and decimal > 0 and dot > 0 and (len(stnum[places:]) > decimal)):
-            txt = stnum[:dot + decimal + 1]
+        if places > 0 < decimal < len(stnum[places:]) and dot > 0:
+            txt = stnum[: dot + decimal + 1]
         elif places > 0:
             txt = stnum[:places]
 
@@ -265,7 +272,7 @@ class Seg14x4(HT16K33):
         If can be passed as an integer, list, or tuple
         """
         if not isinstance(index, int) or not 0 <= index <= 3:
-            raise ValueError('Index value must be an integer in the range: 0-3')
+            raise ValueError("Index value must be an integer in the range: 0-3")
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
@@ -304,15 +311,17 @@ class Seg14x4(HT16K33):
         for character in text:
             self.print(character)
             # Add delay if character is not a dot or more than 2 in a row
-            if character != '.' or char_is_dot:
+            if character != "." or char_is_dot:
                 sleep(delay)
-            char_is_dot = (character == '.')
+            char_is_dot = character == "."
             self.show()
+
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
        supports displaying a limited set of characters."""
-    POSITIONS = (0, 2, 6, 8) #  The positions of characters.
+
+    POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
     def __init__(self, i2c, address=0x70, auto_write=True):
         super().__init__(i2c, address, auto_write)
@@ -326,17 +335,18 @@ class Seg7x4(Seg14x4):
         else:
             offset = 1
         for i in range(3):
-            self._set_buffer(self.POSITIONS[i + offset],
-                             self._get_buffer(self.POSITIONS[i + count]))
+            self._set_buffer(
+                self.POSITIONS[i + offset], self._get_buffer(self.POSITIONS[i + count])
+            )
 
     def _push(self, char):
         """Scroll the display and add a character at the end."""
-        if char in ':;':
+        if char in ":;":
             self._put(char)
         else:
-            if char != '.' or self._get_buffer(self.POSITIONS[3]) & 0b10000000:
+            if char != "." or self._get_buffer(self.POSITIONS[3]) & 0b10000000:
                 self.scroll()
-                self._put(' ', 3)
+                self._put(" ", 3)
             self._put(char, 3)
 
     def _put(self, char, index=0):
@@ -345,22 +355,22 @@ class Seg7x4(Seg14x4):
             return
         char = char.lower()
         index = self.POSITIONS[index]
-        if char == '.':
+        if char == ".":
             self._set_buffer(index, self._get_buffer(index) | 0b10000000)
             return
-        if char in 'abcdef':
+        if char in "abcdef":
             character = ord(char) - 97 + 10
-        elif char == '-':
+        elif char == "-":
             character = 16
-        elif char in '0123456789':
+        elif char in "0123456789":
             character = ord(char) - 48
-        elif char == ' ':
+        elif char == " ":
             self._set_buffer(index, 0x00)
             return
-        elif char == ':':
+        elif char == ":":
             self._set_buffer(4, 0x02)
             return
-        elif char == ';':
+        elif char == ";":
             self._set_buffer(4, 0x00)
             return
         else:
@@ -372,7 +382,7 @@ class Seg7x4(Seg14x4):
         of 0 to 3 with 0 being the left most digit on the display.
         """
         if not isinstance(index, int) or not 0 <= index <= 3:
-            raise ValueError('Index value must be an integer in the range: 0-3')
+            raise ValueError("Index value must be an integer in the range: 0-3")
 
         # Set the digit bitmask value at the appropriate position.
         self._set_buffer(self.POSITIONS[index], bitmask & 0xFF)
@@ -389,9 +399,11 @@ class Seg7x4(Seg14x4):
     def colon(self, turn_on):
         self._colon[0] = turn_on
 
+
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
        supports displaying a limited set of characters."""
+
     def __init__(self, i2c, address=0x70, auto_write=True):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
@@ -449,9 +461,11 @@ class BigSeg7x4(Seg7x4):
     def ampm(self, value):
         self._setindicator(3, value)
 
-class Colon():
+
+class Colon:
     """Helper class for controlling the colons. Not intended for direct use."""
-    #pylint: disable=protected-access
+
+    # pylint: disable=protected-access
 
     MASKS = (0x02, 0x0C)
 
