@@ -30,8 +30,10 @@ from adafruit_ht16k33.ht16k33 import HT16K33
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
+
 class Matrix8x8(HT16K33):
     """A single matrix."""
+
     _columns = 8
     _rows = 8
 
@@ -52,7 +54,7 @@ class Matrix8x8(HT16K33):
         x, y = key
         self.pixel(x, y, value)
 
-    #pylint: disable=too-many-branches
+    # pylint: disable=too-many-branches
     def shift(self, x, y, rotate=False):
         """
         Shift pixels by x and y
@@ -61,28 +63,28 @@ class Matrix8x8(HT16K33):
         """
         auto_write = self.auto_write
         self._auto_write = False
-        if x > 0: # Shift Right
+        if x > 0:  # Shift Right
             for _ in range(x):
                 for row in range(0, self.rows):
                     last_pixel = self[self.columns - 1, row] if rotate else 0
                     for col in range(self.columns - 1, 0, -1):
                         self[col, row] = self[col - 1, row]
                     self[0, row] = last_pixel
-        elif x < 0: # Shift Left
+        elif x < 0:  # Shift Left
             for _ in range(-x):
                 for row in range(0, self.rows):
                     last_pixel = self[0, row] if rotate else 0
                     for col in range(0, self.columns - 1):
                         self[col, row] = self[col + 1, row]
                     self[self.columns - 1, row] = last_pixel
-        if y > 0: # Shift Up
+        if y > 0:  # Shift Up
             for _ in range(y):
                 for col in range(0, self.columns):
                     last_pixel = self[col, self.rows - 1] if rotate else 0
                     for row in range(self.rows - 1, 0, -1):
                         self[col, row] = self[col, row - 1]
                     self[col, 0] = last_pixel
-        elif y < 0: # Shift Down
+        elif y < 0:  # Shift Down
             for _ in range(-y):
                 for col in range(0, self.columns):
                     last_pixel = self[col, 0] if rotate else 0
@@ -92,7 +94,8 @@ class Matrix8x8(HT16K33):
         self._auto_write = auto_write
         if auto_write:
             self.show()
-    #pylint: enable=too-many-branches
+
+    # pylint: enable=too-many-branches
 
     def shift_right(self, rotate=False):
         """
@@ -131,12 +134,15 @@ class Matrix8x8(HT16K33):
         be in 1 bit mode and a size equal to the display size."""
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
-            raise ValueError('Image must be same dimensions as display ({0}x{1}).' \
-                .format(self.columns, self.rows))
+            raise ValueError(
+                "Image must be same dimensions as display ({0}x{1}).".format(
+                    self.columns, self.rows
+                )
+            )
         # Grab all the pixels from the image, faster than getpixel.
-        pixels = img.convert('1').load()
+        pixels = img.convert("1").load()
         # Iterate through the pixels
-        for x in range(self.columns):       # yes this double loop is slow,
+        for x in range(self.columns):  # yes this double loop is slow,
             for y in range(self.rows):  #  but these displays are small!
                 self.pixel(x, y, pixels[(x, y)])
         if self._auto_write:
@@ -152,8 +158,10 @@ class Matrix8x8(HT16K33):
         """Read-only property for number of rows"""
         return self._rows
 
+
 class Matrix16x8(Matrix8x8):
     """The matrix wing."""
+
     _columns = 16
 
     def pixel(self, x, y, color=None):
@@ -165,10 +173,12 @@ class Matrix16x8(Matrix8x8):
         if x >= 8:
             x -= 8
             y += 8
-        return super()._pixel(y, x, color)
+        return super()._pixel(y, x, color)  # pylint: disable=arguments-out-of-order
+
 
 class MatrixBackpack16x8(Matrix16x8):
     """A double matrix backpack."""
+
     def pixel(self, x, y, color=None):
         """Get or set the color of a given pixel."""
         if not 0 <= x <= 15:
@@ -176,6 +186,7 @@ class MatrixBackpack16x8(Matrix16x8):
         if not 0 <= y <= 7:
             return None
         return super()._pixel(x, y, color)
+
 
 class Matrix8x8x2(Matrix8x8):
     """A bi-color matrix."""
@@ -200,8 +211,8 @@ class Matrix8x8x2(Matrix8x8):
 
     def fill(self, color):
         """Fill the whole display with the given color."""
-        fill1 = 0xff if color & 0x01 else 0x00
-        fill2 = 0xff if color & 0x02 else 0x00
+        fill1 = 0xFF if color & 0x01 else 0x00
+        fill2 = 0xFF if color & 0x02 else 0x00
         for i in range(8):
             self._set_buffer(i * 2, fill1)
             self._set_buffer(i * 2 + 1, fill2)
@@ -213,12 +224,15 @@ class Matrix8x8x2(Matrix8x8):
         be a size equal to the display size."""
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
-            raise ValueError('Image must be same dimensions as display ({0}x{1}).' \
-                .format(self.columns, self.rows))
+            raise ValueError(
+                "Image must be same dimensions as display ({0}x{1}).".format(
+                    self.columns, self.rows
+                )
+            )
         # Grab all the pixels from the image, faster than getpixel.
-        pixels = img.convert('RGB').load()
+        pixels = img.convert("RGB").load()
         # Iterate through the pixels
-        for x in range(self.columns):       # yes this double loop is slow,
+        for x in range(self.columns):  # yes this double loop is slow,
             for y in range(self.rows):  #  but these displays are small!
                 if pixels[(x, y)] == (255, 0, 0):
                     self.pixel(x, y, self.LED_RED)

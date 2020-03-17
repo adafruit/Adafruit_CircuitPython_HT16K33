@@ -42,4 +42,4 @@ while True:
                 bit = 1 << y & bite
                 # if bit > 0 then set the pixel brightness
                 if bit:
-                    matrix[16-x, y+1] = 1
+                    matrix[16 - x, y + 1] = 1

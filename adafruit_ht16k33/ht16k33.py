@@ -49,6 +49,7 @@ class HT16K33:
         set. If False, `show` must be called explicitly.
     :param float brightness: 0.0 - 1.0 default brightness level.
     """
+
     def __init__(self, i2c, address=0x70, auto_write=True, brightness=1.0):
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)
@@ -74,11 +75,10 @@ class HT16K33:
     @blink_rate.setter
     def blink_rate(self, rate=None):
         if not 0 <= rate <= 3:
-            raise ValueError('Blink rate must be an integer in the range: 0-3')
+            raise ValueError("Blink rate must be an integer in the range: 0-3")
         rate = rate & 0x03
         self._blink_rate = rate
-        self._write_cmd(_HT16K33_BLINK_CMD |
-                        _HT16K33_BLINK_DISPLAYON | rate << 1)
+        self._write_cmd(_HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1)
 
     @property
     def brightness(self):
@@ -88,7 +88,9 @@ class HT16K33:
     @brightness.setter
     def brightness(self, brightness):
         if not 0.0 <= brightness <= 1.0:
-            raise ValueError('Brightness must be a decimal number in the range: 0.0-1.0')
+            raise ValueError(
+                "Brightness must be a decimal number in the range: 0.0-1.0"
+            )
 
         self._brightness = brightness
         xbright = round(15 * brightness)
@@ -105,7 +107,7 @@ class HT16K33:
         if isinstance(auto_write, bool):
             self._auto_write = auto_write
         else:
-            raise ValueError('Must set to either True or False.')
+            raise ValueError("Must set to either True or False.")
 
     def show(self):
         """Refresh the display and show the changes."""
@@ -116,14 +118,14 @@ class HT16K33:
 
     def fill(self, color):
         """Fill the whole display with the given color."""
-        fill = 0xff if color else 0x00
+        fill = 0xFF if color else 0x00
         for i in range(16):
-            self._buffer[i+1] = fill
+            self._buffer[i + 1] = fill
         if self._auto_write:
             self.show()
 
     def _pixel(self, x, y, color=None):
-        addr = 2*y + x // 8
+        addr = 2 * y + x // 8
         mask = 1 << x % 8
         if color is None:
             return bool(self._buffer[addr + 1] & mask)
@@ -138,7 +140,7 @@ class HT16K33:
         return None
 
     def _set_buffer(self, i, value):
-        self._buffer[i+1] = value  # Offset by 1 to move past register address.
+        self._buffer[i + 1] = value  # Offset by 1 to move past register address.
 
     def _get_buffer(self, i):
-        return self._buffer[i+1]   # Offset by 1 to move past register address.
+        return self._buffer[i + 1]  # Offset by 1 to move past register address.
