@@ -243,7 +243,7 @@ class Seg14x4(HT16K33):
         else:
             places = len(stnum[:dot])
 
-        if places <= 0 and decimal > 0:
+        if places <= 0 < decimal:
             self.fill(False)
             places = 4
 
@@ -251,7 +251,7 @@ class Seg14x4(HT16K33):
                 places += 1
 
         # Set decimal places, if number of decimal places is specified (decimal > 0)
-        if places > 0 and decimal > 0 and dot > 0 and (len(stnum[places:]) > decimal):
+        if places > 0 < decimal < len(stnum[places:]) and dot > 0:
             txt = stnum[: dot + decimal + 1]
         elif places > 0:
             txt = stnum[:places]
