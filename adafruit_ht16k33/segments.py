@@ -373,6 +373,12 @@ class Seg7x4(Seg14x4):
         elif char == ";":
             self._set_buffer(4, 0x00)
             return
+        elif char in "lL":
+            self._set_buffer(index, 0b00111000)
+            return
+        elif char in "oO":
+            self._set_buffer(index, 0b00111111)
+            return
         else:
             return
         self._set_buffer(index, NUMBERS[character])
