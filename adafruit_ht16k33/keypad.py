@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2020 LewsTherinTelamon for Adafruit Industries
+# Copyright (c) 2020 LewsTherinTelamon
 # Assistance provided by @madbodger and @KevinThomas on Discord
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,17 +31,17 @@ bytearray
 """
 from adafruit_ht16k33.ht16k33 import HT16K33
 
-KEYPAD_REGISTER = bytearray([0x40])
-READ_BUFFER = bytearray(6)
-
 
 class Keypad(HT16K33):
     """ 1-39 button keypad matrix """
 
     def read_buttons(self):
         """ Read buttons using i2c_device from HT16K33 and return bytearray"""
+        self.KEYPAD_REGISTER = bytearray([0x40])
+        self.READ_BUFFER = bytearray(6)
+
         with self.i2c_device:
 
-            self.i2c_device.write_then_readinto(KEYPAD_REGISTER, READ_BUFFER)
+            self.i2c_device.write_then_readinto(self.KEYPAD_REGISTER, self.READ_BUFFER)
 
-        return READ_BUFFER
+        return self.READ_BUFFER
