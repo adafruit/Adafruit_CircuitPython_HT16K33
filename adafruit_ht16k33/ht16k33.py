@@ -1,6 +1,7 @@
 # The MIT License (MIT)
 #
 # Copyright (c) 2016 Radomir Dopieralski & Tony DiCola for Adafruit Industries
+# Copyright (c) 2020 LewsTherinTelamon
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -147,9 +148,7 @@ class HT16K33:
     def _get_buffer(self, i):
         return self._buffer[i + 1]  # Offset by 1 to move past register address.
 
-    def _read_buttons(self):
+    def read_buttons(self):
         with self.i2c_device:
-
             self.i2c_device.write_then_readinto(_HT16K33_KEYPAD_READ, self._read_buffer)
-
         return self._read_buffer
