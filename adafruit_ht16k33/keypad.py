@@ -22,7 +22,6 @@
 # SOFTWARE.
 
 
-
 """
 
 
@@ -38,15 +37,13 @@ from adafruit_ht16k33.ht16k33 import HT16K33
 
 KEYPAD_REGISTER = bytearray([0x40])
 READ_BUFFER = bytearray(6)
+
+
 class keypad(HT16K33):
-    
-      
     def read_buttons(self):
-        
 
         with self.i2c_device:
-            
-            self.i2c_device.write_then_readinto(KEYPAD_REGISTER,READ_BUFFER)
-        
-        return READ_BUFFER
 
+            self.i2c_device.write_then_readinto(KEYPAD_REGISTER, READ_BUFFER)
+
+        return READ_BUFFER
