@@ -40,6 +40,7 @@ _HT16K33_CMD_BRIGHTNESS = const(0xE0)
 _HT16K33_OSCILATOR_ON = const(0x21)
 _HT16K33_KEYPAD_READ = const(0x40)
 
+
 class HT16K33:
     """
     The base class for all displays. Contains common methods.
@@ -145,10 +146,10 @@ class HT16K33:
 
     def _get_buffer(self, i):
         return self._buffer[i + 1]  # Offset by 1 to move past register address.
-    
+
     def _read_buttons(self):
         with self.i2c_device:
-                    
+
             self.i2c_device.write_then_readinto(_HT16K33_KEYPAD_READ, self._read_buffer)
-    
+
         return self._read_buffer
