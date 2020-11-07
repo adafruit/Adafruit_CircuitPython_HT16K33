@@ -23,14 +23,10 @@
 
 
 """
-
-
-
 keypad Class for HT16K33. This simple class contains one function that 
 uses the parent class "HT16K33"'s i2c_device to write a control code to 
 the HT16K33 and then reads back 6 bytes into a bytearray and returns the 
 bytearray
-
 
 """
 from adafruit_ht16k33.ht16k33 import HT16K33
@@ -39,9 +35,10 @@ KEYPAD_REGISTER = bytearray([0x40])
 READ_BUFFER = bytearray(6)
 
 
-class keypad(HT16K33):
+class Keypad(HT16K33):
+    """ 1-39 button keypad matrix """
     def read_buttons(self):
-
+        """ Read buttons using i2c_device from HT16K33 and return bytearray"""
         with self.i2c_device:
 
             self.i2c_device.write_then_readinto(KEYPAD_REGISTER, READ_BUFFER)
