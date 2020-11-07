@@ -149,6 +149,7 @@ class HT16K33:
         return self._buffer[i + 1]  # Offset by 1 to move past register address.
 
     def read_buttons(self):
+        """ Read buttons on KS0-KS2 and return bytearray of 6 bytes."""
         self._temp[0] = _HT16K33_KEYPAD_READ
         with self.i2c_device:
             self.i2c_device.write_then_readinto(self._temp, self._read_buffer)
