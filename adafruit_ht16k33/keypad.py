@@ -37,11 +37,10 @@ class Keypad(HT16K33):
 
     def read_buttons(self):
         """ Read buttons using i2c_device from HT16K33 and return bytearray"""
-        self.keypad_register = bytearray([0x40])
-        self.read_buffer = bytearray(6)
+        
 
         with self.i2c_device:
 
-            self.i2c_device.write_then_readinto(self.keypad_register, self.read_buffer)
+            self.i2c_device.write_then_readinto(self._HT16K33_KEYPAD_READ, self._read_buffer)
 
-        return self.read_buffer
+        return self._read_buffer
