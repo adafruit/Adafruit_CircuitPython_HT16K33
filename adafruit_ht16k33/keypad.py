@@ -37,6 +37,7 @@ READ_BUFFER = bytearray(6)
 
 class Keypad(HT16K33):
     """ 1-39 button keypad matrix """
+
     def read_buttons(self):
         """ Read buttons using i2c_device from HT16K33 and return bytearray"""
         with self.i2c_device:
