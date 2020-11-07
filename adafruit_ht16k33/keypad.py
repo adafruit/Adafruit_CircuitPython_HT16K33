@@ -25,7 +25,7 @@
 """
 keypad Class for HT16K33. This simple class contains one function that
 uses the parent class "HT16K33"'s i2c_device to write a control code to
-the HT16K33 and then reads back 6 bytes into a bytearray and returns the 
+the HT16K33 and then reads back 6 bytes into a bytearray and returns the
 bytearray
 
 """
