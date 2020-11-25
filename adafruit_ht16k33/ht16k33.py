@@ -43,6 +43,7 @@ _HT16K33_KEYPAD_READ = const(0x40)
 _HT16K33_INT_FLAG_ACT_HI = const(0xA3)
 _HT16K33_READ_INT_FLAG = const(0x60)
 
+
 class HT16K33:
     """
     The base class for all displays. Contains common methods.
@@ -150,12 +151,13 @@ class HT16K33:
 
     def _get_buffer(self, i):
         return self._buffer[i + 1]  # Offset by 1 to move past register address.
+
     def read_int_flag(self):
         """Read INT flag on K13 and return bytearray of 1 byte"""
         self._temp[0] = _HT16K33_READ_INT_FLAG
         with self.i2c_device:
             self.i2c_device.write_then_readinto(self._temp, self._int_buffer)
-        return self._int_buffer
+        return bool(self._int_buffer[0])
 
     def read_buttons(self):
         """ Read buttons on KS0-KS2 and return bytearray of 6 bytes."""
