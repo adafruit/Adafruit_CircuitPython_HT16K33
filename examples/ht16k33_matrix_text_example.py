@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # Basic example of using FrameBuffer to create and scroll text on the matrix.
 
 # Requires: adafruit_framebuf

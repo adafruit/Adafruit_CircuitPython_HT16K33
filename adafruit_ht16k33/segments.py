@@ -1,24 +1,7 @@
-# The MIT License (MIT)
+# SPDX-FileCopyrightText: Radomir Dopieralski 2016  for Adafruit Industries
+# SPDX-FileCopyrightText: Tony DiCola 2016 for Adafruit Industries
 #
-# Copyright (c) 2016 Radomir Dopieralski & Tony DiCola for Adafruit Industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# SPDX-License-Identifier: MIT
 
 """
 Segment Displays
@@ -216,13 +199,13 @@ class Seg14x4(HT16K33):
 
     def _number(self, number, decimal=0):
         """
-		Display a floating point or integer number on the Adafruit HT16K33 based displays
+        Display a floating point or integer number on the Adafruit HT16K33 based displays
 
-		Param: number - The floating point or integer number to be displayed, which must be
-			in the range 0 (zero) to 9999 for integers and floating point or integer numbers
-			and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
-		Param: decimal - The number of decimal places for a floating point number if decimal
-			is greater than zero, or the input number is an integer if decimal is zero.
+        Param: number - The floating point or integer number to be displayed, which must be
+                in the range 0 (zero) to 9999 for integers and floating point or integer numbers
+                and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
+        Param: decimal - The number of decimal places for a floating point number if decimal
+                is greater than zero, or the input number is an integer if decimal is zero.
 
         Returns: The output text string to be displayed.
         """
@@ -319,7 +302,7 @@ class Seg14x4(HT16K33):
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-       supports displaying a limited set of characters."""
+    supports displaying a limited set of characters."""
 
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
@@ -402,7 +385,7 @@ class Seg7x4(Seg14x4):
 
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-       supports displaying a limited set of characters."""
+    supports displaying a limited set of characters."""
 
     def __init__(self, i2c, address=0x70, auto_write=True):
         super().__init__(i2c, address, auto_write)
@@ -411,12 +394,12 @@ class BigSeg7x4(Seg7x4):
         self.colon = Colon(self, 2)
 
     def _setindicator(self, index, value):
-        """ Set side LEDs (dots)
-            Index is as follow :
-            * 0 : two dots at the center
-            * 1 : top-left dot
-            * 2 : bottom-left dot
-            * 3 : right dot (also ampm indicator)
+        """Set side LEDs (dots)
+        Index is as follow :
+        * 0 : two dots at the center
+        * 1 : top-left dot
+        * 2 : bottom-left dot
+        * 3 : right dot (also ampm indicator)
         """
         bitmask = 1 << (index + 1)
         current = self._get_buffer(0x04)
@@ -428,8 +411,8 @@ class BigSeg7x4(Seg7x4):
             self.show()
 
     def _getindicator(self, index):
-        """ Get side LEDs (dots)
-            See setindicator() for indexes
+        """Get side LEDs (dots)
+        See setindicator() for indexes
         """
         bitmask = 1 << (index + 1)
         return self._get_buffer(0x04) & bitmask
