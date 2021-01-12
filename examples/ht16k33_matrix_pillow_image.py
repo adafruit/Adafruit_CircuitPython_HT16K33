@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # Basic example of drawing an image
 # This example and library is meant to work with Adafruit CircuitPython API.
 #
