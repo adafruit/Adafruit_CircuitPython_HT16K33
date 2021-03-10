@@ -124,10 +124,13 @@ class Matrix8x8(HT16K33):
             )
         # Grab all the pixels from the image, faster than getpixel.
         pixels = img.convert("1").load()
+        auto_write = self.auto_write
+        self._auto_write = False
         # Iterate through the pixels
         for x in range(self.columns):  # yes this double loop is slow,
             for y in range(self.rows):  #  but these displays are small!
                 self.pixel(x, y, pixels[(x, y)])
+        self._auto_write = auto_write
         if self._auto_write:
             self.show()
 
@@ -214,6 +217,8 @@ class Matrix8x8x2(Matrix8x8):
             )
         # Grab all the pixels from the image, faster than getpixel.
         pixels = img.convert("RGB").load()
+        auto_write = self.auto_write
+        self._auto_write = False
         # Iterate through the pixels
         for x in range(self.columns):  # yes this double loop is slow,
             for y in range(self.rows):  #  but these displays are small!
@@ -226,5 +231,6 @@ class Matrix8x8x2(Matrix8x8):
                 else:
                     # Unknown color, default to LED off.
                     self.pixel(x, y, self.LED_OFF)
+        self._auto_write = auto_write
         if self._auto_write:
             self.show()
