@@ -9,3 +9,6 @@
 
 .. automodule:: adafruit_ht16k33.segments
    :members:
+
+.. automodule:: adafruit_ht16k33.animations
+   :members:
