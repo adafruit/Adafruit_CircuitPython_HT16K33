@@ -137,6 +137,10 @@ NUMBERS = (
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
+    def __init__(self, i2c, address=0x70, auto_write=True, chars=4):
+        super().__init__(i2c, address, auto_write)
+        # Character count, used below
+        self._char_count = chars
 
     def print(self, value, decimal=0):
         """Print the value to the display."""
@@ -167,12 +171,12 @@ class Seg14x4(HT16K33):
             offset = 0
         else:
             offset = 2
-        for i in range(6):
+        for i in range((self._char_count -  1) * 2):
             self._set_buffer(i + offset, self._get_buffer(i + 2 * count))
 
     def _put(self, char, index=0):
         """Put a character at the specified place."""
-        if not 0 <= index <= 3:
+        if not 0 <= index <= (self._char_count -1):
             return
         if not 32 <= ord(char) <= 127:
             return
@@ -187,10 +191,27 @@ class Seg14x4(HT16K33):
 
     def _push(self, char):
         """Scroll the display and add a character at the end."""
-        if char != "." or self._get_buffer(7) & 0b01000000:
+        if char != "." or self._get_buffer(self._char_count * 2 - 1) & 0b01000000:
             self.scroll()
-            self._put(" ", 3)
-        self._put(char, 3)
+            self._put(" ", self._char_count - 1)
+        self._put(char, self._char_count - 1)
+
+    def _push_raw(self, bitmask):
+        """push a raw value, to pair with _get_raw"""
+        self.scroll()
+        index = self._char_count - 1
+        self._set_buffer(index * 2, bitmask & 0xFF)
+        self._set_buffer(index * 2 + 1, (bitmask >> 8) & 0xFF)
+
+    def _get_raw(self, index):
+        """get the raw value of a digit, to pair with _push_raw"""
+        if not 0 <= index <= 7:
+            return
+        return (self._get_buffer(index * 2 + 1) << 8) + self._get_buffer(index * 2)
+
+    def _check_last_decimal(self):
+        """Check if the last character has the period set or not, as printing a period will only scroll the display if the decimal point is already set."""
+        return self._get_buffer(self._char_count * 2 - 1) & 0b01000000
 
     def _text(self, text):
         """Display the specified text."""
@@ -249,13 +270,13 @@ class Seg14x4(HT16K33):
 
     def set_digit_raw(self, index, bitmask):
         """Set digit at position to raw bitmask value. Position should be a value
-        of 0 to 3 with 0 being the left most character on the display.
+        of 0 to 7 with 0 being the left most character on the display.
 
         bitmask should be 2 bytes such as: 0xFFFF
         If can be passed as an integer, list, or tuple
         """
-        if not isinstance(index, int) or not 0 <= index <= 3:
-            raise ValueError("Index value must be an integer in the range: 0-3")
+        if not isinstance(index, int) or not 0 <= index <= 7:
+            raise ValueError("Index value must be an integer in the range: 0-7")
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
