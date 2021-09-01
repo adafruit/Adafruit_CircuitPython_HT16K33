@@ -137,6 +137,7 @@ NUMBERS = (
 
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
+
     def __init__(self, i2c, address=0x70, auto_write=True, chars=4):
         super().__init__(i2c, address, auto_write)
         # Character count, used below
@@ -171,12 +172,12 @@ class Seg14x4(HT16K33):
             offset = 0
         else:
             offset = 2
-        for i in range((self._char_count -  1) * 2):
+        for i in range((self._char_count - 1) * 2):
             self._set_buffer(i + offset, self._get_buffer(i + 2 * count))
 
     def _put(self, char, index=0):
         """Put a character at the specified place."""
-        if not 0 <= index <= (self._char_count -1):
+        if not 0 <= index <= (self._char_count - 1):
             return
         if not 32 <= ord(char) <= 127:
             return
@@ -196,21 +197,26 @@ class Seg14x4(HT16K33):
             self._put(" ", self._char_count - 1)
         self._put(char, self._char_count - 1)
 
-    def _push_raw(self, bitmask):
-        """push a raw value, to pair with _get_raw"""
+    def print_raw(self, bitmask):
+        """print a raw value to the right side of the display, to pair with get_raw"""
         self.scroll()
         index = self._char_count - 1
         self._set_buffer(index * 2, bitmask & 0xFF)
         self._set_buffer(index * 2 + 1, (bitmask >> 8) & 0xFF)
 
-    def _get_raw(self, index):
-        """get the raw value of a digit, to pair with _push_raw"""
-        if not 0 <= index <= 7:
-            return
+    def get_raw(self, index):
+        """get the raw value of a digit, to pair with print_raw"""
+        if not isinstance(index, int) or not 0 <= index <= 7:
+            raise ValueError("Index value must be an integer in the range: 0-7")
         return (self._get_buffer(index * 2 + 1) << 8) + self._get_buffer(index * 2)
 
-    def _check_last_decimal(self):
-        """Check if the last character has the period set or not, as printing a period will only scroll the display if the decimal point is already set."""
+    def is_last_decimal_set(self):
+        """
+        Check in with the last character to see if the decimal is set or not.
+        Printing a period will only scroll the display if the decimal point is already set.
+
+        Returns: The status of the bit in question.
+        """
         return self._get_buffer(self._char_count * 2 - 1) & 0b01000000
 
     def _text(self, text):
