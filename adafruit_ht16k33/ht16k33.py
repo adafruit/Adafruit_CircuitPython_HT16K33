@@ -14,8 +14,8 @@
 from adafruit_bus_device import i2c_device
 from micropython import const
 from busio import I2C
+
 try:
-    from _typing import ReadableBuffer
     from typing import Optional
 except ImportError:
     pass
@@ -39,7 +39,13 @@ class HT16K33:
     :param float brightness: 0.0 - 1.0 default brightness level.
     """
 
-    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True, brightness: float = 1.0):
+    def __init__(
+        self,
+        i2c: I2C,
+        address: int = 0x70,
+        auto_write: bool = True,
+        brightness: float = 1.0,
+    ):
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)
         self._buffer = bytearray(17)
@@ -51,7 +57,7 @@ class HT16K33:
         self.blink_rate = 0
         self.brightness = brightness
 
-    def _write_cmd(self, byte: '_typing.ReadableBuffer'):
+    def _write_cmd(self, byte: "_typing.ReadableBuffer"):
         self._temp[0] = byte
         with self.i2c_device:
             self.i2c_device.write(self._temp)

@@ -9,9 +9,9 @@ Matrix Displays
 
 """
 from adafruit_ht16k33.ht16k33 import HT16K33
+
 try:
     from typing import Optional
-    from PIL import Image
 except ImportError:
     pass
 
@@ -210,7 +210,7 @@ class Matrix8x8x2(Matrix8x8):
         if self._auto_write:
             self.show()
 
-    def image(self, img: 'Image'):
+    def image(self, img: "PIL.Image"):
         """Set buffer to value of Python Imaging Library image.  The image should
         be a size equal to the display size."""
         imwidth, imheight = img.size
