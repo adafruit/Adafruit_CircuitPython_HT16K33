@@ -9,11 +9,11 @@ Segment Displays
 """
 
 from time import sleep
-from busio import I2C
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
     from typing import Union, List, Tuple
+    from busio import I2C
 except ImportError:
     pass
 
