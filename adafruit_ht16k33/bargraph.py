@@ -12,6 +12,11 @@
 
 from adafruit_ht16k33.ht16k33 import HT16K33
 
+try:
+    from typing import Optional
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
@@ -24,14 +29,14 @@ class Bicolor24(HT16K33):
     LED_GREEN = 2
     LED_YELLOW = 3
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> Optional[bool]:
         # map to HT16K33 row (x) and column (y), see schematic
         x = key % 4 + 4 * (key // 12)
         y = key // 4 - 3 * (key // 12)
         # construct the color value and return it
         return self._pixel(x, y) | self._pixel(x + 8, y) << 1
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: int, value: bool):
         # map to HT16K33 row (x) and column (y), see schematic
         x = key % 4 + 4 * (key // 12)
         y = key // 4 - 3 * (key // 12)
@@ -40,7 +45,7 @@ class Bicolor24(HT16K33):
         # conditionally turn on green LED
         self._pixel(x + 8, y, value >> 1)
 
-    def fill(self, color):
+    def fill(self, color: bool):
         """Fill the whole display with the given color."""
         what_it_was = self.auto_write
         self.auto_write = False
