@@ -57,7 +57,7 @@ class HT16K33:
         self.blink_rate = 0
         self.brightness = brightness
 
-    def _write_cmd(self, byte: "_typing.ReadableBuffer"):
+    def _write_cmd(self, byte: bytearray):
         self._temp[0] = byte
         with self.i2c_device:
             self.i2c_device.write(self._temp)
