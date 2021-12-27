@@ -1,24 +1,7 @@
-# The MIT License (MIT)
+# SPDX-FileCopyrightText: Radomir Dopieralski 2016  for Adafruit Industries
+# SPDX-FileCopyrightText: Tony DiCola 2016 for Adafruit Industries
 #
-# Copyright (c) 2016 Radomir Dopieralski & Tony DiCola for Adafruit Industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# SPDX-License-Identifier: MIT
 
 """
 Segment Displays
@@ -27,6 +10,12 @@ Segment Displays
 
 from time import sleep
 from adafruit_ht16k33.ht16k33 import HT16K33
+
+try:
+    from typing import Union, List, Tuple
+    from busio import I2C
+except ImportError:
+    pass
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
@@ -155,7 +144,7 @@ NUMBERS = (
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
 
-    def print(self, value, decimal=0):
+    def print(self, value: Union[str, int, float], decimal: int = 0):
         """Print the value to the display."""
         if isinstance(value, (str)):
             self._text(value)
@@ -166,19 +155,19 @@ class Seg14x4(HT16K33):
         if self._auto_write:
             self.show()
 
-    def print_hex(self, value):
+    def print_hex(self, value: int):
         """Print the value as a hexidecimal string to the display."""
         if isinstance(value, int):
             self.print("{0:X}".format(value))
         else:
             self.print(value)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: Union[str, int, float]):
         self._put(value, key)
         if self._auto_write:
             self.show()
 
-    def scroll(self, count=1):
+    def scroll(self, count: int = 1):
         """Scroll the display by specified number of places."""
         if count >= 0:
             offset = 0
@@ -187,7 +176,7 @@ class Seg14x4(HT16K33):
         for i in range(6):
             self._set_buffer(i + offset, self._get_buffer(i + 2 * count))
 
-    def _put(self, char, index=0):
+    def _put(self, char: str, index: int = 0):
         """Put a character at the specified place."""
         if not 0 <= index <= 3:
             return
@@ -202,27 +191,27 @@ class Seg14x4(HT16K33):
         self._set_buffer(index * 2, CHARS[1 + character])
         self._set_buffer(index * 2 + 1, CHARS[character])
 
-    def _push(self, char):
+    def _push(self, char: str):
         """Scroll the display and add a character at the end."""
         if char != "." or self._get_buffer(7) & 0b01000000:
             self.scroll()
             self._put(" ", 3)
         self._put(char, 3)
 
-    def _text(self, text):
+    def _text(self, text: str):
         """Display the specified text."""
         for character in text:
             self._push(character)
 
-    def _number(self, number, decimal=0):
+    def _number(self, number: Union[int, float], decimal: int = 0):
         """
-		Display a floating point or integer number on the Adafruit HT16K33 based displays
+        Display a floating point or integer number on the Adafruit HT16K33 based displays
 
-		Param: number - The floating point or integer number to be displayed, which must be
-			in the range 0 (zero) to 9999 for integers and floating point or integer numbers
-			and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
-		Param: decimal - The number of decimal places for a floating point number if decimal
-			is greater than zero, or the input number is an integer if decimal is zero.
+        Param: number - The floating point or integer number to be displayed, which must be
+                in the range 0 (zero) to 9999 for integers and floating point or integer numbers
+                and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
+        Param: decimal - The number of decimal places for a floating point number if decimal
+                is greater than zero, or the input number is an integer if decimal is zero.
 
         Returns: The output text string to be displayed.
         """
@@ -264,12 +253,12 @@ class Seg14x4(HT16K33):
 
         return txt
 
-    def set_digit_raw(self, index, bitmask):
+    def set_digit_raw(self, index: int, bitmask: Union[int, List, Tuple]):
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most character on the display.
 
         bitmask should be 2 bytes such as: 0xFFFF
-        If can be passed as an integer, list, or tuple
+        It can be passed as an integer, list, or tuple
         """
         if not isinstance(index, int) or not 0 <= index <= 3:
             raise ValueError("Index value must be an integer in the range: 0-3")
@@ -287,7 +276,7 @@ class Seg14x4(HT16K33):
         if self._auto_write:
             self.show()
 
-    def marquee(self, text, delay=0.25, loop=True):
+    def marquee(self, text: str, delay: float = 0.25, loop: bool = True):
         """
         Automatically scroll the text at the specified delay between characters
 
@@ -305,7 +294,7 @@ class Seg14x4(HT16K33):
             else:
                 self._scroll_marquee(text, delay)
 
-    def _scroll_marquee(self, text, delay):
+    def _scroll_marquee(self, text: str, delay: float):
         """Scroll through the text string once using the delay"""
         char_is_dot = False
         for character in text:
@@ -319,16 +308,16 @@ class Seg14x4(HT16K33):
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-       supports displaying a limited set of characters."""
+    supports displaying a limited set of characters."""
 
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
-    def __init__(self, i2c, address=0x70, auto_write=True):
+    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
         self._colon = Colon(self)
 
-    def scroll(self, count=1):
+    def scroll(self, count: int = 1):
         """Scroll the display by specified number of places."""
         if count >= 0:
             offset = 0
@@ -339,7 +328,7 @@ class Seg7x4(Seg14x4):
                 self.POSITIONS[i + offset], self._get_buffer(self.POSITIONS[i + count])
             )
 
-    def _push(self, char):
+    def _push(self, char: str):
         """Scroll the display and add a character at the end."""
         if char in ":;":
             self._put(char)
@@ -349,7 +338,7 @@ class Seg7x4(Seg14x4):
                 self._put(" ", 3)
             self._put(char, 3)
 
-    def _put(self, char, index=0):
+    def _put(self, char: str, index: int = 0):
         """Put a character at the specified place."""
         if not 0 <= index <= 3:
             return
@@ -383,7 +372,7 @@ class Seg7x4(Seg14x4):
             return
         self._set_buffer(index, NUMBERS[character])
 
-    def set_digit_raw(self, index, bitmask):
+    def set_digit_raw(self, index: int, bitmask: int):
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most digit on the display.
         """
@@ -402,27 +391,27 @@ class Seg7x4(Seg14x4):
         return self._colon[0]
 
     @colon.setter
-    def colon(self, turn_on):
+    def colon(self, turn_on: bool):
         self._colon[0] = turn_on
 
 
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-       supports displaying a limited set of characters."""
+    supports displaying a limited set of characters."""
 
-    def __init__(self, i2c, address=0x70, auto_write=True):
+    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
         # or the two-dots indicators at the left (index 1)
         self.colon = Colon(self, 2)
 
-    def _setindicator(self, index, value):
-        """ Set side LEDs (dots)
-            Index is as follow :
-            * 0 : two dots at the center
-            * 1 : top-left dot
-            * 2 : bottom-left dot
-            * 3 : right dot (also ampm indicator)
+    def _setindicator(self, index: int, value: bool):
+        """Set side LEDs (dots)
+        Index is as follow :
+        * 0 : two dots at the center
+        * 1 : top-left dot
+        * 2 : bottom-left dot
+        * 3 : right dot (also ampm indicator)
         """
         bitmask = 1 << (index + 1)
         current = self._get_buffer(0x04)
@@ -433,9 +422,9 @@ class BigSeg7x4(Seg7x4):
         if self._auto_write:
             self.show()
 
-    def _getindicator(self, index):
-        """ Get side LEDs (dots)
-            See setindicator() for indexes
+    def _getindicator(self, index: int):
+        """Get side LEDs (dots)
+        See setindicator() for indexes
         """
         bitmask = 1 << (index + 1)
         return self._get_buffer(0x04) & bitmask
@@ -446,7 +435,7 @@ class BigSeg7x4(Seg7x4):
         return bool(self._getindicator(1))
 
     @top_left_dot.setter
-    def top_left_dot(self, value):
+    def top_left_dot(self, value: bool):
         self._setindicator(1, value)
 
     @property
@@ -455,7 +444,7 @@ class BigSeg7x4(Seg7x4):
         return bool(self._getindicator(2))
 
     @bottom_left_dot.setter
-    def bottom_left_dot(self, value):
+    def bottom_left_dot(self, value: bool):
         self._setindicator(2, value)
 
     @property
@@ -464,7 +453,7 @@ class BigSeg7x4(Seg7x4):
         return bool(self._getindicator(3))
 
     @ampm.setter
-    def ampm(self, value):
+    def ampm(self, value: bool):
         self._setindicator(3, value)
 
 
@@ -475,11 +464,11 @@ class Colon:
 
     MASKS = (0x02, 0x0C)
 
-    def __init__(self, disp, num_of_colons=1):
+    def __init__(self, disp: Seg7x4, num_of_colons: int = 1):
         self._disp = disp
         self._num_of_colons = num_of_colons
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: int, value: bool):
         if key > self._num_of_colons - 1:
             raise ValueError("Trying to set a non-existent colon.")
         current = self._disp._get_buffer(0x04)
@@ -490,7 +479,7 @@ class Colon:
         if self._disp.auto_write:
             self._disp.show()
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> bool:
         if key > self._num_of_colons - 1:
             raise ValueError("Trying to access a non-existent colon.")
         return bool(self._disp._get_buffer(0x04) & self.MASKS[key])

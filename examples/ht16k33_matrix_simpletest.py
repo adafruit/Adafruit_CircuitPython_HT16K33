@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # Basic example of clearing and drawing a pixel on a LED matrix display.
 # This example and library is meant to work with Adafruit CircuitPython API.
 # Author: Tony DiCola
