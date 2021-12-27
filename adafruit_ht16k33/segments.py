@@ -340,6 +340,7 @@ class Seg7x4(Seg14x4):
 
     def _put(self, char: str, index: int = 0):
         """Put a character at the specified place."""
+        # pylint: disable=too-many-return-statements
         if not 0 <= index <= 3:
             return
         char = char.lower()
