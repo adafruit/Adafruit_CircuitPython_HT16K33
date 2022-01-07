@@ -47,6 +47,10 @@ class Bicolor24(HT16K33):
 
     def fill(self, color: bool) -> None:
         """Fill the whole display with the given color.
+        
+        :param bool color: Whether to fill the display
+        """
+
         what_it_was = self.auto_write
         self.auto_write = False
         for i in range(24):

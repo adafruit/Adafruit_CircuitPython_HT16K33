@@ -27,7 +27,14 @@ class Matrix8x8(HT16K33):
     _rows = 8
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        """Get or set the color of a given pixel."""
+        """Get or set the color of a given pixel.
+        
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If `color` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
         if not 0 <= x <= 7:
             return None
         if not 0 <= y <= 7:
@@ -48,7 +55,9 @@ class Matrix8x8(HT16K33):
         """
         Shift pixels by x and y
 
-        :param rotate: (Optional) Rotate the shifted pixels to the left side (default=False)
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool rotate: (Optional) Rotate the shifted pixels to the left side (default=False)
         """
         auto_write = self.auto_write
         self._auto_write = False
@@ -120,7 +129,11 @@ class Matrix8x8(HT16K33):
 
     def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
-        be in 1 bit mode and a size equal to the display size."""
+        be in 1 bit mode and a size equal to the display size.
+        
+        :param Image img: The image to show
+        """
+
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
             raise ValueError(
@@ -157,7 +170,15 @@ class Matrix16x8(Matrix8x8):
     _columns = 16
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        """Get or set the color of a given pixel."""
+        """Get or set the color of a given pixel.
+        
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If `color` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
+
         if not 0 <= x <= 15:
             return None
         if not 0 <= y <= 7:
@@ -172,7 +193,15 @@ class MatrixBackpack16x8(Matrix16x8):
     """A double matrix backpack."""
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        """Get or set the color of a given pixel."""
+        """Get or set the color of a given pixel.
+        
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If `color` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
+
         if not 0 <= x <= 15:
             return None
         if not 0 <= y <= 7:
@@ -189,7 +218,14 @@ class Matrix8x8x2(Matrix8x8):
     LED_YELLOW = 3
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        """Get or set the color of a given pixel."""
+        """Get or set the color of a given pixel.
+        
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If `color` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
         if not 0 <= x <= 7:
             return None
         if not 0 <= y <= 7:
@@ -202,7 +238,11 @@ class Matrix8x8x2(Matrix8x8):
         return None
 
     def fill(self, color: bool) -> None:
-        """Fill the whole display with the given color."""
+        """Fill the whole display with the given color.
+        
+        :param bool color: Whether to fill the display
+        """
+
         fill1 = 0xFF if color & 0x01 else 0x00
         fill2 = 0xFF if color & 0x02 else 0x00
         for i in range(8):
@@ -213,7 +253,11 @@ class Matrix8x8x2(Matrix8x8):
 
     def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
-        be a size equal to the display size."""
+        be a size equal to the display size.
+        
+        :param Image img: The image to show
+        """
+        
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
             raise ValueError(

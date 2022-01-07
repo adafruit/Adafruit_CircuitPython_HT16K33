@@ -145,7 +145,15 @@ class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
 
     def print(self, value: Union[str, int, float], decimal: int = 0) -> None:
-        """Print the value to the display."""
+        """Print the value to the display.
+        
+        :param value: The value to print
+        :type value: str, int, or float
+        :param int decimal: The number of decimal places for a floating point
+            number if decimal is greater than zero, or the input number is an
+            integer if decimal is zero.
+        """
+
         if isinstance(value, (str)):
             self._text(value)
         elif isinstance(value, (int, float)):
@@ -156,7 +164,11 @@ class Seg14x4(HT16K33):
             self.show()
 
     def print_hex(self, value: int) -> None:
-        """Print the value as a hexidecimal string to the display."""
+        """Print the value as a hexidecimal string to the display.
+        
+        :param int value: The number to print
+        """
+
         if isinstance(value, int):
             self.print("{0:X}".format(value))
         else:
@@ -168,7 +180,11 @@ class Seg14x4(HT16K33):
             self.show()
 
     def scroll(self, count: int = 1) -> None:
-        """Scroll the display by specified number of places."""
+        """Scroll the display by specified number of places.
+        
+        :param int count: The number of places to scroll
+        """
+
         if count >= 0:
             offset = 0
         else:
@@ -257,8 +273,9 @@ class Seg14x4(HT16K33):
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most character on the display.
 
-        bitmask should be 2 bytes such as: 0xFFFF
-        It can be passed as an integer, list, or tuple
+        :param int index: The index of the display to set
+        :param bitmask: A 2 byte number corresponding to the segments to set
+        :type bitmask: int, or a list/tuple of bool
         """
         if not isinstance(index, int) or not 0 <= index <= 3:
             raise ValueError("Index value must be an integer in the range: 0-3")
@@ -308,7 +325,13 @@ class Seg14x4(HT16K33):
 
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-    supports displaying a limited set of characters."""
+    supports displaying a limited set of characters.
+    
+    :param I2C i2c: The I2C bus object
+    :param int address: The I2C address for the display
+    :param bool auto_write: True if the display should immediately change when set. If False,
+        `show` must be called explicitly.
+    """
 
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
@@ -318,7 +341,11 @@ class Seg7x4(Seg14x4):
         self._colon = Colon(self)
 
     def scroll(self, count: int = 1) -> None:
-        """Scroll the display by specified number of places."""
+        """Scroll the display by specified number of places.
+        
+        :param int count: The number of places to scroll
+        """
+
         if count >= 0:
             offset = 0
         else:
@@ -376,7 +403,12 @@ class Seg7x4(Seg14x4):
     def set_digit_raw(self, index: int, bitmask: int) -> None:
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most digit on the display.
+        
+        :param int index: The index of the display to set
+        :param bitmask: A 2 byte number corresponding to the segments to set
+        :type bitmask: int, or a list/tuple of bool
         """
+
         if not isinstance(index, int) or not 0 <= index <= 3:
             raise ValueError("Index value must be an integer in the range: 0-3")
 
@@ -398,7 +430,13 @@ class Seg7x4(Seg14x4):
 
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-    supports displaying a limited set of characters."""
+    supports displaying a limited set of characters.
+    
+    :param I2C i2c: The I2C bus object
+    :param int address: The I2C address for the display
+    :param bool auto_write: True if the display should immediately change when set. If False,
+        `show` must be called explicitly.
+    """
 
     def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True) -> None:
         super().__init__(i2c, address, auto_write)
