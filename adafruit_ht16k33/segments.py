@@ -146,7 +146,7 @@ class Seg14x4(HT16K33):
 
     def print(self, value: Union[str, int, float], decimal: int = 0) -> None:
         """Print the value to the display.
-        
+
         :param value: The value to print
         :type value: str, int, or float
         :param int decimal: The number of decimal places for a floating point
@@ -165,7 +165,7 @@ class Seg14x4(HT16K33):
 
     def print_hex(self, value: int) -> None:
         """Print the value as a hexidecimal string to the display.
-        
+
         :param int value: The number to print
         """
 
@@ -181,7 +181,7 @@ class Seg14x4(HT16K33):
 
     def scroll(self, count: int = 1) -> None:
         """Scroll the display by specified number of places.
-        
+
         :param int count: The number of places to scroll
         """
 
@@ -326,7 +326,7 @@ class Seg14x4(HT16K33):
 class Seg7x4(Seg14x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
     supports displaying a limited set of characters.
-    
+
     :param I2C i2c: The I2C bus object
     :param int address: The I2C address for the display
     :param bool auto_write: True if the display should immediately change when set. If False,
@@ -342,7 +342,7 @@ class Seg7x4(Seg14x4):
 
     def scroll(self, count: int = 1) -> None:
         """Scroll the display by specified number of places.
-        
+
         :param int count: The number of places to scroll
         """
 
@@ -403,7 +403,7 @@ class Seg7x4(Seg14x4):
     def set_digit_raw(self, index: int, bitmask: int) -> None:
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most digit on the display.
-        
+
         :param int index: The index of the display to set
         :param bitmask: A 2 byte number corresponding to the segments to set
         :type bitmask: int, or a list/tuple of bool
@@ -431,7 +431,7 @@ class Seg7x4(Seg14x4):
 class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
     supports displaying a limited set of characters.
-    
+
     :param I2C i2c: The I2C bus object
     :param int address: The I2C address for the display
     :param bool auto_write: True if the display should immediately change when set. If False,

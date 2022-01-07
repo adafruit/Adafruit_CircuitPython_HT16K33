@@ -114,10 +114,10 @@ class HT16K33:
 
     def fill(self, color: bool) -> None:
         """Fill the whole display with the given color.
-        
+
         :param bool color: Whether to fill the display
         """
-        
+
         fill = 0xFF if color else 0x00
         for i in range(16):
             self._buffer[i + 1] = fill

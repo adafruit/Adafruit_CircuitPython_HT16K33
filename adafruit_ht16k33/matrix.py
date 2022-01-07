@@ -28,7 +28,7 @@ class Matrix8x8(HT16K33):
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
-        
+
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
@@ -130,7 +130,7 @@ class Matrix8x8(HT16K33):
     def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
         be in 1 bit mode and a size equal to the display size.
-        
+
         :param Image img: The image to show
         """
 
@@ -171,7 +171,7 @@ class Matrix16x8(Matrix8x8):
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
-        
+
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
@@ -194,7 +194,7 @@ class MatrixBackpack16x8(Matrix16x8):
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
-        
+
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
@@ -219,7 +219,7 @@ class Matrix8x8x2(Matrix8x8):
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
-        
+
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
@@ -239,7 +239,7 @@ class Matrix8x8x2(Matrix8x8):
 
     def fill(self, color: bool) -> None:
         """Fill the whole display with the given color.
-        
+
         :param bool color: Whether to fill the display
         """
 
@@ -254,10 +254,10 @@ class Matrix8x8x2(Matrix8x8):
     def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
         be a size equal to the display size.
-        
+
         :param Image img: The image to show
         """
-        
+
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
             raise ValueError(
