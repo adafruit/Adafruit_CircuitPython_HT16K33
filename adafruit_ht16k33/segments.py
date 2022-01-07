@@ -341,6 +341,7 @@ class Seg7x4(Seg14x4):
 
     def _put(self, char: str, index: int = 0):
         """Put a character at the specified place."""
+        # pylint: disable=too-many-return-statements
         if not 0 <= index <= 3:
             return
         if self._chardict and char in self._chardict:
@@ -365,6 +366,12 @@ class Seg7x4(Seg14x4):
             return
         elif char == ";":
             self._set_buffer(4, 0x00)
+            return
+        elif char in "lL":
+            self._set_buffer(index, 0b00111000)
+            return
+        elif char in "oO":
+            self._set_buffer(index, 0b00111111)
             return
         else:
             return
