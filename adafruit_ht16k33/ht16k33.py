@@ -45,7 +45,7 @@ class HT16K33:
         address: int = 0x70,
         auto_write: bool = True,
         brightness: float = 1.0,
-    ):
+    ) -> None:
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self._temp = bytearray(1)
         self._buffer = bytearray(17)
@@ -57,18 +57,18 @@ class HT16K33:
         self.blink_rate = 0
         self.brightness = brightness
 
-    def _write_cmd(self, byte: bytearray):
+    def _write_cmd(self, byte: bytearray) -> None:
         self._temp[0] = byte
         with self.i2c_device:
             self.i2c_device.write(self._temp)
 
     @property
-    def blink_rate(self):
+    def blink_rate(self) -> int:
         """The blink rate. Range 0-3."""
         return self._blink_rate
 
     @blink_rate.setter
-    def blink_rate(self, rate: int = None):
+    def blink_rate(self, rate: Optional[int] = None) -> None:
         if not 0 <= rate <= 3:
             raise ValueError("Blink rate must be an integer in the range: 0-3")
         rate = rate & 0x03
@@ -76,12 +76,12 @@ class HT16K33:
         self._write_cmd(_HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1)
 
     @property
-    def brightness(self):
+    def brightness(self) -> float:
         """The brightness. Range 0.0-1.0"""
         return self._brightness
 
     @brightness.setter
-    def brightness(self, brightness: float):
+    def brightness(self, brightness: float) -> None:
         if not 0.0 <= brightness <= 1.0:
             raise ValueError(
                 "Brightness must be a decimal number in the range: 0.0-1.0"
@@ -93,25 +93,25 @@ class HT16K33:
         self._write_cmd(_HT16K33_CMD_BRIGHTNESS | xbright)
 
     @property
-    def auto_write(self):
+    def auto_write(self) -> bool:
         """Auto write updates to the display."""
         return self._auto_write
 
     @auto_write.setter
-    def auto_write(self, auto_write: bool):
+    def auto_write(self, auto_write: bool) -> None:
         if isinstance(auto_write, bool):
             self._auto_write = auto_write
         else:
             raise ValueError("Must set to either True or False.")
 
-    def show(self):
+    def show(self) -> None:
         """Refresh the display and show the changes."""
         with self.i2c_device:
             # Byte 0 is 0x00, address of LED data register. The remaining 16
             # bytes are the display register data to set.
             self.i2c_device.write(self._buffer)
 
-    def fill(self, color: bool):
+    def fill(self, color: bool) -> None:
         """Fill the whole display with the given color."""
         fill = 0xFF if color else 0x00
         for i in range(16):
@@ -134,7 +134,7 @@ class HT16K33:
             self.show()
         return None
 
-    def _set_buffer(self, i: int, value: bool):
+    def _set_buffer(self, i: int, value: bool) -> None:
         self._buffer[i + 1] = value  # Offset by 1 to move past register address.
 
     def _get_buffer(self, i: int) -> bool:
