@@ -350,11 +350,11 @@ class Seg7x4(Seg14x4):
         # pylint: disable=too-many-return-statements
         if not 0 <= index <= 3:
             return
+        index = self.POSITIONS[index]
         if self._chardict and char in self._chardict:
             self._set_buffer(index, self._chardict[char])
             return
         char = char.lower()
-        index = self.POSITIONS[index]
         if char == ".":
             self._set_buffer(index, self._get_buffer(index) | 0b10000000)
             return
