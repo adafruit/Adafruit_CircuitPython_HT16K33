@@ -312,7 +312,13 @@ class Seg7x4(Seg14x4):
 
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
-    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True, char_dict: Optional[Dict[str, int]] = None):
+    def __init__(
+        self,
+        i2c: I2C,
+        address: int = 0x70,
+        auto_write: bool = True,
+        char_dict: Optional[Dict[str, int]] = None,
+    ):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
         self._colon = Colon(self)
@@ -404,7 +410,13 @@ class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
     supports displaying a limited set of characters."""
 
-    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True, char_dict: Optional[Dict[str, int]] = None):
+    def __init__(
+        self,
+        i2c: I2C,
+        address: int = 0x70,
+        auto_write: bool = True,
+        char_dict: Optional[Dict[str, int]] = None,
+    ):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
         # or the two-dots indicators at the left (index 1)
