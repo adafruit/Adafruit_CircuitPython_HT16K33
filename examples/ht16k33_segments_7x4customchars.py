@@ -30,7 +30,7 @@ custom_chars["g"] = 0b01101111
 
 # Create the I2C interface.
 i2c = busio.I2C(board.SCL, board.SDA)
-display = segments.Seg7x4(i2c, char_dict=)
+display = segments.Seg7x4(i2c, char_dict=custom_chars)
 
 # Clear the display.
 display.fill(0)
