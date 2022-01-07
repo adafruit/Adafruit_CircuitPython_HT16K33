@@ -12,7 +12,7 @@ from time import sleep
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
-    from typing import Union, List, Tuple
+    from typing import Union, List, Tuple, Optional, Dict
     from busio import I2C
 except ImportError:
     pass
@@ -312,10 +312,11 @@ class Seg7x4(Seg14x4):
 
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
-    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True):
+    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True, char_dict: Optional[Dict[str, int]] = None):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
         self._colon = Colon(self)
+        self._chardict = char_dict
 
     def scroll(self, count: int = 1):
         """Scroll the display by specified number of places."""
@@ -341,6 +342,9 @@ class Seg7x4(Seg14x4):
     def _put(self, char: str, index: int = 0):
         """Put a character at the specified place."""
         if not 0 <= index <= 3:
+            return
+        if self._chardict and char in self._chardict:
+            self._set_buffer(index, self._chardict[char])
             return
         char = char.lower()
         index = self.POSITIONS[index]
@@ -393,11 +397,12 @@ class BigSeg7x4(Seg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
     supports displaying a limited set of characters."""
 
-    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True):
+    def __init__(self, i2c: I2C, address: int = 0x70, auto_write: bool = True, char_dict: Optional[Dict[str, int]] = None):
         super().__init__(i2c, address, auto_write)
         # Use colon for controling two-dots indicator at the center (index 0)
         # or the two-dots indicators at the left (index 1)
         self.colon = Colon(self, 2)
+        self._chardict = char_dict
 
     def _setindicator(self, index: int, value: bool):
         """Set side LEDs (dots)
