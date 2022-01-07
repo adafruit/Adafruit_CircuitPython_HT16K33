@@ -32,7 +32,7 @@ class Matrix8x8(HT16K33):
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
-        :return: If `color` was not set, this returns the state of the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
         :rtype: bool
         """
         if not 0 <= x <= 7:
@@ -175,7 +175,7 @@ class Matrix16x8(Matrix8x8):
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
-        :return: If `color` was not set, this returns the state of the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
         :rtype: bool
         """
 
@@ -198,7 +198,7 @@ class MatrixBackpack16x8(Matrix16x8):
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
-        :return: If `color` was not set, this returns the state of the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
         :rtype: bool
         """
 
@@ -223,7 +223,7 @@ class Matrix8x8x2(Matrix8x8):
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
         :param bool color: (Optional) The state to set the pixel
-        :return: If `color` was not set, this returns the state of the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
         :rtype: bool
         """
         if not 0 <= x <= 7:
