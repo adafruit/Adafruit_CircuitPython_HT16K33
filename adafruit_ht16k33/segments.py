@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Segment Displays
-=================
+adafruit_ht16k33.segments
+=========================
 """
 
 from time import sleep

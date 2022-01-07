@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Matrix Displays
-================
+adafruit_ht16k33.matrix
+=======================
 
 """
 from adafruit_ht16k33.ht16k33 import HT16K33
