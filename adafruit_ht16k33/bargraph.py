@@ -36,7 +36,7 @@ class Bicolor24(HT16K33):
         # construct the color value and return it
         return self._pixel(x, y) | self._pixel(x + 8, y) << 1
 
-    def __setitem__(self, key: int, value: bool):
+    def __setitem__(self, key: int, value: bool) -> None:
         # map to HT16K33 row (x) and column (y), see schematic
         x = key % 4 + 4 * (key // 12)
         y = key // 4 - 3 * (key // 12)
@@ -45,8 +45,12 @@ class Bicolor24(HT16K33):
         # conditionally turn on green LED
         self._pixel(x + 8, y, value >> 1)
 
-    def fill(self, color: bool):
-        """Fill the whole display with the given color."""
+    def fill(self, color: bool) -> None:
+        """Fill the whole display with the given color.
+
+        :param bool color: Whether to fill the display
+        """
+
         what_it_was = self.auto_write
         self.auto_write = False
         for i in range(24):

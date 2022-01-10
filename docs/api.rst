@@ -4,6 +4,9 @@
 .. automodule:: adafruit_ht16k33.ht16k33
    :members:
 
+.. automodule:: adafruit_ht16k33.bargraph
+   :members:
+
 .. automodule:: adafruit_ht16k33.matrix
    :members:
 

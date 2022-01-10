@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Matrix Displays
-================
+adafruit_ht16k33.matrix
+=======================
 
 """
 from adafruit_ht16k33.ht16k33 import HT16K33
@@ -27,7 +27,14 @@ class Matrix8x8(HT16K33):
     _rows = 8
 
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        """Get or set the color of a given pixel."""
+        """Get or set the color of a given pixel.
+
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
         if not 0 <= x <= 7:
             return None
         if not 0 <= y <= 7:
@@ -39,16 +46,18 @@ class Matrix8x8(HT16K33):
         x, y = key
         return self.pixel(x, y)
 
-    def __setitem__(self, key: int, value: bool):
+    def __setitem__(self, key: int, value: bool) -> None:
         x, y = key
         self.pixel(x, y, value)
 
     # pylint: disable=too-many-branches
-    def shift(self, x: int, y: int, rotate: bool = False):
+    def shift(self, x: int, y: int, rotate: bool = False) -> None:
         """
         Shift pixels by x and y
 
-        :param rotate: (Optional) Rotate the shifted pixels to the left side (default=False)
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool rotate: (Optional) Rotate the shifted pixels to the left side (default=False)
         """
         auto_write = self.auto_write
         self._auto_write = False
@@ -86,7 +95,7 @@ class Matrix8x8(HT16K33):
 
     # pylint: enable=too-many-branches
 
-    def shift_right(self, rotate: bool = False):
+    def shift_right(self, rotate: bool = False) -> None:
         """
         Shift all pixels right
 
@@ -94,7 +103,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(1, 0, rotate)
 
-    def shift_left(self, rotate: bool = False):
+    def shift_left(self, rotate: bool = False) -> None:
         """
         Shift all pixels left
 
@@ -102,7 +111,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(-1, 0, rotate)
 
-    def shift_up(self, rotate: bool = False):
+    def shift_up(self, rotate: bool = False) -> None:
         """
         Shift all pixels up
 
@@ -110,7 +119,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(0, 1, rotate)
 
-    def shift_down(self, rotate: bool = False):
+    def shift_down(self, rotate: bool = False) -> None:
         """
         Shift all pixels down
 
@@ -118,9 +127,13 @@ class Matrix8x8(HT16K33):
         """
         self.shift(0, -1, rotate)
 
-    def image(self, img):
+    def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
-        be in 1 bit mode and a size equal to the display size."""
+        be in 1 bit mode and a size equal to the display size.
+
+        :param Image img: The image to show
+        """
+
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
             raise ValueError(
@@ -141,12 +154,12 @@ class Matrix8x8(HT16K33):
             self.show()
 
     @property
-    def columns(self):
+    def columns(self) -> int:
         """Read-only property for number of columns"""
         return self._columns
 
     @property
-    def rows(self):
+    def rows(self) -> int:
         """Read-only property for number of rows"""
         return self._rows
 
@@ -156,8 +169,16 @@ class Matrix16x8(Matrix8x8):
 
     _columns = 16
 
-    def pixel(self, x, y, color=None):
-        """Get or set the color of a given pixel."""
+    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
+        """Get or set the color of a given pixel.
+
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
+
         if not 0 <= x <= 15:
             return None
         if not 0 <= y <= 7:
@@ -171,8 +192,16 @@ class Matrix16x8(Matrix8x8):
 class MatrixBackpack16x8(Matrix16x8):
     """A double matrix backpack."""
 
-    def pixel(self, x, y, color=None):
-        """Get or set the color of a given pixel."""
+    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
+        """Get or set the color of a given pixel.
+
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
+
         if not 0 <= x <= 15:
             return None
         if not 0 <= y <= 7:
@@ -188,8 +217,15 @@ class Matrix8x8x2(Matrix8x8):
     LED_GREEN = 2
     LED_YELLOW = 3
 
-    def pixel(self, x, y, color=None):
-        """Get or set the color of a given pixel."""
+    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
+        """Get or set the color of a given pixel.
+
+        :param int x: The x coordinate of the pixel
+        :param int y: The y coordinate of the pixel
+        :param bool color: (Optional) The state to set the pixel
+        :return: If ``color`` was not set, this returns the state of the pixel
+        :rtype: bool
+        """
         if not 0 <= x <= 7:
             return None
         if not 0 <= y <= 7:
@@ -201,8 +237,12 @@ class Matrix8x8x2(Matrix8x8):
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
         return None
 
-    def fill(self, color):
-        """Fill the whole display with the given color."""
+    def fill(self, color: bool) -> None:
+        """Fill the whole display with the given color.
+
+        :param bool color: Whether to fill the display
+        """
+
         fill1 = 0xFF if color & 0x01 else 0x00
         fill2 = 0xFF if color & 0x02 else 0x00
         for i in range(8):
@@ -211,9 +251,13 @@ class Matrix8x8x2(Matrix8x8):
         if self._auto_write:
             self.show()
 
-    def image(self, img: Image):
+    def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
-        be a size equal to the display size."""
+        be a size equal to the display size.
+
+        :param Image img: The image to show
+        """
+
         imwidth, imheight = img.size
         if imwidth != self.columns or imheight != self.rows:
             raise ValueError(
