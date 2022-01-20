@@ -9,13 +9,14 @@
 # Import all board pins.
 import board
 import busio
+import time
 from adafruit_ht16k33 import segments
 
 # Create the character dictionary
 # You can use the list normally referenced as a starting point
 custom_chars = {}
 typical_list_values = segments.NUMBERS
-typical_list_chars = list("0123456789abcdef")
+typical_list_chars = list("0123456789abcdef ")
 for char, value in zip(typical_list_chars, typical_list_values):
     custom_chars[char] = value
 
@@ -37,6 +38,7 @@ display.fill(0)
 
 # Now you can print custom text
 display.print("cool")
+time.sleep(3)
 
 # You can also marquee custom text
 display.marquee("scrolling... ", 0.2)
