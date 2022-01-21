@@ -7,9 +7,9 @@
 # License: Public Domain
 
 # Import all board pins.
+import time
 import board
 import busio
-import time
 from adafruit_ht16k33 import segments
 
 # Create the character dictionary
