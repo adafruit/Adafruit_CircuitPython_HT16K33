@@ -2,7 +2,7 @@
 =============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-ht16k33/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/ht16k33/en/latest/
+    :target: https://docs.circuitpython.org/projects/ht16k33/en/latest/
     :alt: Documentation Status
 
 .. image :: https://img.shields.io/discord/327254708534116352.svg
@@ -101,11 +101,16 @@ Usage Example
     matrix.blink_rate = 2
 
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/ht16k33/en/latest/>`_.
+
 Contributing
 ============
 
 Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_CircuitPython_HT16K33/blob/master/CODE_OF_CONDUCT.md>`_
+<https://github.com/adafruit/Adafruit_CircuitPython_HT16K33/blob/main/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
 
 Documentation
