@@ -16,7 +16,7 @@ from adafruit_ht16k33 import segments
 # You can use the list normally referenced as a starting point
 custom_chars = {}
 typical_list_values = segments.NUMBERS
-typical_list_chars = list("0123456789abcdef ")
+typical_list_chars = list("0123456789abcdef-")
 for char, value in zip(typical_list_chars, typical_list_values):
     custom_chars[char] = value
 
