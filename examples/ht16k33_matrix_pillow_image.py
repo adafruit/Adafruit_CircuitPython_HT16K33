@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # Basic example of drawing an image
 # This example and library is meant to work with Adafruit CircuitPython API.
 #
@@ -23,13 +26,13 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # This creates a 16x8 matrix:
 mtrx = matrix.Matrix16x8(i2c)
 # Or this creates a 16x8 matrix backpack:
-#mtrx = matrix.MatrixBackpack16x8(i2c)
+# mtrx = matrix.MatrixBackpack16x8(i2c)
 # Or this creates a 8x8 matrix:
-#mtrx = matrix.Matrix8x8(i2c)
+# mtrx = matrix.Matrix8x8(i2c)
 # Or this creates a 8x8 bicolor matrix:
-#mtrx = matrix.Matrix8x8x2(i2c)
+# mtrx = matrix.Matrix8x8x2(i2c)
 # Finally you can optionally specify a custom I2C address of the HT16k33 like:
-#mtrx = matrix.Matrix16x8(i2c, address=0x70)
+# mtrx = matrix.Matrix16x8(i2c, address=0x70)
 
 if isinstance(mtrx, matrix.Matrix8x8x2):
     image = Image.open("squares-color.png")
