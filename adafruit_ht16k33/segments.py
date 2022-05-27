@@ -238,6 +238,7 @@ class Seg14x4(HT16K33):
         dot = stnum.find(".")
 
         if (len(stnum) > 5) or ((len(stnum) > 4) and (dot < 0)):
+            self._auto_write = auto_write
             raise ValueError(
                 "Input overflow - {0} is too large for the display!".format(number)
             )
@@ -262,6 +263,7 @@ class Seg14x4(HT16K33):
             txt = stnum[:places]
 
         if len(txt) > 5:
+            self._auto_write = auto_write
             raise ValueError("Output string ('{0}') is too long!".format(txt))
 
         self._text(txt)
