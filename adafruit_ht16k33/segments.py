@@ -332,9 +332,11 @@ class _AbstractSeg7x4(Seg14x4):
         self,
         i2c: I2C,
         address: int = 0x70,
-        auto_write: bool = True
+        auto_write: bool = True,
+        char_dict: Optional[Dict[str, int]] = None,
     ) -> None:
         super().__init__(i2c, address, auto_write)
+        self._chardict = char_dict
 
     def scroll(self, count: int = 1) -> None:
         """Scroll the display by specified number of places.
@@ -417,6 +419,7 @@ class _AbstractSeg7x4(Seg14x4):
         if self._auto_write:
             self.show()
 
+
 class Seg7x4(_AbstractSeg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
     supports displaying a limited set of characters.
@@ -426,6 +429,7 @@ class Seg7x4(_AbstractSeg7x4):
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
     """
+
     def __init__(
         self,
         i2c: I2C,
@@ -433,10 +437,9 @@ class Seg7x4(_AbstractSeg7x4):
         auto_write: bool = True,
         char_dict: Optional[Dict[str, int]] = None,
     ) -> None:
-        super().__init__(i2c, address, auto_write)
+        super().__init__(i2c, address, auto_write, char_dict)
         # Use colon for controling two-dots indicator at the center (index 0)
         self._colon = Colon(self)
-        self._chardict = char_dict
 
     @property
     def colon(self) -> bool:
@@ -465,11 +468,10 @@ class BigSeg7x4(_AbstractSeg7x4):
         auto_write: bool = True,
         char_dict: Optional[Dict[str, int]] = None,
     ) -> None:
-        super().__init__(i2c, address, auto_write)
+        super().__init__(i2c, address, auto_write, char_dict)
         # Use colon for controling two-dots indicator at the center (index 0)
         # or the two-dots indicators at the left (index 1)
         self.colons = Colon(self, 2)
-        self._chardict = char_dict
 
     def _setindicator(self, index: int, value: bool) -> None:
         """Set side LEDs (dots)
@@ -521,6 +523,7 @@ class BigSeg7x4(_AbstractSeg7x4):
     @ampm.setter
     def ampm(self, value: bool) -> None:
         self._setindicator(3, value)
+
 
 class Colon:
     """Helper class for controlling the colons. Not intended for direct use."""
