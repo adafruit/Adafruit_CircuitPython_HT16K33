@@ -325,16 +325,7 @@ class Seg14x4(HT16K33):
             self.show()
 
 
-class Seg7x4(Seg14x4):
-    """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
-    supports displaying a limited set of characters.
-
-    :param I2C i2c: The I2C bus object
-    :param int address: The I2C address for the display
-    :param bool auto_write: True if the display should immediately change when set. If False,
-        `show` must be called explicitly.
-    """
-
+class _AbstractSeg7x4(Seg14x4):
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
     def __init__(
@@ -345,8 +336,6 @@ class Seg7x4(Seg14x4):
         char_dict: Optional[Dict[str, int]] = None,
     ) -> None:
         super().__init__(i2c, address, auto_write)
-        # Use colon for controling two-dots indicator at the center (index 0)
-        self._colon = Colon(self)
         self._chardict = char_dict
 
     def scroll(self, count: int = 1) -> None:
@@ -430,17 +419,8 @@ class Seg7x4(Seg14x4):
         if self._auto_write:
             self.show()
 
-    @property
-    def colon(self) -> bool:
-        """Simplified colon accessor"""
-        return self._colon[0]
 
-    @colon.setter
-    def colon(self, turn_on: bool) -> None:
-        self._colon[0] = turn_on
-
-
-class BigSeg7x4(Seg7x4):
+class Seg7x4(_AbstractSeg7x4):
     """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
     supports displaying a limited set of characters.
 
@@ -457,11 +437,41 @@ class BigSeg7x4(Seg7x4):
         auto_write: bool = True,
         char_dict: Optional[Dict[str, int]] = None,
     ) -> None:
-        super().__init__(i2c, address, auto_write)
+        super().__init__(i2c, address, auto_write, char_dict)
+        # Use colon for controling two-dots indicator at the center (index 0)
+        self._colon = Colon(self)
+
+    @property
+    def colon(self) -> bool:
+        """Simplified colon accessor"""
+        return self._colon[0]
+
+    @colon.setter
+    def colon(self, turn_on: bool) -> None:
+        self._colon[0] = turn_on
+
+
+class BigSeg7x4(_AbstractSeg7x4):
+    """Numeric 7-segment display. It has the same methods as the alphanumeric display, but only
+    supports displaying a limited set of characters.
+
+    :param I2C i2c: The I2C bus object
+    :param int address: The I2C address for the display
+    :param bool auto_write: True if the display should immediately change when set. If False,
+        `show` must be called explicitly.
+    """
+
+    def __init__(
+        self,
+        i2c: I2C,
+        address: int = 0x70,
+        auto_write: bool = True,
+        char_dict: Optional[Dict[str, int]] = None,
+    ) -> None:
+        super().__init__(i2c, address, auto_write, char_dict)
         # Use colon for controling two-dots indicator at the center (index 0)
         # or the two-dots indicators at the left (index 1)
-        self.colon = Colon(self, 2)
-        self._chardict = char_dict
+        self.colons = Colon(self, 2)
 
     def _setindicator(self, index: int, value: bool) -> None:
         """Set side LEDs (dots)
