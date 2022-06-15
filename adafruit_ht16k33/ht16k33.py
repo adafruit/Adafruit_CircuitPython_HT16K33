@@ -58,7 +58,8 @@ class HT16K33:
         self._buffer = bytearray((self._buffer_size) * len(self.i2c_device))
         self._auto_write = auto_write
         self.fill(0)
-        self._write_cmd(_HT16K33_OSCILATOR_ON)
+        for i, _ in enumerate(self.i2c_device):
+            self._write_cmd(_HT16K33_OSCILATOR_ON, i)
         self._blink_rate = None
         self._brightness = None
         self.blink_rate = 0
