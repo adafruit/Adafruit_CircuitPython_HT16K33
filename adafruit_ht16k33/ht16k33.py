@@ -7,7 +7,7 @@
 `adafruit_ht16k33.ht16k33`
 ===========================
 
-* Authors: Radomir Dopieralski & Tony DiCola for Adafruit Industries
+* Authors: Radomir Dopieralski, Tony DiCola, and Melissa LeBlanc-Williams for Adafruit Industries
 
 """
 
