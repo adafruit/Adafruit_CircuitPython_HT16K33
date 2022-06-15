@@ -144,10 +144,12 @@ NUMBERS = (
 class Seg14x4(HT16K33):
     """Alpha-numeric, 14-segment display."""
 
-    def __init__(self, i2c, address=0x70, auto_write=True, chars_per_display = 4):
+    def __init__(self, i2c, address=0x70, auto_write=True, chars_per_display=4):
         super().__init__(i2c, address, auto_write)
         if not 1 <= chars_per_display <= 8:
-            raise ValueError("Input overflow - The HT16K33 only supports up 1-8 characters!")
+            raise ValueError(
+                "Input overflow - The HT16K33 only supports up 1-8 characters!"
+            )
 
         self._chars = chars_per_display * len(self.i2c_device)
         self._bytes_per_char = 2
@@ -198,7 +200,10 @@ class Seg14x4(HT16K33):
         else:
             offset = 2
         for i in range((self._chars - 1) * 2):
-            self._set_buffer(self._adjusted_index(i + offset), self._get_buffer(self._adjusted_index(i + 2 * count)))
+            self._set_buffer(
+                self._adjusted_index(i + offset),
+                self._get_buffer(self._adjusted_index(i + 2 * count)),
+            )
 
     def _put(self, char: str, index: int = 0) -> None:
         """Put a character at the specified place."""
@@ -208,7 +213,8 @@ class Seg14x4(HT16K33):
             return
         if char == ".":
             self._set_buffer(
-                self._adjusted_index(index * 2 + 1), self._get_buffer(self._adjusted_index(index * 2 + 1)) | 0b01000000
+                self._adjusted_index(index * 2 + 1),
+                self._get_buffer(self._adjusted_index(index * 2 + 1)) | 0b01000000,
             )
             return
         character = ord(char) * 2 - 64
@@ -217,7 +223,11 @@ class Seg14x4(HT16K33):
 
     def _push(self, char: str) -> None:
         """Scroll the display and add a character at the end."""
-        if char != "." or self._get_buffer(self._char_buffer_index(self._chars - 1) + 1) & 0b01000000:
+        if (
+            char != "."
+            or self._get_buffer(self._char_buffer_index(self._chars - 1) + 1)
+            & 0b01000000
+        ):
             self.scroll()
             self._put(" ", self._chars - 1)
         self._put(char, self._chars - 1)
@@ -303,7 +313,9 @@ class Seg14x4(HT16K33):
         :type bitmask: int, or a list/tuple of bool
         """
         if not isinstance(index, int) or not 0 <= index <= self._chars - 1:
-            raise ValueError(f"Index value must be an integer in the range: 0-{self._chars - 1}")
+            raise ValueError(
+                f"Index value must be an integer in the range: 0-{self._chars - 1}"
+            )
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
@@ -434,7 +446,9 @@ class _AbstractSeg7x4(Seg14x4):
         """
 
         if not isinstance(index, int) or not 0 <= index < self._chars:
-            raise ValueError(f"Index value must be an integer in the range: 0-{self._chars - 1}")
+            raise ValueError(
+                f"Index value must be an integer in the range: 0-{self._chars - 1}"
+            )
 
         # Set the digit bitmask value at the appropriate position.
         self._set_buffer(self.POSITIONS[index], bitmask & 0xFF)

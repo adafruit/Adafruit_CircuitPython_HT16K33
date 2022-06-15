@@ -81,7 +81,9 @@ class HT16K33:
         rate = rate & 0x03
         self._blink_rate = rate
         for index, _ in enumerate(self.i2c_device):
-            self._write_cmd(_HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1, index)
+            self._write_cmd(
+                _HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1, index
+            )
 
     @property
     def brightness(self) -> float:
@@ -115,13 +117,13 @@ class HT16K33:
 
     def show(self) -> None:
         """Refresh the display and show the changes."""
-        for index, i2c_device in enumerate(self.i2c_device):
-            with i2c_device:
+        for index, i2c_dev in enumerate(self.i2c_device):
+            with i2c_dev:
                 # Byte 0 is 0x00, address of LED data register. The remaining 16
                 # bytes are the display register data to set.
                 offset = index * self._buffer_size
-                buffer = self._buffer[offset: offset + self._buffer_size]
-                i2c_device.write(buffer)
+                buffer = self._buffer[offset : offset + self._buffer_size]
+                i2c_dev.write(buffer)
 
     def fill(self, color: bool) -> None:
         """Fill the whole display with the given color.
