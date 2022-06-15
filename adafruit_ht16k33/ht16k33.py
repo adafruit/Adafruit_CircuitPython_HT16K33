@@ -15,7 +15,7 @@ from adafruit_bus_device import i2c_device
 from micropython import const
 
 try:
-    from typing import Optional
+    from typing import Union, List, Tuple, Optional
     from busio import I2C
 except ImportError:
     pass
@@ -43,7 +43,7 @@ class HT16K33:
     def __init__(
         self,
         i2c: I2C,
-        address: int = 0x70,
+        address: Union[int, Tuple, List] = 0x70,
         auto_write: bool = True,
         brightness: float = 1.0,
     ) -> None:
