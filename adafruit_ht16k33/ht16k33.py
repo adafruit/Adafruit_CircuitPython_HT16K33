@@ -139,7 +139,9 @@ class HT16K33:
             self.show()
 
     def _pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        addr = 2 * y + x // 8
+        offset = ((x // 16) + (y // 8)) * self._buffer_size
+        addr = 2 * (y % 8) + ((x % 16) // 8)
+        addr = (addr % 16) + offset
         mask = 1 << x % 8
         if color is None:
             return bool(self._buffer[addr + 1] & mask)
