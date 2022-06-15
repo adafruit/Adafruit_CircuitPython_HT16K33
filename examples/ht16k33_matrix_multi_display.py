@@ -19,15 +19,7 @@ from adafruit_ht16k33 import matrix
 i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the matrix class.
-# This creates a 16x8 matrix:
-# matrix = matrix.Matrix16x8(i2c)
-# Or this creates a 16x8 matrix backpack:
-# matrix = matrix.MatrixBackpack16x8(i2c)
-# Or this creates a 8x8 matrix:
-# matrix = matrix.Matrix8x8(i2c)
-# Or this creates a 8x8 bicolor matrix:
-# matrix = matrix.Matrix8x8x2(i2c)
-# Finally you can optionally specify a custom I2C address of the HT16k33 like:
+# This creates a 16x8 matrix with multiple displays:
 matrix = matrix.Matrix16x8(i2c, address=(0x70, 0x71))
 
 # Clear the matrix.

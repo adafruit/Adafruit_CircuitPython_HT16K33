@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-# Basic example of setting digits on a LED segment display.
+# Basic example of setting digits on two LED segment displays.
 # This example and library is meant to work with Adafruit CircuitPython API.
-# Author: Tony DiCola
+# Author: Melissa LeBlanc-Williams
 # License: Public Domain
 
 import time
@@ -23,10 +23,6 @@ i2c = busio.I2C(board.SCL, board.SDA)
 display = segments.Seg7x4(i2c, address=(0x70, 0x71))
 # Or this creates a 14 segment alphanumeric 4 character display:
 # display = segments.Seg14x4(i2c, address=(0x70, 0x71))
-# Or this creates a big 7 segment 4 character display
-# display = segments.BigSeg7x4(i2c)
-# Finally you can optionally specify a custom I2C address of the HT16k33 like:
-# display = segments.Seg7x4(i2c, address=0x70)
 
 # Clear the display.
 display.fill(0)
