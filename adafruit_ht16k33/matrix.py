@@ -11,7 +11,8 @@ adafruit_ht16k33.matrix
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
-    from typing import Optional
+    from typing import Union, List, Tuple, Optional
+    from busio import I2C
     from PIL import Image
 except ImportError:
     pass
@@ -169,6 +170,16 @@ class Matrix16x8(Matrix8x8):
 
     _columns = 16
 
+    def __init__(
+        self,
+        i2c: I2C,
+        address: Union[int, Tuple, List] = 0x70,
+        auto_write: bool = True,
+        brightness: float = 1.0,
+    ) -> None:
+        super().__init__(i2c, address, auto_write, brightness)
+        self._columns *= len(self.i2c_device)
+
     def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
 
@@ -179,13 +190,14 @@ class Matrix16x8(Matrix8x8):
         :rtype: bool
         """
 
-        if not 0 <= x <= 15:
+        if not 0 <= x <= self._columns - 1:
             return None
-        if not 0 <= y <= 7:
+        if not 0 <= y <= self._rows - 1:
             return None
-        if x >= 8:
+        while x >= 8:
             x -= 8
             y += 8
+
         return super()._pixel(y, x, color)  # pylint: disable=arguments-out-of-order
 
 
@@ -202,9 +214,9 @@ class MatrixBackpack16x8(Matrix16x8):
         :rtype: bool
         """
 
-        if not 0 <= x <= 15:
+        if not 0 <= x <= self._columns - 1:
             return None
-        if not 0 <= y <= 7:
+        if not 0 <= y <= self._rows - 1:
             return None
         return super()._pixel(x, y, color)
 

@@ -142,7 +142,31 @@ NUMBERS = (
 
 
 class Seg14x4(HT16K33):
-    """Alpha-numeric, 14-segment display."""
+    """Alpha-Numeric 14-segment display.
+
+    :param I2C i2c: The I2C bus object
+    :param address: The I2C address for the display. Can be a tuple or list for multiple displays.
+    :param bool auto_write: True if the display should immediately change when set. If False,
+        `show` must be called explicitly.
+    :param int chars_per_display: A number between 1-8 represesenting the number of characters
+                                  on each display.
+    """
+
+    def __init__(
+        self,
+        i2c: I2C,
+        address: Union[int, Tuple, List] = 0x70,
+        auto_write: bool = True,
+        chars_per_display: int = 4,
+    ):
+        super().__init__(i2c, address, auto_write)
+        if not 1 <= chars_per_display <= 8:
+            raise ValueError(
+                "Input overflow - The HT16K33 only supports up 1-8 characters!"
+            )
+
+        self._chars = chars_per_display * len(self.i2c_device)
+        self._bytes_per_char = 2
 
     def print(self, value: Union[str, int, float], decimal: int = 0) -> None:
         """Print the value to the display.
@@ -189,30 +213,38 @@ class Seg14x4(HT16K33):
             offset = 0
         else:
             offset = 2
-        for i in range(6):
-            self._set_buffer(i + offset, self._get_buffer(i + 2 * count))
+        for i in range((self._chars - 1) * 2):
+            self._set_buffer(
+                self._adjusted_index(i + offset),
+                self._get_buffer(self._adjusted_index(i + 2 * count)),
+            )
 
     def _put(self, char: str, index: int = 0) -> None:
         """Put a character at the specified place."""
-        if not 0 <= index <= 3:
+        if not 0 <= index < self._chars:
             return
         if not 32 <= ord(char) <= 127:
             return
         if char == ".":
             self._set_buffer(
-                index * 2 + 1, self._get_buffer(index * 2 + 1) | 0b01000000
+                self._adjusted_index(index * 2 + 1),
+                self._get_buffer(self._adjusted_index(index * 2 + 1)) | 0b01000000,
             )
             return
         character = ord(char) * 2 - 64
-        self._set_buffer(index * 2, CHARS[1 + character])
-        self._set_buffer(index * 2 + 1, CHARS[character])
+        self._set_buffer(self._adjusted_index(index * 2), CHARS[1 + character])
+        self._set_buffer(self._adjusted_index(index * 2 + 1), CHARS[character])
 
     def _push(self, char: str) -> None:
         """Scroll the display and add a character at the end."""
-        if char != "." or self._get_buffer(7) & 0b01000000:
+        if (
+            char != "."
+            or self._get_buffer(self._char_buffer_index(self._chars - 1) + 1)
+            & 0b01000000
+        ):
             self.scroll()
-            self._put(" ", 3)
-        self._put(char, 3)
+            self._put(" ", self._chars - 1)
+        self._put(char, self._chars - 1)
 
     def _text(self, text: str) -> None:
         """Display the specified text."""
@@ -237,7 +269,7 @@ class Seg14x4(HT16K33):
         stnum = str(number)
         dot = stnum.find(".")
 
-        if (len(stnum) > 5) or ((len(stnum) > 4) and (dot < 0)):
+        if (len(stnum) > self._chars + 1) or ((len(stnum) > self._chars) and (dot < 0)):
             self._auto_write = auto_write
             raise ValueError(
                 "Input overflow - {0} is too large for the display!".format(number)
@@ -251,7 +283,7 @@ class Seg14x4(HT16K33):
 
         if places <= 0 < decimal:
             self.fill(False)
-            places = 4
+            places = self._chars
 
             if "." in stnum:
                 places += 1
@@ -262,7 +294,7 @@ class Seg14x4(HT16K33):
         elif places > 0:
             txt = stnum[:places]
 
-        if len(txt) > 5:
+        if len(txt) > self._chars + 1:
             self._auto_write = auto_write
             raise ValueError("Output string ('{0}') is too long!".format(txt))
 
@@ -270,6 +302,21 @@ class Seg14x4(HT16K33):
         self._auto_write = auto_write
 
         return txt
+
+    def _adjusted_index(self, index):
+        # Determine which part of the buffer to use and adjust index
+        offset = (index // self._bytes_per_buffer()) * self._buffer_size
+        return offset + index % self._bytes_per_buffer()
+
+    def _chars_per_buffer(self):
+        return self._chars // len(self.i2c_device)
+
+    def _bytes_per_buffer(self):
+        return self._bytes_per_char * self._chars_per_buffer()
+
+    def _char_buffer_index(self, char_pos):
+        offset = (char_pos // self._chars_per_buffer()) * self._buffer_size
+        return offset + (char_pos % self._chars_per_buffer()) * self._bytes_per_char
 
     def set_digit_raw(self, index: int, bitmask: Union[int, List, Tuple]) -> None:
         """Set digit at position to raw bitmask value. Position should be a value
@@ -279,8 +326,10 @@ class Seg14x4(HT16K33):
         :param bitmask: A 2 byte number corresponding to the segments to set
         :type bitmask: int, or a list/tuple of bool
         """
-        if not isinstance(index, int) or not 0 <= index <= 3:
-            raise ValueError("Index value must be an integer in the range: 0-3")
+        if not isinstance(index, int) or not 0 <= index <= self._chars - 1:
+            raise ValueError(
+                f"Index value must be an integer in the range: 0-{self._chars - 1}"
+            )
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
@@ -289,8 +338,8 @@ class Seg14x4(HT16K33):
         bitmask &= 0xFFFF
 
         # Set the digit bitmask value at the appropriate position.
-        self._set_buffer(index * 2, bitmask & 0xFF)
-        self._set_buffer(index * 2 + 1, (bitmask >> 8) & 0xFF)
+        self._set_buffer(self._adjusted_index(index * 2), bitmask & 0xFF)
+        self._set_buffer(self._adjusted_index(index * 2 + 1), (bitmask >> 8) & 0xFF)
 
         if self._auto_write:
             self.show()
@@ -328,15 +377,22 @@ class Seg14x4(HT16K33):
 class _AbstractSeg7x4(Seg14x4):
     POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         i2c: I2C,
-        address: int = 0x70,
+        address: Union[int, Tuple, List] = 0x70,
         auto_write: bool = True,
         char_dict: Optional[Dict[str, int]] = None,
+        chars_per_display: int = 4,
     ) -> None:
-        super().__init__(i2c, address, auto_write)
+        super().__init__(i2c, address, auto_write, chars_per_display)
         self._chardict = char_dict
+        self._bytes_per_char = 1
+
+    def _adjusted_index(self, index):
+        # Determine which part of the buffer to use and adjust index
+        offset = (index // self._bytes_per_buffer()) * self._buffer_size
+        return offset + self.POSITIONS[index % self._bytes_per_buffer()]
 
     def scroll(self, count: int = 1) -> None:
         """Scroll the display by specified number of places.
@@ -348,9 +404,10 @@ class _AbstractSeg7x4(Seg14x4):
             offset = 0
         else:
             offset = 1
-        for i in range(3):
+        for i in range(self._chars - 1):
             self._set_buffer(
-                self.POSITIONS[i + offset], self._get_buffer(self.POSITIONS[i + count])
+                self._adjusted_index(i + offset),
+                self._get_buffer(self._adjusted_index(i + count)),
             )
 
     def _push(self, char: str) -> None:
@@ -358,17 +415,20 @@ class _AbstractSeg7x4(Seg14x4):
         if char in ":;":
             self._put(char)
         else:
-            if char != "." or self._get_buffer(self.POSITIONS[3]) & 0b10000000:
+            if (
+                char != "."
+                or self._get_buffer(self._adjusted_index(self._chars - 1)) & 0b10000000
+            ):
                 self.scroll()
-                self._put(" ", 3)
-            self._put(char, 3)
+                self._put(" ", self._chars - 1)
+            self._put(char, self._chars - 1)
 
     def _put(self, char: str, index: int = 0) -> None:
         """Put a character at the specified place."""
         # pylint: disable=too-many-return-statements
-        if not 0 <= index <= 3:
+        if not 0 <= index < self._chars:
             return
-        index = self.POSITIONS[index]
+        index = self._adjusted_index(index)
         if self._chardict and char in self._chardict:
             self._set_buffer(index, self._chardict[char])
             return
@@ -406,15 +466,16 @@ class _AbstractSeg7x4(Seg14x4):
         of 0 to 3 with 0 being the left most digit on the display.
 
         :param int index: The index of the display to set
-        :param bitmask: A 2 byte number corresponding to the segments to set
-        :type bitmask: int, or a list/tuple of bool
+        :param int bitmask: A single byte number corresponding to the segments to set
         """
 
-        if not isinstance(index, int) or not 0 <= index <= 3:
-            raise ValueError("Index value must be an integer in the range: 0-3")
+        if not isinstance(index, int) or not 0 <= index < self._chars:
+            raise ValueError(
+                f"Index value must be an integer in the range: 0-{self._chars - 1}"
+            )
 
         # Set the digit bitmask value at the appropriate position.
-        self._set_buffer(self.POSITIONS[index], bitmask & 0xFF)
+        self._set_buffer(self._adjusted_index(index), bitmask & 0xFF)
 
         if self._auto_write:
             self.show()
@@ -425,19 +486,22 @@ class Seg7x4(_AbstractSeg7x4):
     supports displaying a limited set of characters.
 
     :param I2C i2c: The I2C bus object
-    :param int address: The I2C address for the display
+    :param address: The I2C address for the display. Can be a tuple or list for multiple displays.
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
+    :param int chars_per_display: A number between 1-8 represesenting the number of characters
+                                  on each display.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         i2c: I2C,
-        address: int = 0x70,
+        address: Union[int, Tuple, List] = 0x70,
         auto_write: bool = True,
         char_dict: Optional[Dict[str, int]] = None,
+        chars_per_display: int = 4,
     ) -> None:
-        super().__init__(i2c, address, auto_write, char_dict)
+        super().__init__(i2c, address, auto_write, char_dict, chars_per_display)
         # Use colon for controling two-dots indicator at the center (index 0)
         self._colon = Colon(self)
 

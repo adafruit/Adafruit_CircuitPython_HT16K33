@@ -7,7 +7,7 @@
 `adafruit_ht16k33.ht16k33`
 ===========================
 
-* Authors: Radomir Dopieralski & Tony DiCola for Adafruit Industries
+* Authors: Radomir Dopieralski, Tony DiCola, and Melissa LeBlanc-Williams for Adafruit Industries
 
 """
 
@@ -15,7 +15,7 @@ from adafruit_bus_device import i2c_device
 from micropython import const
 
 try:
-    from typing import Optional
+    from typing import Union, List, Tuple, Optional
     from busio import I2C
 except ImportError:
     pass
@@ -43,25 +43,32 @@ class HT16K33:
     def __init__(
         self,
         i2c: I2C,
-        address: int = 0x70,
+        address: Union[int, Tuple, List] = 0x70,
         auto_write: bool = True,
         brightness: float = 1.0,
     ) -> None:
-        self.i2c_device = i2c_device.I2CDevice(i2c, address)
+        if isinstance(address, (tuple, list)):
+            self.i2c_device = []
+            for addr in address:
+                self.i2c_device.append(i2c_device.I2CDevice(i2c, addr))
+        else:
+            self.i2c_device = [i2c_device.I2CDevice(i2c, address)]
         self._temp = bytearray(1)
-        self._buffer = bytearray(17)
+        self._buffer_size = 17
+        self._buffer = bytearray((self._buffer_size) * len(self.i2c_device))
         self._auto_write = auto_write
         self.fill(0)
-        self._write_cmd(_HT16K33_OSCILATOR_ON)
+        for i, _ in enumerate(self.i2c_device):
+            self._write_cmd(_HT16K33_OSCILATOR_ON, i)
         self._blink_rate = None
         self._brightness = None
         self.blink_rate = 0
         self.brightness = brightness
 
-    def _write_cmd(self, byte: bytearray) -> None:
+    def _write_cmd(self, byte: bytearray, i2c_index: int = 0) -> None:
         self._temp[0] = byte
-        with self.i2c_device:
-            self.i2c_device.write(self._temp)
+        with self.i2c_device[i2c_index]:
+            self.i2c_device[i2c_index].write(self._temp)
 
     @property
     def blink_rate(self) -> int:
@@ -74,7 +81,10 @@ class HT16K33:
             raise ValueError("Blink rate must be an integer in the range: 0-3")
         rate = rate & 0x03
         self._blink_rate = rate
-        self._write_cmd(_HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1)
+        for index, _ in enumerate(self.i2c_device):
+            self._write_cmd(
+                _HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1, index
+            )
 
     @property
     def brightness(self) -> float:
@@ -91,7 +101,8 @@ class HT16K33:
         self._brightness = brightness
         xbright = round(15 * brightness)
         xbright = xbright & 0x0F
-        self._write_cmd(_HT16K33_CMD_BRIGHTNESS | xbright)
+        for index, _ in enumerate(self.i2c_device):
+            self._write_cmd(_HT16K33_CMD_BRIGHTNESS | xbright, index)
 
     @property
     def auto_write(self) -> bool:
@@ -107,10 +118,13 @@ class HT16K33:
 
     def show(self) -> None:
         """Refresh the display and show the changes."""
-        with self.i2c_device:
-            # Byte 0 is 0x00, address of LED data register. The remaining 16
-            # bytes are the display register data to set.
-            self.i2c_device.write(self._buffer)
+        for index, i2c_dev in enumerate(self.i2c_device):
+            with i2c_dev:
+                # Byte 0 is 0x00, address of LED data register. The remaining 16
+                # bytes are the display register data to set.
+                offset = index * self._buffer_size
+                buffer = self._buffer[offset : offset + self._buffer_size]
+                i2c_dev.write(buffer)
 
     def fill(self, color: bool) -> None:
         """Fill the whole display with the given color.
@@ -119,13 +133,16 @@ class HT16K33:
         """
 
         fill = 0xFF if color else 0x00
-        for i in range(16):
-            self._buffer[i + 1] = fill
+        for device, _ in enumerate(self.i2c_device):
+            for i in range(self._buffer_size - 1):
+                self._buffer[device * self._buffer_size + i + 1] = fill
         if self._auto_write:
             self.show()
 
     def _pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
-        addr = 2 * y + x // 8
+        offset = ((x // 16) + (y // 8)) * self._buffer_size
+        addr = 2 * (y % 8) + ((x % 16) // 8)
+        addr = (addr % 16) + offset
         mask = 1 << x % 8
         if color is None:
             return bool(self._buffer[addr + 1] & mask)
