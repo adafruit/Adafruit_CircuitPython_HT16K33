@@ -12,7 +12,7 @@ requires = [
 [project]
 name = "adafruit-circuitpython-ht16k33"
 description = "CircuitPython library for HT16K33 LED matrices and segment displays."
-version = "0.0.0-auto.0"
+version = "0.0.0+auto.0"
 readme = "README.rst"
 authors = [
     {name = "Adafruit Industries", email = "circuitpython@adafruit.com"}
