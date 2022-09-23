@@ -289,13 +289,13 @@ class Seg14x4(HT16K33):
                 places += 1
 
         # Set decimal places, if number of decimal places is specified (decimal > 0)
-        txt = None
+        txt = stnum
         if places > 0 < decimal < len(stnum[places:]) and dot > 0:
             txt = stnum[: dot + decimal + 1]
         elif places > 0:
             txt = stnum[:places]
 
-        if txt is None or len(txt) > self._chars + 1:
+        if len(txt) > self._chars + 1:
             self._auto_write = auto_write
             raise ValueError("Output string ('{0}') is too long!".format(txt))
 
