@@ -129,7 +129,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(0, -1, rotate)
 
-    def image(self, img: Image):
+    def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
         be in 1 bit mode and a size equal to the display size.
 
