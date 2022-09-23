@@ -320,7 +320,7 @@ class Seg14x4(HT16K33):
         return offset + (char_pos % self._chars_per_buffer()) * self._bytes_per_char
 
     def set_digit_raw(
-        self, index: int, bitmask: Union[int, List[int, int], Tuple[int, int]]
+        self, index: int, bitmask: Union[int, List[int], Tuple[int, int]]
     ) -> None:
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most character on the display.
