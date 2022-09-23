@@ -10,6 +10,13 @@ adafruit_ht16k33.matrix
 """
 from adafruit_ht16k33.ht16k33 import HT16K33
 
+try:
+    from typing import Optional, Tuple, Union, List
+    from circuitpython_typing.pil import Image
+    from busio import I2C
+except ImportError:
+    pass
+
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
@@ -21,7 +28,7 @@ class Matrix8x8(HT16K33):
     _columns = 8
     _rows = 8
 
-    def pixel(self, x, y, color = None):
+    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
 
         :param int x: The x coordinate of the pixel
@@ -37,16 +44,16 @@ class Matrix8x8(HT16K33):
         x = (x - 1) % 8
         return super()._pixel(x, y, color)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: Tuple[int, int]) -> Optional[bool]:
         x, y = key
         return self.pixel(x, y)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: Tuple[int, int], value: Optional[bool]) -> None:
         x, y = key
         self.pixel(x, y, value)
 
     # pylint: disable=too-many-branches
-    def shift(self, x, y, rotate = False):
+    def shift(self, x: int, y: int, rotate: bool = False) -> None:
         """
         Shift pixels by x and y
 
@@ -90,7 +97,7 @@ class Matrix8x8(HT16K33):
 
     # pylint: enable=too-many-branches
 
-    def shift_right(self, rotate = False):
+    def shift_right(self, rotate: bool = False) -> None:
         """
         Shift all pixels right
 
@@ -98,7 +105,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(1, 0, rotate)
 
-    def shift_left(self, rotate = False):
+    def shift_left(self, rotate: bool = False) -> None:
         """
         Shift all pixels left
 
@@ -106,7 +113,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(-1, 0, rotate)
 
-    def shift_up(self, rotate = False):
+    def shift_up(self, rotate: bool = False) -> None:
         """
         Shift all pixels up
 
@@ -114,7 +121,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(0, 1, rotate)
 
-    def shift_down(self, rotate = False):
+    def shift_down(self, rotate: bool = False) -> None:
         """
         Shift all pixels down
 
@@ -122,7 +129,7 @@ class Matrix8x8(HT16K33):
         """
         self.shift(0, -1, rotate)
 
-    def image(self, img):
+    def image(self, img: Image):
         """Set buffer to value of Python Imaging Library image.  The image should
         be in 1 bit mode and a size equal to the display size.
 
@@ -149,12 +156,12 @@ class Matrix8x8(HT16K33):
             self.show()
 
     @property
-    def columns(self):
+    def columns(self) -> int:
         """Read-only property for number of columns"""
         return self._columns
 
     @property
-    def rows(self):
+    def rows(self) -> int:
         """Read-only property for number of rows"""
         return self._rows
 
@@ -166,15 +173,15 @@ class Matrix16x8(Matrix8x8):
 
     def __init__(
         self,
-        i2c,
-        address = 0x70,
-        auto_write = True,
-        brightness = 1.0,
-    ):
+        i2c: I2C,
+        address: Union[int, List[int], Tuple[int, ...]] = 0x70,
+        auto_write: bool = True,
+        brightness: float = 1.0,
+    ) -> None:
         super().__init__(i2c, address, auto_write, brightness)
         self._columns *= len(self.i2c_device)
 
-    def pixel(self, x, y, color = None):
+    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
 
         :param int x: The x coordinate of the pixel
@@ -198,7 +205,7 @@ class Matrix16x8(Matrix8x8):
 class MatrixBackpack16x8(Matrix16x8):
     """A double matrix backpack."""
 
-    def pixel(self, x, y, color = None):
+    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         """Get or set the color of a given pixel.
 
         :param int x: The x coordinate of the pixel
@@ -223,7 +230,7 @@ class Matrix8x8x2(Matrix8x8):
     LED_GREEN = 2
     LED_YELLOW = 3
 
-    def pixel(self, x, y, color = None):
+    def pixel(self, x: int, y: int, color: Optional[int] = None) -> Optional[int]:
         """Get or set the color of a given pixel.
 
         :param int x: The x coordinate of the pixel
@@ -243,7 +250,7 @@ class Matrix8x8x2(Matrix8x8):
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
         return None
 
-    def fill(self, color):
+    def fill(self, color: int) -> None:
         """Fill the whole display with the given color.
 
         :param bool color: Whether to fill the display
@@ -257,7 +264,7 @@ class Matrix8x8x2(Matrix8x8):
         if self._auto_write:
             self.show()
 
-    def image(self, img):
+    def image(self, img: Image) -> None:
         """Set buffer to value of Python Imaging Library image.  The image should
         be a size equal to the display size.
 
