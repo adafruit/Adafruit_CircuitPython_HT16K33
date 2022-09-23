@@ -146,7 +146,8 @@ class Seg14x4(HT16K33):
     """Alpha-Numeric 14-segment display.
 
     :param I2C i2c: The I2C bus object
-    :param int|list|tuple address: The I2C address(es) for the display. Can be a tuple or list for multiple displays.
+    :param int|list|tuple address: The I2C address(es) for the display. Can be a tuple or
+        list for multiple displays.
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
     :param int chars_per_display: A number between 1-8 represesenting the number of characters
@@ -488,7 +489,8 @@ class Seg7x4(_AbstractSeg7x4):
     supports displaying a limited set of characters.
 
     :param I2C i2c: The I2C bus object
-    :param int|list|tuple address: The I2C address for the display. Can be a tuple or list for multiple displays.
+    :param int|list|tuple address: The I2C address for the display. Can be a tuple or list for
+        multiple displays.
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
     :param dict char_dict: An optional dictionary mapping strings to bit settings integers used
