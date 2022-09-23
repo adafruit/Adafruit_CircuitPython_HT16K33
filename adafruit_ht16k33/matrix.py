@@ -11,11 +11,12 @@ adafruit_ht16k33.matrix
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
-    from typing import Union, List, Tuple, Optional
+    from typing import Optional, Tuple, Union, List
+    from circuitpython_typing.pil import Image
     from busio import I2C
-    from PIL import Image
 except ImportError:
     pass
+
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
@@ -43,11 +44,11 @@ class Matrix8x8(HT16K33):
         x = (x - 1) % 8
         return super()._pixel(x, y, color)
 
-    def __getitem__(self, key: int) -> Optional[bool]:
+    def __getitem__(self, key: Tuple[int, int]) -> Optional[bool]:
         x, y = key
         return self.pixel(x, y)
 
-    def __setitem__(self, key: int, value: bool) -> None:
+    def __setitem__(self, key: Tuple[int, int], value: Optional[bool]) -> None:
         x, y = key
         self.pixel(x, y, value)
 
@@ -173,7 +174,7 @@ class Matrix16x8(Matrix8x8):
     def __init__(
         self,
         i2c: I2C,
-        address: Union[int, Tuple, List] = 0x70,
+        address: Union[int, List[int], Tuple[int, ...]] = 0x70,
         auto_write: bool = True,
         brightness: float = 1.0,
     ) -> None:
@@ -229,14 +230,14 @@ class Matrix8x8x2(Matrix8x8):
     LED_GREEN = 2
     LED_YELLOW = 3
 
-    def pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
+    def pixel(self, x: int, y: int, color: Optional[int] = None) -> Optional[int]:
         """Get or set the color of a given pixel.
 
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
-        :param bool color: (Optional) The state to set the pixel
+        :param int color: (Optional) The color to set the pixel
         :return: If ``color`` was not set, this returns the state of the pixel
-        :rtype: bool
+        :rtype: int
         """
         if not 0 <= x <= 7:
             return None
@@ -249,10 +250,10 @@ class Matrix8x8x2(Matrix8x8):
             return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
         return None
 
-    def fill(self, color: bool) -> None:
+    def fill(self, color: int) -> None:
         """Fill the whole display with the given color.
 
-        :param bool color: Whether to fill the display
+        :param int color: The color to fill the display
         """
 
         fill1 = 0xFF if color & 0x01 else 0x00

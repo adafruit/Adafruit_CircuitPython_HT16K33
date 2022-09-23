@@ -20,6 +20,7 @@ try:
 except ImportError:
     pass
 
+
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
@@ -33,8 +34,8 @@ class HT16K33:
     """
     The base class for all displays. Contains common methods.
 
-    :param I2C i2c: The I2C bus object
-    :param int address: The I2C addess of the HT16K33.
+    :param ~busio.I2C i2c: The I2C bus object
+    :param int|list|tuple address: The I2C addess(es) of the HT16K33.
     :param bool auto_write: True if the display should immediately change when
         set. If False, `show` must be called explicitly.
     :param float brightness: 0.0 - 1.0 default brightness level.
@@ -43,7 +44,7 @@ class HT16K33:
     def __init__(
         self,
         i2c: I2C,
-        address: Union[int, Tuple, List] = 0x70,
+        address: Union[int, List[int], Tuple[int, ...]] = 0x70,
         auto_write: bool = True,
         brightness: float = 1.0,
     ) -> None:
@@ -65,7 +66,7 @@ class HT16K33:
         self.blink_rate = 0
         self.brightness = brightness
 
-    def _write_cmd(self, byte: bytearray, i2c_index: int = 0) -> None:
+    def _write_cmd(self, byte: int, i2c_index: int = 0) -> None:
         self._temp[0] = byte
         with self.i2c_device[i2c_index]:
             self.i2c_device[i2c_index].write(self._temp)
@@ -76,7 +77,7 @@ class HT16K33:
         return self._blink_rate
 
     @blink_rate.setter
-    def blink_rate(self, rate: Optional[int] = None) -> None:
+    def blink_rate(self, rate: int) -> None:
         if not 0 <= rate <= 3:
             raise ValueError("Blink rate must be an integer in the range: 0-3")
         rate = rate & 0x03
@@ -156,8 +157,8 @@ class HT16K33:
             self.show()
         return None
 
-    def _set_buffer(self, i: int, value: bool) -> None:
+    def _set_buffer(self, i: int, value: int) -> None:
         self._buffer[i + 1] = value  # Offset by 1 to move past register address.
 
-    def _get_buffer(self, i: int) -> bool:
+    def _get_buffer(self, i: int) -> int:
         return self._buffer[i + 1]  # Offset by 1 to move past register address.
