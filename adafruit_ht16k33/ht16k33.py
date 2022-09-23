@@ -14,6 +14,12 @@
 from adafruit_bus_device import i2c_device
 from micropython import const
 
+try:
+    from typing import Union, List, Tuple, Optional
+    from busio import I2C
+except ImportError:
+    pass
+
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
@@ -28,7 +34,7 @@ class HT16K33:
     """
     The base class for all displays. Contains common methods.
 
-    :param I2C i2c: The I2C bus object
+    :param ~busio.I2C i2c: The I2C bus object
     :param int address: The I2C addess of the HT16K33.
     :param bool auto_write: True if the display should immediately change when
         set. If False, `show` must be called explicitly.
@@ -37,11 +43,11 @@ class HT16K33:
 
     def __init__(
         self,
-        i2c,
-        address = 0x70,
-        auto_write = True,
-        brightness = 1.0,
-    ):
+        i2c: I2C,
+        address: Union[int, List[int], Tuple[int, ...]] = 0x70,
+        auto_write: bool = True,
+        brightness: float = 1.0,
+    ) -> None:
         if isinstance(address, (tuple, list)):
             self.i2c_device = []
             for addr in address:
@@ -60,18 +66,18 @@ class HT16K33:
         self.blink_rate = 0
         self.brightness = brightness
 
-    def _write_cmd(self, byte, i2c_index = 0):
+    def _write_cmd(self, byte: int, i2c_index: int = 0) -> None:
         self._temp[0] = byte
         with self.i2c_device[i2c_index]:
             self.i2c_device[i2c_index].write(self._temp)
 
     @property
-    def blink_rate(self):
+    def blink_rate(self) -> int:
         """The blink rate. Range 0-3."""
         return self._blink_rate
 
     @blink_rate.setter
-    def blink_rate(self, rate = None):
+    def blink_rate(self, rate: int) -> None:
         if not 0 <= rate <= 3:
             raise ValueError("Blink rate must be an integer in the range: 0-3")
         rate = rate & 0x03
@@ -82,12 +88,12 @@ class HT16K33:
             )
 
     @property
-    def brightness(self):
+    def brightness(self) -> float:
         """The brightness. Range 0.0-1.0"""
         return self._brightness
 
     @brightness.setter
-    def brightness(self, brightness):
+    def brightness(self, brightness: float) -> None:
         if not 0.0 <= brightness <= 1.0:
             raise ValueError(
                 "Brightness must be a decimal number in the range: 0.0-1.0"
@@ -100,18 +106,18 @@ class HT16K33:
             self._write_cmd(_HT16K33_CMD_BRIGHTNESS | xbright, index)
 
     @property
-    def auto_write(self):
+    def auto_write(self) -> bool:
         """Auto write updates to the display."""
         return self._auto_write
 
     @auto_write.setter
-    def auto_write(self, auto_write):
+    def auto_write(self, auto_write: bool) -> None:
         if isinstance(auto_write, bool):
             self._auto_write = auto_write
         else:
             raise ValueError("Must set to either True or False.")
 
-    def show(self):
+    def show(self) -> None:
         """Refresh the display and show the changes."""
         for index, i2c_dev in enumerate(self.i2c_device):
             with i2c_dev:
@@ -121,7 +127,7 @@ class HT16K33:
                 buffer = self._buffer[offset : offset + self._buffer_size]
                 i2c_dev.write(buffer)
 
-    def fill(self, color):
+    def fill(self, color: bool) -> None:
         """Fill the whole display with the given color.
 
         :param bool color: Whether to fill the display
@@ -134,7 +140,7 @@ class HT16K33:
         if self._auto_write:
             self.show()
 
-    def _pixel(self, x, y, color = None):
+    def _pixel(self, x: int, y: int, color: Optional[bool] = None) -> Optional[bool]:
         offset = ((x // 16) + (y // 8)) * self._buffer_size
         addr = 2 * (y % 8) + ((x % 16) // 8)
         addr = (addr % 16) + offset
@@ -151,8 +157,8 @@ class HT16K33:
             self.show()
         return None
 
-    def _set_buffer(self, i, value):
+    def _set_buffer(self, i: int, value: int) -> None:
         self._buffer[i + 1] = value  # Offset by 1 to move past register address.
 
-    def _get_buffer(self, i):
+    def _get_buffer(self, i: int) -> int:
         return self._buffer[i + 1]  # Offset by 1 to move past register address.
