@@ -158,7 +158,7 @@ class Seg14x4(HT16K33):
         self,
         i2c: I2C,
         address: Union[int, List[int], Tuple[int, ...]] = 0x70,
-        auto_write: Union[int, List[int], Tuple[int, ...]] = True,
+        auto_write: bool = True,
         chars_per_display: int = 4,
     ) -> None:
         super().__init__(i2c, address, auto_write)
