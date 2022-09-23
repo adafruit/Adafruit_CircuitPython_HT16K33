@@ -198,8 +198,8 @@ class Seg14x4(HT16K33):
         else:
             self.print(value)
 
-    def __setitem__(self, key: int, value: Union[str, int]) -> None:
-        self._put(str(value), key)
+    def __setitem__(self, key: int, value: str) -> None:
+        self._put(value, key)
         if self._auto_write:
             self.show()
 
