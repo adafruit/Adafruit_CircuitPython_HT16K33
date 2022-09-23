@@ -16,6 +16,13 @@ The display must be initialized with auto_write=False.
 
 from time import sleep
 
+try:
+    from typing import List
+    from adafruit_ht16k33.segments import Seg14x4
+except ImportError:
+    pass
+
+
 N = 16384
 M = 8192
 L = 4096
@@ -45,11 +52,17 @@ class Animation:
 
     """
 
-    def __init__(self, display):
+    def __init__(self, display: Seg14x4) -> None:
 
         self._display = display
 
-    def animate(self, digits, bitmasks, delay=0.2, auto_write=True):
+    def animate(
+        self,
+        digits: List[int],
+        bitmasks: List[int],
+        delay: float = 0.2,
+        auto_write: bool = True,
+    ) -> None:
         """Animate function
 
 
@@ -84,12 +97,10 @@ class Animation:
                     self._display.show()
                     sleep(delay)
 
-    def chase_forward_and_reverse(self, delay=0.2, cycles=5):
+    def chase_forward_and_reverse(self, delay: float = 0.2, cycles: int = 5):
         """Chase Forward and Reverse Animation"""
 
-        cy = 0
-
-        while cy < cycles:
+        for _ in range(cycles):
             self.animate([0, 1, 2, 3], [A, 0], delay)
             self.animate([3], [B, C, D, 0], delay)
             self.animate([2, 1, 0], [D, 0], delay)
@@ -103,15 +114,12 @@ class Animation:
             self.animate([2, 1], [G2, G1, 0], delay)
             self.animate([0], [H, 0], delay)
 
-            cy += 1
-
-    def prelude_to_spinners(self, delay=0.2, cycles=5):
+    def prelude_to_spinners(self, delay: float = 0.2, cycles: int = 5) -> None:
         """Prelude to Spinners Animation"""
 
-        cy = 0
         auto_write = False
 
-        while cy < cycles:
+        for _ in range(cycles):
             self.animate([1, 2], [A], 0, auto_write)
             self._display.show()
             sleep(delay)
@@ -164,15 +172,12 @@ class Animation:
             self._display.show()
             sleep(delay)
 
-            cy += 1
-
-    def spinners(self, delay=0.2, cycles=5):
+    def spinners(self, delay: float = 0.2, cycles: int = 5) -> None:
         """Spinners Animation"""
 
-        cy = 0
         auto_write = False
 
-        while cy < cycles:
+        for _ in range(cycles):
             self.animate([0], [H + M], 0, auto_write)
             self.animate([1], [J + K], 0, auto_write)
             self.animate([2], [H + M], 0, auto_write)
@@ -194,16 +199,14 @@ class Animation:
             self._display.show()
             sleep(delay)
 
-            cy += 1
-
         self._display.fill(0)
 
-    def enclosed_spinners(self, delay=0.2, cycles=5):
+    def enclosed_spinners(self, delay: float = 0.2, cycles: int = 5) -> None:
         """Enclosed Spinner Animation"""
-        cy = 0
+
         auto_write = False
 
-        while cy < cycles:
+        for _ in range(cycles):
             self.animate([0], [A + D + E + F + H + M], 0, auto_write)
             self.animate([1], [A + D + J + K], 0, auto_write)
             self.animate([2], [A + D + H + M], 0, auto_write)
@@ -225,30 +228,26 @@ class Animation:
             self._display.show()
             sleep(delay)
 
-            cy += 1
-
         self._display.fill(0)
 
-    def count_down(self):
+    def count_down(self) -> None:
         """Countdown Method"""
+
         auto_write = False
         numbers = [
             [A + B + C + D + G1 + G2 + N],
             [A + B + D + E + G1 + G2 + N],
             [B + C + N],
         ]
-        index = 0
 
         self._display.fill(0)
 
-        while index < len(numbers):
-            self.animate([index], numbers[index], 0, auto_write)
+        for index, number in enumerate(numbers):
+            self.animate([index], number, 0, auto_write)
             self._display.show()
             sleep(1)
             self._display.fill(0)
             sleep(0.5)
-
-            index += 1
 
         sleep(1)
         self._display.fill(0)
