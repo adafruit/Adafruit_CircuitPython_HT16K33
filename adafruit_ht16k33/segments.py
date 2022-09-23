@@ -365,7 +365,7 @@ class Seg14x4(HT16K33):
             else:
                 self._scroll_marquee(text, delay)
 
-    def _scroll_marquee(self, text: str, delay: float):
+    def _scroll_marquee(self, text: str, delay: float) -> None:
         """Scroll through the text string once using the delay"""
         char_is_dot = False
         for character in text:
