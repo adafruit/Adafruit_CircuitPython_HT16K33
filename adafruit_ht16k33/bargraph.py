@@ -25,14 +25,14 @@ class Bicolor24(HT16K33):
     LED_GREEN = 2
     LED_YELLOW = 3
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> int:
         # map to HT16K33 row (x) and column (y), see schematic
         x = key % 4 + 4 * (key // 12)
         y = key // 4 - 3 * (key // 12)
         # construct the color value and return it
         return self._pixel(x, y) | self._pixel(x + 8, y) << 1
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: int, value: int) -> None:
         # map to HT16K33 row (x) and column (y), see schematic
         x = key % 4 + 4 * (key // 12)
         y = key // 4 - 3 * (key // 12)
@@ -41,10 +41,12 @@ class Bicolor24(HT16K33):
         # conditionally turn on green LED
         self._pixel(x + 8, y, value >> 1)
 
-    def fill(self, color):
+    def fill(self, color: int) -> None:  # TODO: finish annotation
         """Fill the whole display with the given color.
 
-        :param bool color: Whether to fill the display
+        :param int color: Whether to fill the display, where 0 is no
+            color, 1 is red, 2 is green, and 3 is yellow (red +
+            green)
         """
 
         what_it_was = self.auto_write
