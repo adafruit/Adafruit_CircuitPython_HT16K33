@@ -235,9 +235,9 @@ class Matrix8x8x2(Matrix8x8):
 
         :param int x: The x coordinate of the pixel
         :param int y: The y coordinate of the pixel
-        :param bool color: (Optional) The state to set the pixel
+        :param int color: (Optional) The color to set the pixel
         :return: If ``color`` was not set, this returns the state of the pixel
-        :rtype: bool
+        :rtype: int
         """
         if not 0 <= x <= 7:
             return None
@@ -253,7 +253,7 @@ class Matrix8x8x2(Matrix8x8):
     def fill(self, color: int) -> None:
         """Fill the whole display with the given color.
 
-        :param bool color: Whether to fill the display
+        :param int color: The color to fill the display
         """
 
         fill1 = 0xFF if color & 0x01 else 0x00

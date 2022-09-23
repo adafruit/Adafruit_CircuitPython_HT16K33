@@ -35,7 +35,7 @@ class HT16K33:
     The base class for all displays. Contains common methods.
 
     :param ~busio.I2C i2c: The I2C bus object
-    :param int address: The I2C addess of the HT16K33.
+    :param int|list|tuple address: The I2C addess(es) of the HT16K33.
     :param bool auto_write: True if the display should immediately change when
         set. If False, `show` must be called explicitly.
     :param float brightness: 0.0 - 1.0 default brightness level.

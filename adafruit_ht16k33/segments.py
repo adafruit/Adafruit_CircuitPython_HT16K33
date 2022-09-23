@@ -146,7 +146,7 @@ class Seg14x4(HT16K33):
     """Alpha-Numeric 14-segment display.
 
     :param I2C i2c: The I2C bus object
-    :param address: The I2C address for the display. Can be a tuple or list for multiple displays.
+    :param int|list|tuple address: The I2C address(es) for the display. Can be a tuple or list for multiple displays.
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
     :param int chars_per_display: A number between 1-8 represesenting the number of characters
@@ -156,7 +156,7 @@ class Seg14x4(HT16K33):
     def __init__(
         self,
         i2c: I2C,
-        address=0x70,
+        address: Union[int, List[int], Tuple[int, ...]] = 0x70,
         auto_write: Union[int, List[int], Tuple[int, ...]] = True,
         chars_per_display: int = 4,
     ) -> None:
@@ -172,8 +172,7 @@ class Seg14x4(HT16K33):
     def print(self, value: Union[str, float], decimal: int = 0) -> None:
         """Print the value to the display.
 
-        :param value: The value to print
-        :type value: str, int, or float
+        :param str|float value: The value to print
         :param int decimal: The number of decimal places for a floating point
             number if decimal is greater than zero, or the input number is an
             integer if decimal is zero.
@@ -191,7 +190,7 @@ class Seg14x4(HT16K33):
     def print_hex(self, value: Union[int, str]) -> None:
         """Print the value as a hexidecimal string to the display.
 
-        :param int value: The number to print
+        :param int|str value: The number to print
         """
 
         if isinstance(value, int):
@@ -199,7 +198,7 @@ class Seg14x4(HT16K33):
         else:
             self.print(value)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: int, value: str) -> None:
         self._put(value, key)
         if self._auto_write:
             self.show()
@@ -256,13 +255,12 @@ class Seg14x4(HT16K33):
         """
         Display a floating point or integer number on the Adafruit HT16K33 based displays
 
-        Param: number - The floating point or integer number to be displayed, which must be
-                in the range 0 (zero) to 9999 for integers and floating point or integer numbers
-                and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
-        Param: decimal - The number of decimal places for a floating point number if decimal
-                is greater than zero, or the input number is an integer if decimal is zero.
-
-        Returns: The output text string to be displayed.
+        :parma float number: The floating point or integer number to be displayed, which must be
+            in the range 0 (zero) to 9999 for integers and floating point or integer numbers
+            and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
+        :param int decimal: The number of decimal places for a floating point number if decimal
+            is greater than zero, or the input number is an integer if decimal is zero.
+        :return: The output text string to be displayed
         """
 
         auto_write = self._auto_write
@@ -328,7 +326,7 @@ class Seg14x4(HT16K33):
 
         :param int index: The index of the display to set
         :param bitmask: A 2 byte number corresponding to the segments to set
-        :type bitmask: int, or a list/tuple of bool
+        :type bitmask: int, or a list/tuple of int
         """
         if not isinstance(index, int) or not 0 <= index <= self._chars - 1:
             raise ValueError(
@@ -490,11 +488,13 @@ class Seg7x4(_AbstractSeg7x4):
     supports displaying a limited set of characters.
 
     :param I2C i2c: The I2C bus object
-    :param address: The I2C address for the display. Can be a tuple or list for multiple displays.
+    :param int|list|tuple address: The I2C address for the display. Can be a tuple or list for multiple displays.
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
+    :param dict char_dict: An optional dictionary mapping strings to bit settings integers used
+        for defining how to display custom letters
     :param int chars_per_display: A number between 1-8 represesenting the number of characters
-                                  on each display.
+        on each display.
     """
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -524,9 +524,11 @@ class BigSeg7x4(_AbstractSeg7x4):
     supports displaying a limited set of characters.
 
     :param I2C i2c: The I2C bus object
-    :param int address: The I2C address for the display
+    :param int|list|tuple address: The I2C address(es) for the display
     :param bool auto_write: True if the display should immediately change when set. If False,
         `show` must be called explicitly.
+    :param dict char_dict: An optional dictionary mapping strings to bit settings integers used
+        for defining how to display custom letters
     """
 
     def __init__(
