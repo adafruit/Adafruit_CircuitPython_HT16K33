@@ -41,7 +41,7 @@ class Bicolor24(HT16K33):
         # conditionally turn on green LED
         self._pixel(x + 8, y, value >> 1)
 
-    def fill(self, color: int) -> None:  # TODO: finish annotation
+    def fill(self, color: int) -> None:
         """Fill the whole display with the given color.
 
         :param int color: Whether to fill the display, where 0 is no
