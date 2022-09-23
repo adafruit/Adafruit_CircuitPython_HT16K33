@@ -256,7 +256,7 @@ class Seg14x4(HT16K33):
         """
         Display a floating point or integer number on the Adafruit HT16K33 based displays
 
-        :parma float number: The floating point or integer number to be displayed, which must be
+        :param float number: The floating point or integer number to be displayed, which must be
             in the range 0 (zero) to 9999 for integers and floating point or integer numbers
             and between 0.0 and 999.0 or 99.00 or 9.000 for floating point numbers.
         :param int decimal: The number of decimal places for a floating point number if decimal
