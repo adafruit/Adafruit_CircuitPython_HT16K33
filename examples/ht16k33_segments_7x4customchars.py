@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-FileCopyrightText: Alec Delaney
+#
 # SPDX-License-Identifier: MIT
 
-# Basic example of setting digits on a LED segment display.
-# This example and library is meant to work with Adafruit CircuitPython API.
-# Author: Alec Delaney
-# License: Public Domain
+"""
+Basic example of setting custom characters on a LED segment display.
+"""
 
 # Import all board pins.
 import time
