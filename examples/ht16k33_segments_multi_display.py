@@ -68,10 +68,14 @@ if isinstance(display, segments.Seg7x4):
     display.set_digit_raw(2, 0x79)
     display.set_digit_raw(3, 0b01111001)
 else:
-    # 14-segment raw digits
+    # 14-segment raw digits. Same character (0) displayed using four different methods.
+    # 16-bit Hexadecimal number
     display.set_digit_raw(0, 0x2D3F)
+    # 16-bit Binary number
     display.set_digit_raw(1, 0b0010110100111111)
+    # 8-bit Binary Tuple
     display.set_digit_raw(2, (0b00101101, 0b00111111))
+    # 8-bit Hexadecimal List
     display.set_digit_raw(3, [0x2D, 0x3F])
 time.sleep(2)
 
