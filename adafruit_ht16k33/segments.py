@@ -138,6 +138,25 @@ NUMBERS = (
     0x5E,  # d
     0x79,  # E
     0x71,  # F
+    0x3D,  # G
+    0x76,  # H
+    0x30,  # I
+    0x1E,  # J
+    0x40,  # -
+    0x38,  # L
+    0x40,  # -
+    0x54,  # n
+    0x5C,  # o
+    0x73,  # P
+    0x67,  # q
+    0x50,  # R
+    0x6D,  # S
+    0x78,  # t
+    0x3E,  # U
+    0x1C,  # v
+    0x40,  # -
+    0x40,  # -
+    0x6E,  # y
     0x40,  # -
 )
 
@@ -439,7 +458,7 @@ class _AbstractSeg7x4(Seg14x4):
         if char == ".":
             self._set_buffer(index, self._get_buffer(index) | 0b10000000)
             return
-        if char in "abcdef":
+        if char in "abcdefghijklmnopqrstuvwxy":
             character = ord(char) - 97 + 10
         elif char == "-":
             character = 16
