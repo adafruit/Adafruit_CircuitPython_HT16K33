@@ -9,7 +9,7 @@ from adafruit_ht16k33 import segments
 # Display connected to STEMMA QT connector.
 display = segments.Seg14x4(board.STEMMA_I2C())
 # Display connected to I2C pins.
-# display = segments.Seg14x4(board.I2C())
+# display = segments.Seg14x4(board.I2C())  # uses board.SCL and board.SDA
 
 # This section displays four 0's across the display. The code shows four
 # different ways to use the set_digit_raw function. Each is labeled below.

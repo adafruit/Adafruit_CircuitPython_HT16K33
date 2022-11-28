@@ -14,6 +14,7 @@ from adafruit_ht16k33.animations import Animation
 
 #   Initialize the I2C bus
 i2c = board.I2C()  # uses board.SCL and board.SDA
+# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 display = Seg14x4(i2c, auto_write=False)
 #   Brightness of the display (0 to 15)
 display.brightness = 0.3
