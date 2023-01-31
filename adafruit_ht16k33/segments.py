@@ -158,6 +158,7 @@ NUMBERS = (
     0x40,  # -
     0x6E,  # y
     0x40,  # -
+    0x40,  # -
 )
 
 
@@ -461,7 +462,7 @@ class _AbstractSeg7x4(Seg14x4):
         if char in "abcdefghijklmnopqrstuvwxy":
             character = ord(char) - 97 + 10
         elif char == "-":
-            character = 16
+            character = 36
         elif char in "0123456789":
             character = ord(char) - 48
         elif char == " ":
