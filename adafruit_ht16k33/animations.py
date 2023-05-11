@@ -53,7 +53,6 @@ class Animation:
     """
 
     def __init__(self, display: Seg14x4) -> None:
-
         self._display = display
 
     def animate(
