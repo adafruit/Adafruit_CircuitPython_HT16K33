@@ -8,7 +8,6 @@ adafruit_ht16k33.segments
 =========================
 """
 import time
-from time import sleep
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
@@ -191,6 +190,7 @@ class Seg14x4(HT16K33):
         self._last_nb_scroll_time = -1
         self._nb_scroll_text = None
         self._nb_scroll_index = -1
+        self._nb_prev_char_is_dot = False
 
     def print(self, value: Union[str, float], decimal: int = 0) -> None:
         """Print the value to the display.
@@ -369,7 +369,13 @@ class Seg14x4(HT16K33):
         if self._auto_write:
             self.show()
 
-    def non_blocking_marquee(self, text: str, delay: float = 0.25, loop: bool = True):
+    def non_blocking_marquee(
+        self,
+        text: str,
+        delay: float = 0.25,
+        loop: bool = True,
+        space_between: bool = False,
+    ) -> bool:
         """
         Scroll the text at the specified delay between characters. Must be called
         repeatedly from main loop faster than delay time.
@@ -378,39 +384,48 @@ class Seg14x4(HT16K33):
         :param float delay: (optional) The delay in seconds to pause before scrolling
                             to the next character (default=0.25)
         :param bool loop: (optional) Whether to endlessly loop the text (default=True)
+        :param bool space_between: (optional) Whether to seperate the end and beginning of
+         the text with a space. (default=False)
         """
         # pylint: disable=too-many-nested-blocks
         if isinstance(text, str):
             now = time.monotonic()
             # if text is the same
             if text == self._nb_scroll_text:
-                # if the text is 4 or less chars we don't need scrolling.
-                if len(text) > 4:
-                    # if we delayed long enough, and it's time to scroll
-                    if now >= self._last_nb_scroll_time + delay:
-                        self._last_nb_scroll_time = now
-                        # if there are chars left in the text
-                        if self._nb_scroll_index + 1 < len(text):
-                            self._nb_scroll_index += 1
-                            self._push(text[self._nb_scroll_index])
-                            self.show()
-                        else:
-                            if loop:
-                                self._nb_scroll_index = -1
-                                self._push(" ")
-                                self.show()
+                # if we delayed long enough, and it's time to scroll
+                if now >= self._last_nb_scroll_time + delay:
+                    # if there are chars left in the text
+                    if self._nb_scroll_index + 1 < len(text):
+                        self._nb_scroll_index += 1
 
+                        _character = text[self._nb_scroll_index]
+
+                        if _character != "." or self._nb_prev_char_is_dot:
+                            self._last_nb_scroll_time = now
+
+                        self.print(text[self._nb_scroll_index])
+                        self._nb_prev_char_is_dot = text[self._nb_scroll_index] == "."
+                    else:
+                        self._nb_scroll_index = -1
+                        if loop:
+                            if space_between:
+                                self._last_nb_scroll_time = now
+                                self.print(" ")
+                        else:
+                            return True
             else:
                 # different text
+                self._nb_scroll_index = 0
+                self.fill(False)
                 self._nb_scroll_text = text
                 self._last_nb_scroll_time = now
-                if len(text) <= 4:
-                    self.print(f"{text}{' ' * (4 - len(text))}")
-                else:
-                    self._nb_scroll_index = 3
-                    self.print(text[0:4])
+                self.print(text[0])
 
-    def marquee(self, text: str, delay: float = 0.25, loop: bool = True) -> None:
+        return False
+
+    def marquee(
+        self, text: str, delay: float = 0.25, loop: bool = True, space_between=False
+    ) -> None:
         """
         Automatically scroll the text at the specified delay between characters
 
@@ -418,26 +433,16 @@ class Seg14x4(HT16K33):
         :param float delay: (optional) The delay in seconds to pause before scrolling
                             to the next character (default=0.25)
         :param bool loop: (optional) Whether to endlessly loop the text (default=True)
-
+        :param bool space_between: (optional) Whether to seperate the end and beginning of
+         the text with a space. (default=False)
         """
         if isinstance(text, str):
             self.fill(False)
-            if loop:
-                while True:
-                    self._scroll_marquee(text, delay)
-            else:
-                self._scroll_marquee(text, delay)
-
-    def _scroll_marquee(self, text: str, delay: float) -> None:
-        """Scroll through the text string once using the delay"""
-        char_is_dot = False
-        for character in text:
-            self.print(character)
-            # Add delay if character is not a dot or more than 2 in a row
-            if character != "." or char_is_dot:
-                sleep(delay)
-            char_is_dot = character == "."
-            self.show()
+            while True:
+                if self.non_blocking_marquee(
+                    text=text, delay=delay, loop=loop, space_between=space_between
+                ):
+                    return
 
 
 class _AbstractSeg7x4(Seg14x4):
