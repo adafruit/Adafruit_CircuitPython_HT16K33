@@ -7,8 +7,7 @@
 adafruit_ht16k33.segments
 =========================
 """
-
-from time import sleep
+import time
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
@@ -17,107 +16,106 @@ try:
 except ImportError:
     pass
 
-
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
 # fmt: off
 CHARS = (
-    0b00000000, 0b00000000, #
-    0b01000000, 0b00000110, # !
-    0b00000010, 0b00100000, # "
-    0b00010010, 0b11001110, # #
-    0b00010010, 0b11101101, # $
-    0b00001100, 0b00100100, # %
-    0b00100011, 0b01011101, # &
-    0b00000100, 0b00000000, # '
-    0b00100100, 0b00000000, # (
-    0b00001001, 0b00000000, # )
-    0b00111111, 0b11000000, # *
-    0b00010010, 0b11000000, # +
-    0b00001000, 0b00000000, # ,
-    0b00000000, 0b11000000, # -
-    0b00000000, 0b00000000, # .
-    0b00001100, 0b00000000, # /
-    0b00001100, 0b00111111, # 0
-    0b00000000, 0b00000110, # 1
-    0b00000000, 0b11011011, # 2
-    0b00000000, 0b10001111, # 3
-    0b00000000, 0b11100110, # 4
-    0b00100000, 0b01101001, # 5
-    0b00000000, 0b11111101, # 6
-    0b00000000, 0b00000111, # 7
-    0b00000000, 0b11111111, # 8
-    0b00000000, 0b11101111, # 9
-    0b00010010, 0b00000000, # :
-    0b00001010, 0b00000000, # ;
-    0b00100100, 0b01000000, # <
-    0b00000000, 0b11001000, # =
-    0b00001001, 0b10000000, # >
-    0b01100000, 0b10100011, # ?
-    0b00000010, 0b10111011, # @
-    0b00000000, 0b11110111, # A
-    0b00010010, 0b10001111, # B
-    0b00000000, 0b00111001, # C
-    0b00010010, 0b00001111, # D
-    0b00000000, 0b11111001, # E
-    0b00000000, 0b01110001, # F
-    0b00000000, 0b10111101, # G
-    0b00000000, 0b11110110, # H
-    0b00010010, 0b00000000, # I
-    0b00000000, 0b00011110, # J
-    0b00100100, 0b01110000, # K
-    0b00000000, 0b00111000, # L
-    0b00000101, 0b00110110, # M
-    0b00100001, 0b00110110, # N
-    0b00000000, 0b00111111, # O
-    0b00000000, 0b11110011, # P
-    0b00100000, 0b00111111, # Q
-    0b00100000, 0b11110011, # R
-    0b00000000, 0b11101101, # S
-    0b00010010, 0b00000001, # T
-    0b00000000, 0b00111110, # U
-    0b00001100, 0b00110000, # V
-    0b00101000, 0b00110110, # W
-    0b00101101, 0b00000000, # X
-    0b00010101, 0b00000000, # Y
-    0b00001100, 0b00001001, # Z
-    0b00000000, 0b00111001, # [
-    0b00100001, 0b00000000, # \
-    0b00000000, 0b00001111, # ]
-    0b00001100, 0b00000011, # ^
-    0b00000000, 0b00001000, # _
-    0b00000001, 0b00000000, # `
-    0b00010000, 0b01011000, # a
-    0b00100000, 0b01111000, # b
-    0b00000000, 0b11011000, # c
-    0b00001000, 0b10001110, # d
-    0b00001000, 0b01011000, # e
-    0b00000000, 0b01110001, # f
-    0b00000100, 0b10001110, # g
-    0b00010000, 0b01110000, # h
-    0b00010000, 0b00000000, # i
-    0b00000000, 0b00001110, # j
-    0b00110110, 0b00000000, # k
-    0b00000000, 0b00110000, # l
-    0b00010000, 0b11010100, # m
-    0b00010000, 0b01010000, # n
-    0b00000000, 0b11011100, # o
-    0b00000001, 0b01110000, # p
-    0b00000100, 0b10000110, # q
-    0b00000000, 0b01010000, # r
-    0b00100000, 0b10001000, # s
-    0b00000000, 0b01111000, # t
-    0b00000000, 0b00011100, # u
-    0b00100000, 0b00000100, # v
-    0b00101000, 0b00010100, # w
-    0b00101000, 0b11000000, # x
-    0b00100000, 0b00001100, # y
-    0b00001000, 0b01001000, # z
-    0b00001001, 0b01001001, # {
-    0b00010010, 0b00000000, # |
-    0b00100100, 0b10001001, # }
-    0b00000101, 0b00100000, # ~
+    0b00000000, 0b00000000,  #
+    0b01000000, 0b00000110,  # !
+    0b00000010, 0b00100000,  # "
+    0b00010010, 0b11001110,  # #
+    0b00010010, 0b11101101,  # $
+    0b00001100, 0b00100100,  # %
+    0b00100011, 0b01011101,  # &
+    0b00000100, 0b00000000,  # '
+    0b00100100, 0b00000000,  # (
+    0b00001001, 0b00000000,  # )
+    0b00111111, 0b11000000,  # *
+    0b00010010, 0b11000000,  # +
+    0b00001000, 0b00000000,  # ,
+    0b00000000, 0b11000000,  # -
+    0b00000000, 0b00000000,  # .
+    0b00001100, 0b00000000,  # /
+    0b00001100, 0b00111111,  # 0
+    0b00000000, 0b00000110,  # 1
+    0b00000000, 0b11011011,  # 2
+    0b00000000, 0b10001111,  # 3
+    0b00000000, 0b11100110,  # 4
+    0b00100000, 0b01101001,  # 5
+    0b00000000, 0b11111101,  # 6
+    0b00000000, 0b00000111,  # 7
+    0b00000000, 0b11111111,  # 8
+    0b00000000, 0b11101111,  # 9
+    0b00010010, 0b00000000,  # :
+    0b00001010, 0b00000000,  # ;
+    0b00100100, 0b01000000,  # <
+    0b00000000, 0b11001000,  # =
+    0b00001001, 0b10000000,  # >
+    0b01100000, 0b10100011,  # ?
+    0b00000010, 0b10111011,  # @
+    0b00000000, 0b11110111,  # A
+    0b00010010, 0b10001111,  # B
+    0b00000000, 0b00111001,  # C
+    0b00010010, 0b00001111,  # D
+    0b00000000, 0b11111001,  # E
+    0b00000000, 0b01110001,  # F
+    0b00000000, 0b10111101,  # G
+    0b00000000, 0b11110110,  # H
+    0b00010010, 0b00000000,  # I
+    0b00000000, 0b00011110,  # J
+    0b00100100, 0b01110000,  # K
+    0b00000000, 0b00111000,  # L
+    0b00000101, 0b00110110,  # M
+    0b00100001, 0b00110110,  # N
+    0b00000000, 0b00111111,  # O
+    0b00000000, 0b11110011,  # P
+    0b00100000, 0b00111111,  # Q
+    0b00100000, 0b11110011,  # R
+    0b00000000, 0b11101101,  # S
+    0b00010010, 0b00000001,  # T
+    0b00000000, 0b00111110,  # U
+    0b00001100, 0b00110000,  # V
+    0b00101000, 0b00110110,  # W
+    0b00101101, 0b00000000,  # X
+    0b00010101, 0b00000000,  # Y
+    0b00001100, 0b00001001,  # Z
+    0b00000000, 0b00111001,  # [
+    0b00100001, 0b00000000,  # \
+    0b00000000, 0b00001111,  # ]
+    0b00001100, 0b00000011,  # ^
+    0b00000000, 0b00001000,  # _
+    0b00000001, 0b00000000,  # `
+    0b00010000, 0b01011000,  # a
+    0b00100000, 0b01111000,  # b
+    0b00000000, 0b11011000,  # c
+    0b00001000, 0b10001110,  # d
+    0b00001000, 0b01011000,  # e
+    0b00000000, 0b01110001,  # f
+    0b00000100, 0b10001110,  # g
+    0b00010000, 0b01110000,  # h
+    0b00010000, 0b00000000,  # i
+    0b00000000, 0b00001110,  # j
+    0b00110110, 0b00000000,  # k
+    0b00000000, 0b00110000,  # l
+    0b00010000, 0b11010100,  # m
+    0b00010000, 0b01010000,  # n
+    0b00000000, 0b11011100,  # o
+    0b00000001, 0b01110000,  # p
+    0b00000100, 0b10000110,  # q
+    0b00000000, 0b01010000,  # r
+    0b00100000, 0b10001000,  # s
+    0b00000000, 0b01111000,  # t
+    0b00000000, 0b00011100,  # u
+    0b00100000, 0b00000100,  # v
+    0b00101000, 0b00010100,  # w
+    0b00101000, 0b11000000,  # x
+    0b00100000, 0b00001100,  # y
+    0b00001000, 0b01001000,  # z
+    0b00001001, 0b01001001,  # {
+    0b00010010, 0b00000000,  # |
+    0b00100100, 0b10001001,  # }
+    0b00000101, 0b00100000,  # ~
     0b00111111, 0b11111111,
 )
 # fmt: on
@@ -189,6 +187,10 @@ class Seg14x4(HT16K33):
 
         self._chars = chars_per_display * len(self.i2c_device)
         self._bytes_per_char = 2
+        self._last_nb_scroll_time = -1
+        self._nb_scroll_text = None
+        self._nb_scroll_index = -1
+        self._nb_prev_char_is_dot = False
 
     def print(self, value: Union[str, float], decimal: int = 0) -> None:
         """Print the value to the display.
@@ -367,7 +369,63 @@ class Seg14x4(HT16K33):
         if self._auto_write:
             self.show()
 
-    def marquee(self, text: str, delay: float = 0.25, loop: bool = True) -> None:
+    def non_blocking_marquee(
+        self,
+        text: str,
+        delay: float = 0.25,
+        loop: bool = True,
+        space_between: bool = False,
+    ) -> bool:
+        """
+        Scroll the text at the specified delay between characters. Must be called
+        repeatedly from main loop faster than delay time.
+
+        :param str text: The text to display
+        :param float delay: (optional) The delay in seconds to pause before scrolling
+                            to the next character (default=0.25)
+        :param bool loop: (optional) Whether to endlessly loop the text (default=True)
+        :param bool space_between: (optional) Whether to seperate the end and beginning of
+         the text with a space. (default=False)
+        """
+        # pylint: disable=too-many-nested-blocks
+        if isinstance(text, str):
+            now = time.monotonic()
+            # if text is the same
+            if text == self._nb_scroll_text:
+                # if we delayed long enough, and it's time to scroll
+                if now >= self._last_nb_scroll_time + delay:
+                    # if there are chars left in the text
+                    if self._nb_scroll_index + 1 < len(text):
+                        self._nb_scroll_index += 1
+
+                        _character = text[self._nb_scroll_index]
+
+                        if _character != "." or self._nb_prev_char_is_dot:
+                            self._last_nb_scroll_time = now
+
+                        self.print(text[self._nb_scroll_index])
+                        self._nb_prev_char_is_dot = text[self._nb_scroll_index] == "."
+                    else:
+                        self._nb_scroll_index = -1
+                        if loop:
+                            if space_between:
+                                self._last_nb_scroll_time = now
+                                self.print(" ")
+                        else:
+                            return True
+            else:
+                # different text
+                self._nb_scroll_index = 0
+                self.fill(False)
+                self._nb_scroll_text = text
+                self._last_nb_scroll_time = now
+                self.print(text[0])
+
+        return False
+
+    def marquee(
+        self, text: str, delay: float = 0.25, loop: bool = True, space_between=False
+    ) -> None:
         """
         Automatically scroll the text at the specified delay between characters
 
@@ -375,30 +433,20 @@ class Seg14x4(HT16K33):
         :param float delay: (optional) The delay in seconds to pause before scrolling
                             to the next character (default=0.25)
         :param bool loop: (optional) Whether to endlessly loop the text (default=True)
-
+        :param bool space_between: (optional) Whether to seperate the end and beginning of
+         the text with a space. (default=False)
         """
         if isinstance(text, str):
             self.fill(False)
-            if loop:
-                while True:
-                    self._scroll_marquee(text, delay)
-            else:
-                self._scroll_marquee(text, delay)
-
-    def _scroll_marquee(self, text: str, delay: float) -> None:
-        """Scroll through the text string once using the delay"""
-        char_is_dot = False
-        for character in text:
-            self.print(character)
-            # Add delay if character is not a dot or more than 2 in a row
-            if character != "." or char_is_dot:
-                sleep(delay)
-            char_is_dot = character == "."
-            self.show()
+            while True:
+                if self.non_blocking_marquee(
+                    text=text, delay=delay, loop=loop, space_between=space_between
+                ):
+                    return
 
 
 class _AbstractSeg7x4(Seg14x4):
-    POSITIONS = (0, 2, 6, 8)  #  The positions of characters.
+    POSITIONS = (0, 2, 6, 8)  # The positions of characters.
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
