@@ -245,7 +245,7 @@ class Matrix8x8x2(Matrix8x8):
             super()._pixel(y, x, (color >> 1) & 0x01)
             super()._pixel(y + 8, x, (color & 0x01))
         else:
-            return super()._pixel(y, x) | super()._pixel(y + 8, x) << 1
+            return super()._pixel(y, x) << 1 | super()._pixel(y + 8, x)
         return None
 
     def fill(self, color: int) -> None:
