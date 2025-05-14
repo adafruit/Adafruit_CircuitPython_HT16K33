@@ -7,10 +7,11 @@ marquee scrolling.
 """
 
 import time
+
 import board
 import neopixel
-import adafruit_ht16k33.segments
 
+import adafruit_ht16k33.segments
 
 i2c = board.I2C()
 segment_display = adafruit_ht16k33.segments.Seg14x4(i2c)

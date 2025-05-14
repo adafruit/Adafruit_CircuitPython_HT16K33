@@ -8,12 +8,14 @@ adafruit_ht16k33.matrix
 =======================
 
 """
+
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
-    from typing import Optional, Tuple, Union, List
-    from circuitpython_typing.pil import Image
+    from typing import List, Optional, Tuple, Union
+
     from busio import I2C
+    from circuitpython_typing.pil import Image
 except ImportError:
     pass
 
@@ -52,7 +54,6 @@ class Matrix8x8(HT16K33):
         x, y = key
         self.pixel(x, y, value)
 
-    # pylint: disable=too-many-branches
     def shift(self, x: int, y: int, rotate: bool = False) -> None:
         """
         Shift pixels by x and y
@@ -197,7 +198,7 @@ class Matrix16x8(Matrix8x8):
             x -= 8
             y += 8
 
-        return super()._pixel(y, x, color)  # pylint: disable=arguments-out-of-order
+        return super()._pixel(y, x, color)
 
 
 class MatrixBackpack16x8(Matrix16x8):

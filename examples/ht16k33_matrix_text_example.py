@@ -5,9 +5,9 @@
 
 # Requires: adafruit_framebuf
 
+import adafruit_framebuf
 import board
 import busio
-import adafruit_framebuf
 
 # Import the HT16K33 LED matrix module.
 from adafruit_ht16k33 import matrix
