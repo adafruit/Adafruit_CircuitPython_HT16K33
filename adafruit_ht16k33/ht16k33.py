@@ -15,7 +15,8 @@ from adafruit_bus_device import i2c_device
 from micropython import const
 
 try:
-    from typing import Union, List, Tuple, Optional
+    from typing import List, Optional, Tuple, Union
+
     from busio import I2C
 except ImportError:
     pass
@@ -83,9 +84,7 @@ class HT16K33:
         rate = rate & 0x03
         self._blink_rate = rate
         for index, _ in enumerate(self.i2c_device):
-            self._write_cmd(
-                _HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1, index
-            )
+            self._write_cmd(_HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1, index)
 
     @property
     def brightness(self) -> float:
@@ -95,9 +94,7 @@ class HT16K33:
     @brightness.setter
     def brightness(self, brightness: float) -> None:
         if not 0.0 <= brightness <= 1.0:
-            raise ValueError(
-                "Brightness must be a decimal number in the range: 0.0-1.0"
-            )
+            raise ValueError("Brightness must be a decimal number in the range: 0.0-1.0")
 
         self._brightness = brightness
         xbright = round(15 * brightness)

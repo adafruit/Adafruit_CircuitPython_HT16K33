@@ -8,8 +8,10 @@ Basic example of setting custom characters on a LED segment display.
 
 # Import all board pins.
 import time
+
 import board
 import busio
+
 from adafruit_ht16k33 import segments
 
 # Create the character dictionary

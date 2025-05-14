@@ -8,12 +8,12 @@
 
 # Import all board pins.
 import time
+
 import board
 import busio
 
 # Import the HT16K33 LED matrix module.
 from adafruit_ht16k33 import matrix
-
 
 # Create the I2C interface.
 i2c = busio.I2C(board.SCL, board.SDA)

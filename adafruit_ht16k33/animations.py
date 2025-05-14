@@ -18,6 +18,7 @@ from time import sleep
 
 try:
     from typing import List
+
     from adafruit_ht16k33.segments import Seg14x4
 except ImportError:
     pass
@@ -38,9 +39,6 @@ D = 8
 C = 4
 B = 2
 A = 1
-
-
-# pylint: disable=invalid-name
 
 
 class Animation:
@@ -86,9 +84,7 @@ class Animation:
 
             for bits in bitmasks:
                 if not 0 <= bits <= 0xFFFF:
-                    raise ValueError(
-                        "Bitmask value must be an integer in the range: 0-65535"
-                    )
+                    raise ValueError("Bitmask value must be an integer in the range: 0-65535")
 
                 self._display.set_digit_raw(dig, bits)
 

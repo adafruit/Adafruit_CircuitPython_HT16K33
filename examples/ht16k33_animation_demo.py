@@ -2,15 +2,17 @@
 # SPDX-License-Identifier: MIT
 
 """
-    Test script for display animations on an HT16K33 with alphanumeric display
+Test script for display animations on an HT16K33 with alphanumeric display
 
-    The display must be initialized with auto_write=False.
+The display must be initialized with auto_write=False.
 """
 
 from time import sleep
+
 import board
-from adafruit_ht16k33.segments import Seg14x4
+
 from adafruit_ht16k33.animations import Animation
+from adafruit_ht16k33.segments import Seg14x4
 
 #   Initialize the I2C bus
 i2c = board.I2C()  # uses board.SCL and board.SDA

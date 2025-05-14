@@ -7,11 +7,14 @@
 adafruit_ht16k33.segments
 =========================
 """
+
 import time
+
 from adafruit_ht16k33.ht16k33 import HT16K33
 
 try:
-    from typing import Union, List, Tuple, Optional, Dict
+    from typing import Dict, List, Optional, Tuple, Union
+
     from busio import I2C
 except ImportError:
     pass
@@ -21,7 +24,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_HT16K33.git"
 
 # fmt: off
 CHARS = (
-    0b00000000, 0b00000000,  #
+    0b00000000, 0b00000000,
     0b01000000, 0b00000110,  # !
     0b00000010, 0b00100000,  # "
     0b00010010, 0b11001110,  # #
@@ -181,9 +184,7 @@ class Seg14x4(HT16K33):
     ) -> None:
         super().__init__(i2c, address, auto_write)
         if not 1 <= chars_per_display <= 8:
-            raise ValueError(
-                "Input overflow - The HT16K33 only supports up 1-8 characters!"
-            )
+            raise ValueError("Input overflow - The HT16K33 only supports up 1-8 characters!")
 
         self._chars = chars_per_display * len(self.i2c_device)
         self._bytes_per_char = 2
@@ -206,7 +207,7 @@ class Seg14x4(HT16K33):
         elif isinstance(value, (int, float)):
             self._number(value, decimal)
         else:
-            raise ValueError("Unsupported display value type: {}".format(type(value)))
+            raise ValueError(f"Unsupported display value type: {type(value)}")
         if self._auto_write:
             self.show()
 
@@ -217,7 +218,7 @@ class Seg14x4(HT16K33):
         """
 
         if isinstance(value, int):
-            self.print("{0:X}".format(value))
+            self.print(f"{value:X}")
         else:
             self.print(value)
 
@@ -262,8 +263,7 @@ class Seg14x4(HT16K33):
         """Scroll the display and add a character at the end."""
         if (
             char != "."
-            or self._get_buffer(self._char_buffer_index(self._chars - 1) + 1)
-            & 0b01000000
+            or self._get_buffer(self._char_buffer_index(self._chars - 1) + 1) & 0b01000000
         ):
             self.scroll()
             self._put(" ", self._chars - 1)
@@ -293,9 +293,7 @@ class Seg14x4(HT16K33):
 
         if (len(stnum) > self._chars + 1) or ((len(stnum) > self._chars) and (dot < 0)):
             self._auto_write = auto_write
-            raise ValueError(
-                "Input overflow - {0} is too large for the display!".format(number)
-            )
+            raise ValueError(f"Input overflow - {number} is too large for the display!")
 
         if dot < 0:
             # No decimal point (Integer)
@@ -319,7 +317,7 @@ class Seg14x4(HT16K33):
 
         if len(txt) > self._chars + 1:
             self._auto_write = auto_write
-            raise ValueError("Output string ('{0}') is too long!".format(txt))
+            raise ValueError(f"Output string ('{txt}') is too long!")
 
         self._text(txt)
         self._auto_write = auto_write
@@ -341,9 +339,7 @@ class Seg14x4(HT16K33):
         offset = (char_pos // self._chars_per_buffer()) * self._buffer_size
         return offset + (char_pos % self._chars_per_buffer()) * self._bytes_per_char
 
-    def set_digit_raw(
-        self, index: int, bitmask: Union[int, List[int], Tuple[int, int]]
-    ) -> None:
+    def set_digit_raw(self, index: int, bitmask: Union[int, List[int], Tuple[int, int]]) -> None:
         """Set digit at position to raw bitmask value. Position should be a value
         of 0 to 3 with 0 being the left most character on the display.
 
@@ -352,9 +348,7 @@ class Seg14x4(HT16K33):
         :type bitmask: int, or a list/tuple of int
         """
         if not isinstance(index, int) or not 0 <= index <= self._chars - 1:
-            raise ValueError(
-                f"Index value must be an integer in the range: 0-{self._chars - 1}"
-            )
+            raise ValueError(f"Index value must be an integer in the range: 0-{self._chars - 1}")
 
         if isinstance(bitmask, (tuple, list)):
             bitmask = ((bitmask[0] & 0xFF) << 8) | (bitmask[1] & 0xFF)
@@ -387,7 +381,6 @@ class Seg14x4(HT16K33):
         :param bool space_between: (optional) Whether to seperate the end and beginning of
          the text with a space. (default=False)
         """
-        # pylint: disable=too-many-nested-blocks
         if isinstance(text, str):
             now = time.monotonic()
             # if text is the same
@@ -448,7 +441,7 @@ class Seg14x4(HT16K33):
 class _AbstractSeg7x4(Seg14x4):
     POSITIONS = (0, 2, 6, 8)  # The positions of characters.
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         i2c: I2C,
         address: Union[int, List[int], Tuple[int, ...]] = 0x70,
@@ -486,17 +479,13 @@ class _AbstractSeg7x4(Seg14x4):
         if char in ":;":
             self._put(char)
         else:
-            if (
-                char != "."
-                or self._get_buffer(self._adjusted_index(self._chars - 1)) & 0b10000000
-            ):
+            if char != "." or self._get_buffer(self._adjusted_index(self._chars - 1)) & 0b10000000:
                 self.scroll()
                 self._put(" ", self._chars - 1)
             self._put(char, self._chars - 1)
 
     def _put(self, char: str, index: int = 0) -> None:
         """Put a character at the specified place."""
-        # pylint: disable=too-many-return-statements
         if not 0 <= index < self._chars:
             return
         index = self._adjusted_index(index)
@@ -541,9 +530,7 @@ class _AbstractSeg7x4(Seg14x4):
         """
 
         if not isinstance(index, int) or not 0 <= index < self._chars:
-            raise ValueError(
-                f"Index value must be an integer in the range: 0-{self._chars - 1}"
-            )
+            raise ValueError(f"Index value must be an integer in the range: 0-{self._chars - 1}")
 
         # Set the digit bitmask value at the appropriate position.
         self._set_buffer(self._adjusted_index(index), bitmask & 0xFF)
@@ -567,7 +554,7 @@ class Seg7x4(_AbstractSeg7x4):
         on each display.
     """
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         i2c: I2C,
         address: Union[int, List[int], Tuple[int, ...]] = 0x70,
@@ -667,8 +654,6 @@ class BigSeg7x4(_AbstractSeg7x4):
 
 class Colon:
     """Helper class for controlling the colons. Not intended for direct use."""
-
-    # pylint: disable=protected-access
 
     MASKS = (0x02, 0x0C)
 
