@@ -399,8 +399,8 @@ class Seg14x4(HT16K33):
                         self.print(text[self._nb_scroll_index])
                         self._nb_prev_char_is_dot = text[self._nb_scroll_index] == "."
                     else:
-                        self._nb_scroll_index = -1
                         if loop:
+                            self._nb_scroll_index = -1
                             if space_between:
                                 self._last_nb_scroll_time = now
                                 self.print(" ")
