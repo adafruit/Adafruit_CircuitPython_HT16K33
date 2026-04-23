@@ -81,7 +81,7 @@ class HT16K33:
     def blink_rate(self, rate: int) -> None:
         if not 0 <= rate <= 3:
             raise ValueError("Blink rate must be an integer in the range: 0-3")
-        rate = rate & 0x03
+        rate &= 0x03
         self._blink_rate = rate
         for index, _ in enumerate(self.i2c_device):
             self._write_cmd(_HT16K33_BLINK_CMD | _HT16K33_BLINK_DISPLAYON | rate << 1, index)
@@ -98,7 +98,7 @@ class HT16K33:
 
         self._brightness = brightness
         xbright = round(15 * brightness)
-        xbright = xbright & 0x0F
+        xbright &= 0x0F
         for index, _ in enumerate(self.i2c_device):
             self._write_cmd(_HT16K33_CMD_BRIGHTNESS | xbright, index)
 
